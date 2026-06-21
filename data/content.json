@@ -1,0 +1,38 @@
+{
+  "siteName": "Simon 的作品集",
+  "hero": {
+    "warm": {
+      "greeting": "你好，我是苏融",
+      "title": "网络/硬件/人工智能",
+      "tagline": "兴趣引导技术"
+    },
+    "tech": {
+      "title": "你好，我是苏融",
+      "tagline": "网络/硬件/人工智能——兴趣引导技术"
+    }
+  },
+  "sections": {
+    "works": {
+      "warm": "我的作品",
+      "tech": "作品集",
+      "warmSubtitle": "这里是我的一些项目展示"
+    },
+    "about": {
+      "warm": "关于我",
+      "tech": "关于"
+    },
+    "contact": {
+      "title": "联系方式",
+      "warmSubtitle": "欢迎与我交流，分享想法或合作机会"
+    }
+  },
+  "footer": {
+    "warm": "© 2024 Simon. 用 ❤️ 构建",
+    "tech": "© 2024 Simon. Powered by Next.js."
+  },
+  "socialLinks": {
+    "github": "https://github.com",
+    "email": "mailto:hello@example.com",
+    "weixin": ""
+  }
+}

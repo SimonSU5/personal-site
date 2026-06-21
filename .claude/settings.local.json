@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src --import-alias \"@/*\" --use-npm)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src --import-alias \"@/*\" --use-npm)",
+      "Bash(npm run *)",
+      "Bash(gh auth *)",
+      "Bash(git remote *)",
+      "Bash(git add *)"
     ]
   }
 }

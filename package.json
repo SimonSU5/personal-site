@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:3001": "next dev --port 3001",
+    "dev:8080": "next dev --port 8080",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
