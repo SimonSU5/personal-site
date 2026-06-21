@@ -135,9 +135,9 @@ async function syncPosts(owner: string, repo: string, token: string) {
 }
 
 async function syncWorks(owner: string, repo: string, token: string) {
-  // 获取 works.json
+  // 获取 works 目录下的文件
   const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/works.json`,
+    `https://api.github.com/repos/${owner}/${repo}/contents/works`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -148,19 +148,75 @@ async function syncWorks(owner: string, repo: string, token: string) {
 
   if (!response.ok) {
     if (response.status === 404) {
-      // works.json 不存在
+      // works 目录不存在
       return [];
     }
     throw new Error(`GitHub API error: ${response.statusText}`);
   }
 
-  const data = await response.json();
-  const content = Buffer.from(data.content, "base64").toString("utf-8");
-  const works = JSON.parse(content);
+  const files = await response.json();
+  const works = [];
 
-  // 为每个作品添加 source 标记
-  return works.map((work: any) => ({
-    ...work,
-    source: "github",
-  }));
+  for (const file of files) {
+    if (file.name.endsWith(".md")) {
+      // 获取文件内容
+      const contentRes = await fetch(file.url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      });
+
+      const contentData = await contentRes.json();
+      const content = Buffer.from(contentData.content, "base64").toString("utf-8");
+
+      // 解析 frontmatter
+      const frontmatterMatch = content.match(/^---\n(.*?)\n---\n(.*)$/s);
+      let title = file.name.replace(".md", "");
+      let description = "";
+      let cover = "";
+      let tech = [];
+      let demo = "";
+      let repoUrl = "";
+      let featured = false;
+      let body = content;
+
+      if (frontmatterMatch) {
+        const frontmatter = frontmatterMatch[1];
+        body = frontmatterMatch[2];
+
+        const titleMatch = frontmatter.match(/title:\s*(.+)/);
+        const descMatch = frontmatter.match(/description:\s*(.+)/);
+        const coverMatch = frontmatter.match(/cover:\s*(.+)/);
+        const techMatch = frontmatter.match(/tech:\s*(.+)/);
+        const demoMatch = frontmatter.match(/demo:\s*(.+)/);
+        const repoMatch = frontmatter.match(/repo:\s*(.+)/);
+        const featuredMatch = frontmatter.match(/featured:\s*(true|false)/i);
+
+        if (titleMatch) title = titleMatch[1].trim();
+        if (descMatch) description = descMatch[1].trim();
+        if (coverMatch) cover = coverMatch[1].trim();
+        if (techMatch) tech = techMatch[1].split(",").map((t: string) => t.trim());
+        if (demoMatch) demo = demoMatch[1].trim();
+        if (repoMatch) repoUrl = repoMatch[1].trim();
+        if (featuredMatch) featured = featuredMatch[1].toLowerCase() === "true";
+      }
+
+      works.push({
+        id: file.name.replace(".md", ""),
+        title,
+        description,
+        cover,
+        tech,
+        demo,
+        repo: repoUrl,
+        featured,
+        content: body,
+        source: "github",
+        githubPath: file.path,
+      });
+    }
+  }
+
+  return works;
 }
