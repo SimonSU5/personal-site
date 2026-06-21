@@ -202,7 +202,7 @@ export default function GithubSettingsPage() {
 
           <button
             onClick={handleSync}
-            disabled={syncing || !githubRepo || (!githubToken && !useEnvToken)}
+            disabled={syncing || !githubRepo || (!useEnvToken && !githubToken)}
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {syncing ? "同步中..." : useEnvToken ? "🔄 立即同步（使用环境变量）" : "🔄 立即同步"}
