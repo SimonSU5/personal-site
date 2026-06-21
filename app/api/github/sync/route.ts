@@ -100,13 +100,36 @@ async function syncPosts(owner: string, repo: string, token: string) {
         const frontmatter = frontmatterMatch[1];
         body = frontmatterMatch[2];
 
-        const titleMatch = frontmatter.match(/title:\s*(.+)/);
-        const excerptMatch = frontmatter.match(/excerpt:\s*(.+)/);
-        const categoryMatch = frontmatter.match(/category:\s*(.+)/);
+        // 按行解析 frontmatter
+        const lines = frontmatter.split("\n");
+        for (const line of lines) {
+          const colonIndex = line.indexOf(":");
+          if (colonIndex === -1) continue;
 
-        if (titleMatch) title = titleMatch[1].trim();
-        if (excerptMatch) excerpt = excerptMatch[1].trim();
-        if (categoryMatch) category = categoryMatch[1].trim();
+          const key = line.slice(0, colonIndex).trim();
+          let value = line.slice(colonIndex + 1).trim();
+
+          switch (key) {
+            case "title":
+              title = value;
+              break;
+            case "excerpt":
+              excerpt = value;
+              break;
+            case "category":
+              if (value) category = value;
+              break;
+            case "tags":
+              // tags 字段暂时不处理，如果需要可以添加
+              break;
+            case "cover":
+              // cover 字段暂时不处理
+              break;
+            case "date":
+              // 如果 frontmatter 有日期，使用它
+              break;
+          }
+        }
       }
 
       // 从文件名提取日期
