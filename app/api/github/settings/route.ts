@@ -17,11 +17,15 @@ export async function GET() {
   const content = await fs.readFile(SETTINGS_FILE, "utf-8");
   const settings = JSON.parse(content);
 
+  // 检查是否配置了环境变量
+  const hasEnvToken = !!process.env.GITHUB_TOKEN;
+
   // 不返回 token 的完整值
   return NextResponse.json({
-    githubRepo: settings.githubRepo,
+    githubRepo: settings.githubRepo || process.env.GITHUB_REPO || "",
     hasToken: !!settings.githubToken,
     tokenPrefix: settings.githubToken ? settings.githubToken.slice(0, 10) + "..." : "",
+    useEnvToken: hasEnvToken,
   });
 }
 

@@ -8,6 +8,7 @@ export default function GithubSettingsPage() {
   const [githubRepo, setGithubRepo] = useState("");
   const [githubToken, setGithubToken] = useState("");
   const [loading, setLoading] = useState(true);
+  const [useEnvToken, setUseEnvToken] = useState(false);
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<any>(null);
@@ -33,6 +34,7 @@ export default function GithubSettingsPage() {
       if (res.ok) {
         const data = await res.json();
         setGithubRepo(data.githubRepo || "");
+        setUseEnvToken(data.useEnvToken || false);
       }
     } catch (err) {
       console.error("Failed to fetch settings");
@@ -75,7 +77,10 @@ export default function GithubSettingsPage() {
       const res = await fetch("/api/github/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ githubRepo, githubToken }),
+        body: JSON.stringify({
+          githubRepo,
+          ...(githubToken && !useEnvToken ? { githubToken } : {})
+        }),
       });
 
       const data = await res.json();
@@ -139,24 +144,38 @@ export default function GithubSettingsPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                GitHub Personal Access Token
-                <span className="text-gray-400 font-normal ml-2">
-                  (需要 repo 权限)
-                </span>
-              </label>
-              <input
-                type="password"
-                value={githubToken}
-                onChange={(e) => setGithubToken(e.target.value)}
-                placeholder="ghp_xxxxxxxxxxxx"
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-500 outline-none"
-              />
-              <p className="text-sm text-gray-500 mt-2">
-                在 GitHub Settings → Developer settings → Personal access tokens 中创建
-              </p>
-            </div>
+            {!useEnvToken ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  GitHub Personal Access Token
+                  <span className="text-gray-400 font-normal ml-2">
+                    (需要 repo 权限)
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  value={githubToken}
+                  onChange={(e) => setGithubToken(e.target.value)}
+                  placeholder="ghp_xxxxxxxxxxxx"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-500 outline-none"
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  在 GitHub Settings → Developer settings → Personal access tokens 中创建
+                </p>
+              </div>
+            ) : (
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-medium text-green-800">环境变量已配置</span>
+                </div>
+                <p className="text-sm text-green-700 mt-1">
+                  正在使用环境变量 GITHUB_TOKEN，无需手动输入
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
@@ -183,11 +202,17 @@ export default function GithubSettingsPage() {
 
           <button
             onClick={handleSync}
-            disabled={syncing || !githubRepo || !githubToken}
+            disabled={syncing || !githubRepo || (!githubToken && !useEnvToken)}
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {syncing ? "同步中..." : "🔄 立即同步"}
+            {syncing ? "同步中..." : useEnvToken ? "🔄 立即同步（使用环境变量）" : "🔄 立即同步"}
           </button>
+
+          {useEnvToken && (
+            <p className="text-sm text-green-600 mt-2">
+              ✓ 已配置环境变量 GITHUB_TOKEN，无需手动输入
+            </p>
+          )}
 
           {syncResult && (
             <div className="mt-4 p-4 bg-green-50 rounded-lg">

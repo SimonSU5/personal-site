@@ -16,17 +16,21 @@ export async function POST(req: NextRequest) {
   try {
     const { githubToken, githubRepo } = await req.json();
 
-    if (!githubToken || !githubRepo) {
+    // 优先使用环境变量
+    const token = githubToken || process.env.GITHUB_TOKEN;
+    const repo = githubRepo || process.env.GITHUB_REPO;
+
+    if (!token || !repo) {
       return NextResponse.json({ error: "Missing GitHub credentials" }, { status: 400 });
     }
 
-    const [owner, repo] = githubRepo.split("/");
+    const [owner, repoName] = repo.split("/");
 
     // 同步博客文章
-    const posts = await syncPosts(owner, repo, githubToken);
+    const posts = await syncPosts(owner, repoName, token);
 
     // 同步作品集
-    const works = await syncWorks(owner, repo, githubToken);
+    const works = await syncWorks(owner, repoName, token);
 
     // 保存到本地
     if (posts.length > 0) {
