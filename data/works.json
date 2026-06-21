@@ -1,44 +1,27 @@
 [
   {
-    "id": "example-project",
-    "title": "示例项目",
-    "description": "这是一个示例项目描述",
-    "cover": "assets/covers/example-project.jpg",
-    "tech": [
-      "React",
-      "TypeScript",
-      "Next.js"
-    ],
-    "demo": "https://example.com",
-    "repo": "https://github.com/SimonSU5/example",
-    "featured": true,
-    "content": "\n# 示例项目\n\n## 项目简介\n\n这是一个示例项目，用于展示作品集的格式。\n\n## 技术栈\n\n- React 18\n- TypeScript\n- Next.js 14\n- Tailwind CSS\n\n## 主要功能\n\n1. 功能一\n2. 功能二\n3. 功能三\n\n## 项目截图\n\n![项目截图](assets/images/example-project-1.jpg)\n",
-    "source": "github",
-    "githubPath": "works/example-project.md"
-  },
-  {
     "id": "组网项目-某机关单位的远程监控项目",
-    "title": "组网项目-某机关单位的远程监控项目",
+    "title": "某机关单位的远程监控项目",
     "description": "",
-    "cover": "",
+    "cover": "assets/covers/project-cover.jpg",
     "tech": [],
     "demo": "",
     "repo": "",
     "featured": false,
-    "content": "",
+    "content": "\n# \n\n## 项目简介\n\n项目介绍...\n\n## 技术栈\n\n- 技术1\n- 技术2\n- 技术3\n\n## 主要功能\n\n- 功能1\n- 功能2\n- 功能3\n\n## 项目成果\n\n项目成果和数据...\n",
     "source": "github",
     "githubPath": "works/组网项目-某机关单位的远程监控项目.md"
   },
   {
     "id": "组网项目-某航运公司跨省组网",
-    "title": "组网项目-某航运公司跨省组网",
+    "title": "某航运公司跨省组网",
     "description": "",
-    "cover": "",
+    "cover": "assets/covers/project-cover.jpg",
     "tech": [],
     "demo": "",
     "repo": "",
     "featured": false,
-    "content": "",
+    "content": "\n# \n\n## 项目简介\n\n项目介绍...\n\n## 技术栈\n\n- 技术1\n- 技术2\n- 技术3\n\n## 主要功能\n\n- 功能1\n- 功能2\n- 功能3\n\n## 项目成果\n\n项目成果和数据...\n",
     "source": "github",
     "githubPath": "works/组网项目-某航运公司跨省组网.md"
   }

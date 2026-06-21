@@ -185,21 +185,39 @@ async function syncWorks(owner: string, repo: string, token: string) {
         const frontmatter = frontmatterMatch[1];
         body = frontmatterMatch[2];
 
-        const titleMatch = frontmatter.match(/title:\s*(.+)/);
-        const descMatch = frontmatter.match(/description:\s*(.+)/);
-        const coverMatch = frontmatter.match(/cover:\s*(.+)/);
-        const techMatch = frontmatter.match(/tech:\s*(.+)/);
-        const demoMatch = frontmatter.match(/demo:\s*(.+)/);
-        const repoMatch = frontmatter.match(/repo:\s*(.+)/);
-        const featuredMatch = frontmatter.match(/featured:\s*(true|false)/i);
+        // 按行解析 frontmatter
+        const lines = frontmatter.split("\n");
+        for (const line of lines) {
+          const colonIndex = line.indexOf(":");
+          if (colonIndex === -1) continue;
 
-        if (titleMatch) title = titleMatch[1].trim();
-        if (descMatch) description = descMatch[1].trim();
-        if (coverMatch) cover = coverMatch[1].trim();
-        if (techMatch) tech = techMatch[1].split(",").map((t: string) => t.trim());
-        if (demoMatch) demo = demoMatch[1].trim();
-        if (repoMatch) repoUrl = repoMatch[1].trim();
-        if (featuredMatch) featured = featuredMatch[1].toLowerCase() === "true";
+          const key = line.slice(0, colonIndex).trim();
+          let value = line.slice(colonIndex + 1).trim();
+
+          switch (key) {
+            case "title":
+              title = value;
+              break;
+            case "description":
+              description = value;
+              break;
+            case "cover":
+              cover = value;
+              break;
+            case "tech":
+              tech = value ? value.split(",").map((t: string) => t.trim()).filter(Boolean) : [];
+              break;
+            case "demo":
+              demo = value;
+              break;
+            case "repo":
+              repoUrl = value;
+              break;
+            case "featured":
+              featured = value.toLowerCase() === "true";
+              break;
+          }
+        }
       }
 
       works.push({

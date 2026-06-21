@@ -39,9 +39,11 @@ export default function WorkCard({ work, variant = "warm" }: WorkCardProps) {
       <h3 className={style.title}>{work.title}</h3>
       <p className={`mt-2 ${style.description}`}>{work.description}</p>
       <div className={`mt-3 flex flex-wrap gap-2 ${style.tags}`}>
-        {work.tags.map((tag) => (
-          <span key={tag} className="px-2 py-1 bg-gray-100 rounded">{tag}</span>
-        ))}
+        {work.tech && work.tech.length > 0 ? (
+          work.tech.map((tag, index) => (
+            <span key={`${tag}-${index}`} className="px-2 py-1 bg-gray-100 rounded">{tag}</span>
+          ))
+        ) : null}
       </div>
     </div>
   );
