@@ -12,6 +12,42 @@ async function saveWorks(works: any[]) {
   await writeFile(filePath, JSON.stringify(works, null, 2));
 }
 
+// 处理 Markdown 内容中的图片路径，将相对路径转换为 GitHub raw URL
+function processImagePaths(content: string, fileDir: string, baseUrl: string): string {
+  // 匹配 Markdown 图片语法：![alt](path) 和 ![alt](path "title")
+  const imageRegex = /!\[(.*?)\]\(([^)]+?)\)/g;
+
+  return content.replace(imageRegex, (match, alt, imagePath) => {
+    // 移除可能存在的 title 部分
+    const cleanPath = imagePath.split(/\s+/)[0];
+
+    // 如果已经是完整 URL，直接返回
+    if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://")) {
+      return match;
+    }
+
+    // 处理路径
+    let fullPath: string;
+    if (cleanPath.startsWith("/")) {
+      // 绝对路径（从仓库根目录）
+      fullPath = `${baseUrl}${cleanPath}`;
+    } else {
+      // 相对路径（从当前文件所在目录）
+      fullPath = `${baseUrl}/${fileDir}/${cleanPath}`;
+    }
+
+    // 保持原有的 alt 和可能的 title
+    const hasTitle = imagePath.includes('"');
+    if (hasTitle) {
+      const titleMatch = imagePath.match(/"([^"]+)"/);
+      const title = titleMatch ? `"${titleMatch[1]}"` : "";
+      return `![${alt}](${fullPath} ${title})`;
+    }
+
+    return `![${alt}](${fullPath})`;
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { githubToken, githubRepo } = await req.json();
@@ -94,6 +130,7 @@ async function syncPosts(owner: string, repo: string, token: string) {
       let title = file.name.replace(".md", "");
       let excerpt = "";
       let category = "未分类";
+      let cover = "";
       let body = content;
 
       if (frontmatterMatch) {
@@ -123,7 +160,7 @@ async function syncPosts(owner: string, repo: string, token: string) {
               // tags 字段暂时不处理，如果需要可以添加
               break;
             case "cover":
-              // cover 字段暂时不处理
+              cover = value;
               break;
             case "date":
               // 如果 frontmatter 有日期，使用它
@@ -132,22 +169,42 @@ async function syncPosts(owner: string, repo: string, token: string) {
         }
       }
 
+      // 获取文件所在目录（用于处理相对路径）
+      const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
+      const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main`;
+
+      // 处理封面图片路径
+      if (cover && !cover.startsWith("http")) {
+        // 相对路径，转换为 GitHub raw URL
+        if (cover.startsWith("/")) {
+          // 绝对路径（从仓库根目录）
+          cover = `${baseUrl}${cover}`;
+        } else {
+          // 相对路径（从当前文件所在目录）
+          cover = `${baseUrl}/${fileDir}/${cover}`;
+        }
+      }
+
+      // 处理正文中的图片引用
+      const processedBody = processImagePaths(body, fileDir, baseUrl);
+
       // 从文件名提取日期
       const dateMatch = file.name.match(/^(\d{4}-\d{2}-\d{2})/);
       const date = dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0];
 
       // 计算阅读时间
-      const wordCount = body.split(/\s+/).length;
+      const wordCount = processedBody.split(/\s+/).length;
       const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
       posts.push({
         id: file.name.replace(".md", ""),
         title,
-        excerpt: excerpt || body.slice(0, 150) + "...",
-        content: body,
+        excerpt: excerpt || "",
+        content: processedBody,
         category,
         date,
         readTime: `${readTime}分钟`,
+        cover,
         source: "github",
         githubPath: file.path,
       });
@@ -243,6 +300,25 @@ async function syncWorks(owner: string, repo: string, token: string) {
         }
       }
 
+      // 获取文件所在目录（用于处理相对路径）
+      const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
+      const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main`;
+
+      // 处理封面图片路径
+      if (cover && !cover.startsWith("http")) {
+        // 相对路径，转换为 GitHub raw URL
+        if (cover.startsWith("/")) {
+          // 绝对路径（从仓库根目录）
+          cover = `${baseUrl}${cover}`;
+        } else {
+          // 相对路径（从当前文件所在目录）
+          cover = `${baseUrl}/${fileDir}/${cover}`;
+        }
+      }
+
+      // 处理正文中的图片引用
+      const processedBody = processImagePaths(body, fileDir, baseUrl);
+
       works.push({
         id: file.name.replace(".md", ""),
         title,
@@ -252,7 +328,7 @@ async function syncWorks(owner: string, repo: string, token: string) {
         demo,
         repo: repoUrl,
         featured,
-        content: body,
+        content: processedBody,
         source: "github",
         githubPath: file.path,
       });
