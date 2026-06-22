@@ -1,9 +1,22 @@
 [
   {
+    "id": "组网项目-某国企省内跨市监控项目组网",
+    "title": "",
+    "description": "",
+    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/assets/covers/project-cover.jpg",
+    "tech": [],
+    "demo": "",
+    "repo": "",
+    "featured": false,
+    "content": "\n# \n\n## 项目简介\n\n项目介绍...\n\n## 技术栈\n\n- 技术1\n- 技术2\n- 技术3\n\n## 主要功能\n\n- 功能1\n- 功能2\n- 功能3\n\n## 项目成果\n\n项目成果和数据...\n",
+    "source": "github",
+    "githubPath": "works/组网项目-某国企省内跨市监控项目组网.md"
+  },
+  {
     "id": "组网项目-某机关单位的远程监控项目",
     "title": "某机关单位的远程监控项目",
     "description": "",
-    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/works/assets/covers/project-cover.jpg",
+    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/assets/images/机关单位监控项目-封面.png",
     "tech": [],
     "demo": "",
     "repo": "",
@@ -15,13 +28,13 @@
   {
     "id": "组网项目-某航运公司跨省组网",
     "title": "某航运公司跨省组网",
-    "description": "",
-    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/works/assets/covers/project-cover.jpg",
+    "description": "这个项目是我刚入职时的一个项目，当时对方已在两个月前提出需求，并在一个月前提出要试用。前同事不是一个网络技术见长的人，前期需求对接阻力较大。所以这个项目移交到我手里时，用户需求已经相当紧迫。",
+    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/assets/images/航运公司项目-封面.png",
     "tech": [],
     "demo": "",
     "repo": "",
     "featured": false,
-    "content": "\n# \n\n## 项目简介\n\n项目介绍...\n\n## 技术栈\n\n- 技术1\n- 技术2\n- 技术3\n\n## 主要功能\n\n- 功能1\n- 功能2\n- 功能3\n\n## 项目成果\n\n项目成果和数据...\n",
+    "content": "## 项目简介\n\n某航运公司（外企，总部位于新加坡）中国总部位于上海市，在宁波，深圳，武汉等全国14个城市有分部。公司内部服务器位于上海和新加坡，并且有访问外网的需求。老系统通过互联网建立ipsec隧道组网，因使用国外设备维保过期，寻求更低成本的组网产品和维护，总预算在7位数。\n\n## 技术栈\n\n- 技术1\n- 技术2\n- 技术3\n\n## 主要功能\n\n- 功能1\n- 功能2\n- 功能3\n\n## 项目成果\n\n项目成果和数据...\n",
     "source": "github",
     "githubPath": "works/组网项目-某航运公司跨省组网.md"
   }

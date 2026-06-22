@@ -179,8 +179,11 @@ async function syncPosts(owner: string, repo: string, token: string) {
         if (cover.startsWith("/")) {
           // 绝对路径（从仓库根目录）
           cover = `${baseUrl}${cover}`;
+        } else if (cover.startsWith("assets/") || cover.startsWith("images/")) {
+          // 以 assets/ 或 images/ 开头，视为从仓库根目录
+          cover = `${baseUrl}/${cover}`;
         } else {
-          // 相对路径（从当前文件所在目录）
+          // 其他相对路径，从当前文件所在目录
           cover = `${baseUrl}/${fileDir}/${cover}`;
         }
       }
@@ -310,8 +313,11 @@ async function syncWorks(owner: string, repo: string, token: string) {
         if (cover.startsWith("/")) {
           // 绝对路径（从仓库根目录）
           cover = `${baseUrl}${cover}`;
+        } else if (cover.startsWith("assets/") || cover.startsWith("images/")) {
+          // 以 assets/ 或 images/ 开头，视为从仓库根目录
+          cover = `${baseUrl}/${cover}`;
         } else {
-          // 相对路径（从当前文件所在目录）
+          // 其他相对路径，从当前文件所在目录
           cover = `${baseUrl}/${fileDir}/${cover}`;
         }
       }

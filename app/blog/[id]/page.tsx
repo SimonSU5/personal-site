@@ -38,7 +38,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
           <img
             src={post.cover}
             alt={post.title}
-            className="w-full h-64 object-cover rounded-lg mb-8"
+            className="w-full h-auto rounded-lg mb-8 max-h-[600px]"
           />
         )}
 

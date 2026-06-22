@@ -33,16 +33,16 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
 
         <h1 className="text-4xl font-bold text-[#1A1A1A] mb-4">{work.title}</h1>
 
-        {work.description && (
-          <p className="text-xl mb-8 text-[#666666]">{work.description}</p>
-        )}
-
         {work.cover && (
           <img
             src={work.cover}
             alt={work.title}
-            className="w-full h-64 object-cover rounded-lg mb-8"
+            className="w-full h-auto rounded-lg mb-8 max-h-[600px]"
           />
+        )}
+
+        {work.description && (
+          <p className="text-xl mb-8 text-[#666666]">{work.description}</p>
         )}
 
         {work.tech && work.tech.length > 0 && (

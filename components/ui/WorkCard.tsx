@@ -17,7 +17,7 @@ export default function WorkCard({ work, variant = "warm" }: WorkCardProps) {
     },
     warm: {
       card: "bg-white rounded-2xl shadow-md hover:shadow-xl transition-all border border-amber-100 cursor-pointer",
-      image: "rounded-t-2xl",
+      image: "rounded-2xl",
       title: "text-xl font-semibold text-gray-800",
       description: "text-gray-600",
       tags: "text-sm text-amber-600",
@@ -27,11 +27,11 @@ export default function WorkCard({ work, variant = "warm" }: WorkCardProps) {
   const style = variants[variant];
 
   return (
-    <Link href={`/works/${work.id}`}>
-      <div className={`p-4 ${style.card}`}>
+    <Link href={`/works/${work.id}`} className="block">
+      <div className={`${style.card} p-4 h-full`}>
       <div className={`w-full aspect-video object-cover ${style.image} mb-4 overflow-hidden bg-gray-200`}>
-        {work.image ? (
-          <img src={work.image} alt={work.title} className="w-full h-full object-cover" />
+        {work.cover ? (
+          <img src={work.cover} alt={work.title} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
             暂无图片
