@@ -1,14 +1,20 @@
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
-// 使用固定密钥，生产环境必须通过环境变量设置
 const SESSION_SECRET = process.env.SESSION_SECRET || "dev-secret-change-in-production-min-32-chars";
 const SECRET = SESSION_SECRET;
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 
 interface SessionData {
   authenticated: boolean;
   timestamp: number;
+}
+
+function generateSignature(data: string): string {
+  return crypto
+    .createHmac("sha256", SECRET)
+    .update(data)
+    .digest("base64url");
 }
 
 function generateSessionToken(): string {
@@ -16,7 +22,6 @@ function generateSessionToken(): string {
 }
 
 export async function createSession(): Promise<string> {
-  // 生产环境密钥检查
   if (process.env.NODE_ENV === "production" && SESSION_SECRET.includes("dev-secret")) {
     throw new Error("SESSION_SECRET must be set in production");
   }
@@ -28,11 +33,7 @@ export async function createSession(): Promise<string> {
   };
 
   const sessionStr = JSON.stringify(data);
-  const signature = crypto
-    .createHmac("sha256", SECRET)
-    .update(sessionStr)
-    .digest("base64url");
-
+  const signature = generateSignature(sessionStr);
   const sessionValue = `${sessionStr}.${signature}`;
 
   const cookieStore = await cookies();
@@ -63,10 +64,7 @@ export async function checkAuth(): Promise<boolean> {
 
     const [sessionStr, signature] = parts;
 
-    const expectedSignature = crypto
-      .createHmac("sha256", SECRET)
-      .update(sessionStr)
-      .digest("base64url");
+    const expectedSignature = generateSignature(sessionStr);
 
     if (signature !== expectedSignature) {
       return false;
