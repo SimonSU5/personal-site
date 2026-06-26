@@ -126,7 +126,7 @@ async function syncPosts(owner: string, repo: string, token: string) {
       const content = Buffer.from(contentData.content, "base64").toString("utf-8");
 
       // 解析 frontmatter
-      const frontmatterMatch = content.match(/^---\n(.*?)\n---\n(.*)$/s);
+      const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
       let title = file.name.replace(".md", "");
       let excerpt = "";
       let category = "未分类";
@@ -254,11 +254,12 @@ async function syncWorks(owner: string, repo: string, token: string) {
       const content = Buffer.from(contentData.content, "base64").toString("utf-8");
 
       // 解析 frontmatter
-      const frontmatterMatch = content.match(/^---\n(.*?)\n---\n(.*)$/s);
+      const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
       let title = file.name.replace(".md", "");
       let description = "";
+      let category = "未分类";
       let cover = "";
-      let tech = [];
+      let tech: string[] = [];
       let demo = "";
       let repoUrl = "";
       let featured = false;
@@ -283,6 +284,9 @@ async function syncWorks(owner: string, repo: string, token: string) {
               break;
             case "description":
               description = value;
+              break;
+            case "category":
+              if (value) category = value;
               break;
             case "cover":
               cover = value;
@@ -329,6 +333,7 @@ async function syncWorks(owner: string, repo: string, token: string) {
         id: file.name.replace(".md", ""),
         title,
         description,
+        category,
         cover,
         tech,
         demo,
