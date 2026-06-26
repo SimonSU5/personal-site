@@ -9,8 +9,10 @@ export default function UploadPage() {
     title: "",
     description: "",
     category: "",
-    link: "",
-    tags: "",
+    demo: "",
+    repo: "",
+    tech: "",
+    content: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -64,9 +66,17 @@ export default function UploadPage() {
       }
 
       const workData = {
-        ...formData,
-        image: imageUrl,
-        tags: formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
+        id: Date.now().toString(),
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        demo: formData.demo,
+        repo: formData.repo,
+        tech: formData.tech ? formData.tech.split(",").map((t) => t.trim()).filter(Boolean) : [],
+        content: formData.content,
+        cover: imageUrl,
+        featured: false,
+        source: "manual",
       };
 
       const res = await fetch("/api/works", {
@@ -90,7 +100,8 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-white border-b border-gray-200"
+      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px" }}>
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">上传作品</h1>
           <a href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">
@@ -99,7 +110,8 @@ export default function UploadPage() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-4xl mx-auto"
+      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "32px", paddingBottom: "32px" }}>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* 图片上传 */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
@@ -151,7 +163,7 @@ export default function UploadPage() {
 
             <input
               type="text"
-              placeholder="分类（如：Web App、AI/ML）"
+              placeholder="分类（如：数通、软件开发）"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
@@ -160,18 +172,33 @@ export default function UploadPage() {
 
             <input
               type="url"
-              placeholder="项目链接（可选）"
-              value={formData.link}
-              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+              placeholder="演示链接（Demo URL，可选）"
+              value={formData.demo}
+              onChange={(e) => setFormData({ ...formData, demo: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+            />
+
+            <input
+              type="url"
+              placeholder="代码仓库（Repository URL，可选）"
+              value={formData.repo}
+              onChange={(e) => setFormData({ ...formData, repo: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
             />
 
             <input
               type="text"
-              placeholder="标签（用逗号分隔，如：React, Node.js）"
-              value={formData.tags}
-              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              placeholder="技术栈（用逗号分隔，如：React, Node.js, MongoDB）"
+              value={formData.tech}
+              onChange={(e) => setFormData({ ...formData, tech: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+            />
+
+            <textarea
+              placeholder="详细内容（Markdown 格式，可选）"
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none min-h-[150px]"
             />
           </div>
 

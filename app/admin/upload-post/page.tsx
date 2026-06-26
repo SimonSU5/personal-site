@@ -12,6 +12,8 @@ export default function UploadPostPage() {
     category: "",
     readTime: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -61,7 +63,8 @@ export default function UploadPostPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-white border-b border-gray-200"
+      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px" }}>
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">发布博客文章</h1>
           <a href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">
@@ -70,9 +73,12 @@ export default function UploadPostPage() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm space-y-4">
+      <main className="max-w-4xl mx-auto"
+      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "32px", paddingBottom: "32px" }}>
+        <form onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div className="bg-white rounded-xl shadow-sm"
+          style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
             <h3 className="font-medium text-gray-900">文章信息</h3>
 
             <input
@@ -80,7 +86,8 @@ export default function UploadPostPage() {
               placeholder="文章标题"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
               required
             />
 
@@ -89,7 +96,8 @@ export default function UploadPostPage() {
               placeholder="分类（如：React、TypeScript）"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
               required
             />
 
@@ -98,7 +106,8 @@ export default function UploadPostPage() {
               placeholder="阅读时间（如：5 分钟）"
               value={formData.readTime}
               onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
               required
             />
 
@@ -122,7 +131,8 @@ export default function UploadPostPage() {
           <button
             type="submit"
             disabled={uploading}
-            className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="w-full bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
+            style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "12px", paddingBottom: "12px" }}
           >
             {uploading ? "发布中..." : "发布文章"}
           </button>

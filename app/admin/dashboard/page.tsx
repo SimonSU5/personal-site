@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Edit, Trash2, Home, LogOut, FileText, Code, User, Mail } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -67,194 +68,259 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900">管理后台</h1>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/upload"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              上传作品
-            </Link>
-            <Link
-              href="/admin/upload-post"
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              发布博客
-            </Link>
-            <Link
-              href="/admin/github-settings"
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              GitHub 设置
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              退出
-            </button>
-            <a href="/" className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
-              查看网站
-            </a>
+    <div className="min-h-screen bg-bg-primary">
+      <main className="main-container">
+        {/* Admin Sidebar - Simplified */}
+        <aside className="sidebar">
+          <div className="sidebar-info">
+            <figure className="avatar-box">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 border-2 border-accent-primary flex items-center justify-center">
+                <User size={40} className="text-accent-primary" />
+              </div>
+            </figure>
+            <div className="info-content">
+              <h1 className="name">管理员</h1>
+              <p className="title">后台管理</p>
+            </div>
           </div>
-        </div>
-      </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h3 className="text-gray-500 text-sm mb-2">作品总数</h3>
-            <p className="text-3xl font-bold text-gray-900">{works.length}</p>
+          <div className="sidebar-info_more">
+            <div className="separator" />
+            <ul className="social-list">
+              <li className="social-item">
+                <a href="/" className="social-link" title="返回首页">
+                  <Home size={20} />
+                </a>
+              </li>
+              <li className="social-item">
+                <button onClick={handleLogout} className="social-link" title="退出登录">
+                  <LogOut size={20} />
+                </button>
+              </li>
+            </ul>
           </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h3 className="text-gray-500 text-sm mb-2">博客文章</h3>
-            <p className="text-3xl font-bold text-gray-900">{posts.length}</p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h3 className="text-gray-500 text-sm mb-2">留言</h3>
-            <p className="text-3xl font-bold text-gray-900">0</p>
-          </div>
-        </div>
+        </aside>
 
-        {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">快捷操作</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <Link
-              href="/admin/upload"
-              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors"
-            >
-              <span className="text-2xl">📤</span>
-              <span className="text-sm text-gray-700">上传作品</span>
-            </Link>
-            <Link
-              href="/admin/upload-post"
-              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors"
-            >
-              <span className="text-2xl">✍️</span>
-              <span className="text-sm text-gray-700">发布博客</span>
-            </Link>
-            <Link
-              href="/admin/edit-about"
-              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-colors"
-            >
-              <span className="text-2xl">👤</span>
-              <span className="text-sm text-gray-700">编辑关于</span>
-            </Link>
-            <Link
-              href="/admin/edit-content"
-              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-xl hover:border-amber-500 hover:bg-amber-50 transition-colors"
-            >
-              <span className="text-2xl">📝</span>
-              <span className="text-sm text-gray-700">编辑内容</span>
-            </Link>
-            <Link
-              href="/admin/github-settings"
-              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50 transition-colors"
-            >
-              <span className="text-2xl">🐙</span>
-              <span className="text-sm text-gray-700">GitHub 同步</span>
-            </Link>
-          </div>
-        </div>
+        {/* Main Content */}
+        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+          <nav className="navbar sticky top-0 z-20 bg-bg-card">
+            <ul className="navbar-list">
+              <li className="navbar-item">
+                <Link href="/admin/content" className="navbar-link">
+                  内容编辑
+                </Link>
+              </li>
+              <li className="navbar-item">
+                <Link href="/admin/resume" className="navbar-link">
+                  简历管理
+                </Link>
+              </li>
+              <li className="navbar-item">
+                <Link href="/admin/works" className="navbar-link">
+                  作品管理
+                </Link>
+              </li>
+              <li className="navbar-item">
+                <Link href="/admin/blog" className="navbar-link">
+                  博客管理
+                </Link>
+              </li>
+              <li className="navbar-item">
+                <Link href="/admin/contact" className="navbar-link">
+                  联系管理
+                </Link>
+              </li>
+              <li className="navbar-item">
+                <Link href="/admin/github-settings" className="navbar-link">
+                  GitHub 同步
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
-        {/* Works List */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">作品列表</h2>
-            <Link
-              href="/admin/upload"
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
-              + 上传作品
-            </Link>
-          </div>
-          {loading ? (
-            <p className="text-gray-500">加载中...</p>
-          ) : works.length === 0 ? (
-            <p className="text-gray-500">暂无作品</p>
-          ) : (
-            <div className="space-y-4">
-              {works.map((work) => (
-                <div
-                  key={work.id}
-                  className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    {work.image && (
-                      <img
-                        src={work.image}
-                        alt={work.title}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                    )}
-                    <div>
-                      <h3 className="font-medium text-gray-900">{work.title}</h3>
-                      <p className="text-sm text-gray-500">{work.category}</p>
-                    </div>
+          <article className="admin-content active flex flex-col h-full overflow-hidden">
+            <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
+              <h2 className="h2 article-title">管理面板</h2>
+            </header>
+
+            <section className="article-content flex-1 overflow-y-auto overflow-x-hidden px-5 pb-5"
+            style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+              {/* Stats */}
+              <div className="stats-grid" style={{ marginTop: "24px" }}>
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <Code size={24} />
                   </div>
-                  <button
-                    onClick={() => handleDeleteWork(work.id)}
-                    className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
+                  <div className="stat-info">
+                    <p className="stat-label">作品总数</p>
+                    <p className="stat-value">{works.length}</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <FileText size={24} />
+                  </div>
+                  <div className="stat-info">
+                    <p className="stat-label">博客文章</p>
+                    <p className="stat-value">{posts.length}</p>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <Code size={24} />
+                  </div>
+                  <div className="stat-info">
+                    <p className="stat-label">GitHub 同步</p>
+                    <Link href="/admin/github-settings" className="stat-link text-accent-primary">
+                      配置
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="quick-actions">
+                <h3 className="text-lg font-semibold"
+                style={{ marginBottom: "16px" }}>快捷操作</h3>
+                <div className="quick-actions-grid">
+                  <Link
+                    href="/admin/upload"
+                    className="quick-action-card"
                   >
-                    删除
-                  </button>
+                    <Upload size={32} className="text-accent-primary" />
+                    <span className="quick-action-label">上传作品</span>
+                  </Link>
+                  <Link
+                    href="/admin/upload-post"
+                    className="quick-action-card"
+                  >
+                    <FileText size={32} className="text-accent-primary" />
+                    <span className="quick-action-label">发布博客</span>
+                  </Link>
+                  <Link
+                    href="/admin/content"
+                    className="quick-action-card"
+                  >
+                    <Edit size={32} className="text-accent-primary" />
+                    <span className="quick-action-label">编辑内容</span>
+                  </Link>
+                  <Link
+                    href="/admin/resume"
+                    className="quick-action-card"
+                  >
+                    <User size={32} className="text-accent-primary" />
+                    <span className="quick-action-label">简历管理</span>
+                  </Link>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
 
-        {/* Posts List */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">博客文章</h2>
-            <Link
-              href="/admin/upload-post"
-              className="text-sm text-green-600 hover:text-green-700"
-            >
-              + 发布文章
-            </Link>
-          </div>
-          {loading ? (
-            <p className="text-gray-500">加载中...</p>
-          ) : posts.length === 0 ? (
-            <p className="text-gray-500">暂无文章</p>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors"
-                >
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900">{post.title}</h3>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-sm text-gray-500">{post.category}</span>
-                      <span className="text-sm text-gray-400">{post.date}</span>
-                      <span className="text-sm text-gray-400">{post.readTime}阅读</span>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1 line-clamp-1">{post.excerpt}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleDeletePost(post.id)}
-                      className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
-                    >
-                      删除
-                    </button>
-                  </div>
+              {/* Recent Works */}
+              <div>
+                <div className="flex items-center justify-between"
+                style={{ marginBottom: "16px" }}>
+                  <h3 className="text-lg font-semibold">最近作品</h3>
+                  <Link href="/admin/works" className="text-sm text-accent-primary">
+                    查看全部
+                  </Link>
                 </div>
-              ))}
-            </div>
-          )}
+                {loading ? (
+                  <p className="text-text-muted">加载中...</p>
+                ) : works.length === 0 ? (
+                  <div className="empty-state">
+                    <p className="text-text-muted">暂无作品</p>
+                    <Link href="/admin/upload" className="admin-btn admin-btn-primary"
+                    style={{ display: "inline-block", marginTop: "16px" }}>
+                      上传第一个作品
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="admin-list">
+                    {works.slice(0, 5).map((work) => (
+                      <div key={work.id} className="admin-list-item">
+                        <div className="flex-1">
+                          <p className="font-medium">{work.title}</p>
+                          <p className="text-sm text-text-secondary">{work.category || "未分类"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteWork(work.id)}
+                          className="admin-btn admin-btn-danger"
+                          style={{ paddingLeft: "12px", paddingRight: "12px" }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Recent Posts */}
+              <div>
+                <div className="flex items-center justify-between"
+                style={{ marginBottom: "16px" }}>
+                  <h3 className="text-lg font-semibold">最近文章</h3>
+                  <Link href="/admin/blog" className="text-sm text-accent-primary">
+                    查看全部
+                  </Link>
+                </div>
+                {loading ? (
+                  <p className="text-text-muted">加载中...</p>
+                ) : posts.length === 0 ? (
+                  <div className="empty-state">
+                    <p className="text-text-muted">暂无文章</p>
+                    <Link href="/admin/upload-post" className="admin-btn admin-btn-primary mt-4">
+                      发布第一篇文章
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="admin-list">
+                    {posts.slice(0, 5).map((post) => (
+                      <div key={post.id} className="admin-list-item">
+                        <div className="flex-1">
+                          <p className="font-medium">{post.title}</p>
+                          <div className="flex items-center"
+                          style={{ gap: "12px", marginTop: "4px" }}>
+                            <span className="text-sm text-text-secondary">{post.category}</span>
+                            <span className="text-sm text-text-muted">{post.date}</span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleDeletePost(post.id)}
+                          className="admin-btn admin-btn-danger"
+                          style={{ paddingLeft: "12px", paddingRight: "12px" }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+          </article>
         </div>
       </main>
     </div>
+  );
+}
+
+// Import Upload icon
+function Upload({ size, className }: { size: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </svg>
   );
 }

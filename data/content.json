@@ -1,5 +1,5 @@
 {
-  "siteName": "Simon 的作品集",
+  "siteName": "Simon",
   "hero": {
     "warm": {
       "greeting": "你好，我是苏融",
@@ -11,6 +11,93 @@
       "tagline": "网络/硬件/人工智能——兴趣引导技术"
     }
   },
+  "about": {
+    "greeting": "你好",
+    "title": "我是一名热爱钻研的网络工程师，硬件开发者和后端开发者。",
+    "description": [
+      "在网络工程方面，我擅长企业网络架构设计、故障排查、网络维护等工作。在软件开发方面，我精通前后端开发，能够独立完成从需求分析到产品交付的全流程。",
+      "我对人工智能充满热情，相信技术能够改变世界。我始终保持学习的态度，不断探索新技术，努力提升自己的技术能力和产品思维。",
+      "我从设计者的角度理解网络工程，从物理原理角度理解硬件，从底层代码了解后端和人工智能，坚信刨根问底。"
+    ]
+  },
+  "services": [
+    {
+      "icon": "language-outline",
+      "title": "网络工程",
+      "description": "企业网络架构设计、故障排查、网络维护、SD-WAN 组网等；路由器、交换机、防火墙等网络设备的配置和管理"
+    },
+    {
+      "icon": "code-slash-outline",
+      "title": "后段开发",
+      "description": "后端开发、数据库设计、API 开发等"
+    },
+    {
+      "icon": "hardware-chip-outline",
+      "title": "硬件开发",
+      "description": "单片机、PCB等基础开发"
+    },
+    {
+      "icon": "rocket-outline",
+      "title": "AI 应用",
+      "description": "人工智能应用开发、机器学习模型部署"
+    }
+  ],
+  "education": [
+    {
+      "id": "1",
+      "title": "硕士/香港理工大学(QS50) - IT技术",
+      "period": "2021-2023",
+      "description": "NLP，大数据，计算机网络，数据结构等"
+    },
+    {
+      "id": "1782363523811",
+      "title": "本科/东北大学(985/211) - 通信工程",
+      "period": "2017-2021",
+      "description": "模电，数电，数字信号处理，射频信号，单片机等"
+    }
+  ],
+  "experience": [
+    {
+      "id": "1",
+      "title": "中国移动通信浙江有限公司宁波分公司-政企业务支撑",
+      "period": "2023.07-2026.06",
+      "description": "1.  负责监控视联网产品项目售前售中售后全流程支撑；\n2. 负责互联网专线（悦享专线等）、传输专线、VPN专线产品售后；\n3. 负责集团SDWAN专线、专线卫士防火墙、FTTO Wi-Fi产品售后及疑难产品技术支撑；\n4. 分公司考核管理，后台协维综调人员管理。\n绩效情况：第一年（新员工统一年份）C 第二年 A 第三年 A"
+    },
+    {
+      "id": "1782378649941",
+      "title": "宁波银行-总行金融科技部/国际业务组-实习",
+      "period": "2023.03-2023.06",
+      "description": "国际业务后段开发，负责spring cloud接口开发及数据库query，并撰写接口文档。"
+    },
+    {
+      "id": "1782378660877",
+      "title": "HKCRC-香港机器人建造中心-实习",
+      "period": "2022.06-2023.01",
+      "description": "负责建模组研发，主要工作内容为手持红外点阵建模"
+    }
+  ],
+  "skills": [
+    {
+      "id": "1",
+      "name": "网络工程",
+      "percentage": 85
+    },
+    {
+      "id": "2",
+      "name": "硬件开发",
+      "percentage": 35
+    },
+    {
+      "id": "3",
+      "name": "后端开发",
+      "percentage": 55
+    },
+    {
+      "id": "4",
+      "name": "AI/NLP/ML",
+      "percentage": 60
+    }
+  ],
   "sections": {
     "works": {
       "warm": "我的作品",
@@ -27,12 +114,13 @@
     }
   },
   "footer": {
-    "warm": "© 2024 Simon. 用 ❤️ 构建",
-    "tech": "© 2024 Simon. Powered by Next.js."
+    "warm": "© 2026 Simon. ",
+    "tech": "© 2026 Simon. "
   },
   "socialLinks": {
-    "github": "https://github.com",
-    "email": "mailto:hello@example.com",
-    "weixin": ""
+    "email": "sr1235@163.com",
+    "github": "https://github.com/SimonSU5",
+    "location": "浙江，宁波",
+    "birthday": "1999.08.13"
   }
 }
