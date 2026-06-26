@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
+import { clearSession } from "@/lib/auth";
 
 export async function POST() {
-  const cookieStore = await cookies();
-  cookieStore.delete("admin-session");
+  await clearSession();
   return Response.json({ success: true });
 }

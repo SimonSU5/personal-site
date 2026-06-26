@@ -1,12 +1,6 @@
-import { cookies } from "next/headers";
+import { checkAuth } from "@/lib/auth";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-
-async function checkAuth() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin-session");
-  return session?.value === "true";
-}
 
 async function getContent() {
   const filePath = path.join(process.cwd(), "data", "content.json");
@@ -16,7 +10,11 @@ async function getContent() {
 
 async function saveContent(data: any) {
   const filePath = path.join(process.cwd(), "data", "content.json");
-  await writeFile(filePath, JSON.stringify(data, null, 2));
+
+  const existingContent = await getContent();
+  const mergedContent = { ...existingContent, ...data };
+
+  await writeFile(filePath, JSON.stringify(mergedContent, null, 2));
 }
 
 export async function GET() {

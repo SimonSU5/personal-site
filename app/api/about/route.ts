@@ -1,12 +1,6 @@
-import { cookies } from "next/headers";
+import { checkAuth } from "@/lib/auth";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-
-async function checkAuth() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin-session");
-  return session?.value === "true";
-}
 
 async function getAbout() {
   const filePath = path.join(process.cwd(), "data", "about.json");

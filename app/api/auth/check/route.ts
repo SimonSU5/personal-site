@@ -1,10 +1,9 @@
-import { cookies } from "next/headers";
+import { checkAuth } from "@/lib/auth";
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin-session");
+  const authenticated = await checkAuth();
 
-  if (session?.value === "true") {
+  if (authenticated) {
     return Response.json({ authenticated: true });
   }
 
