@@ -25,13 +25,13 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-primary">
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <a href="/" className="inline-flex items-center gap-2 mb-8 text-[#666666] hover:text-[#333333]">
+        <a href="/" className="inline-flex items-center gap-2 mb-8 text-text-secondary hover:text-text-primary transition-colors">
           ← 返回首页
         </a>
 
-        <h1 className="text-4xl font-bold text-[#1A1A1A] mb-4">{work.title}</h1>
+        <h1 className="text-4xl font-bold text-text-primary mb-4">{work.title}</h1>
 
         {work.cover && (
           <img
@@ -42,13 +42,13 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
         )}
 
         {work.description && (
-          <p className="text-xl mb-8 text-[#666666]">{work.description}</p>
+          <p className="text-xl mb-8 text-text-secondary">{work.description}</p>
         )}
 
         {work.tech && work.tech.length > 0 && (
-          <div className="mb-8 flex flex-wrap gap-2 text-sm text-amber-600">
+          <div className="mb-8 flex flex-wrap gap-2 text-sm">
             {work.tech.map((tag: string, index: number) => (
-              <span key={`${tag}-${index}`} className="px-3 py-1 bg-gray-100 rounded">
+              <span key={`${tag}-${index}`} className="px-3 py-1 bg-bg-card border border-border-color text-text-primary rounded">
                 {tag}
               </span>
             ))}
@@ -61,7 +61,7 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
               href={work.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              className="inline-block px-6 py-3 bg-accent-color text-white rounded-lg hover:opacity-90 transition-opacity"
             >
               查看演示
             </a>
@@ -71,7 +71,7 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
               href={work.repo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+              className="inline-block px-6 py-3 bg-bg-card border border-border-color text-text-primary rounded-lg hover:bg-bg-secondary transition-colors"
             >
               查看代码
             </a>
@@ -79,7 +79,7 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
         </div>
 
         {work.content && (
-          <div className="prose prose-lg max-w-none">
+          <div className="prose prose-invert prose-lg max-w-none detail-markdown">
             <MarkdownContent content={work.content} />
           </div>
         )}

@@ -1,62 +1,59 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useStyle } from "@/lib/contexts/StyleContext";
-import StyleSwitcher from "@/components/ui/StyleSwitcher";
+import { CompactFontSwitcher } from "@/components/ui/ThemeSwitcher";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
-  const { style } = useStyle();
+  const [scrolled, setScrolled] = useState(false);
 
-  const variants = {
-    minimal: {
-      nav: "border-b border-gray-900 bg-white",
-      link: "text-gray-900 hover:text-gray-600",
-      active: "text-gray-900 border-b-2 border-gray-900",
-      bg: "bg-white",
-      text: "text-gray-900",
-    },
-    tech: {
-      nav: "border-b border-cyan-500/30 bg-gray-900/80 backdrop-blur",
-      link: "text-gray-300 hover:text-cyan-400",
-      active: "text-cyan-400 border-b-2 border-cyan-400",
-      bg: "bg-gray-900",
-      text: "text-cyan-400",
-    },
-    warm: {
-      nav: "border-b border-amber-100 bg-white/80 backdrop-blur",
-      link: "text-gray-600 hover:text-amber-600",
-      active: "text-amber-600 border-b-2 border-amber-500",
-      bg: "bg-white",
-      text: "text-amber-600",
-    },
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { name: "首页", href: "/" },
-    { name: "关于", href: "/about" },
     { name: "博客", href: "/blog" },
-    { name: "联系", href: "/contact" },
+    { name: "作品", href: "#works" },
+    { name: "联系", href: "#contact" },
   ];
 
-  const v = variants[style];
-
   return (
-    <nav className={`sticky top-0 z-50 px-6 py-4 ${v.nav}`}>
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`sticky top-0 z-50 px-6 py-4 border-b border-border-color transition-all duration-300 ${
+        scrolled
+          ? "bg-bg-primary/90 backdrop-blur-md shadow-lg"
+          : "bg-bg-primary/70 backdrop-blur-sm"
+      }`}
+    >
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold">作品集</Link>
-        <div className="flex items-center gap-6">
+        <Link
+          href="/"
+          className="text-xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+        >
+          Simon
+        </Link>
+        <div className="flex items-center gap-8">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`px-2 py-1 ${v.link}`}
+              className="relative px-2 py-1 text-sm font-medium text-text-secondary hover:text-accent-primary transition-colors"
             >
               {item.name}
             </Link>
           ))}
-          <StyleSwitcher />
+          <CompactFontSwitcher />
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

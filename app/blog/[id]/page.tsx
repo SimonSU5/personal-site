@@ -25,14 +25,14 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-primary">
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <a href="/" className="inline-flex items-center gap-2 mb-8 text-[#666666] hover:text-[#333333]">
+        <a href="/" className="inline-flex items-center gap-2 mb-8 text-text-secondary hover:text-text-primary transition-colors">
           ← 返回首页
         </a>
 
-        <h1 className="text-4xl font-bold text-[#1A1A1A] mb-4">{post.title}</h1>
-        <p className="text-[#666666] mb-8">{post.date} · {post.category} · {post.readTime}阅读</p>
+        <h1 className="text-4xl font-bold text-text-primary mb-4">{post.title}</h1>
+        <p className="text-text-secondary mb-8">{post.date} · {post.category} · {post.readTime}阅读</p>
 
         {post.cover && (
           <img
@@ -42,9 +42,9 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
           />
         )}
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-invert prose-lg max-w-none detail-markdown">
           {post.excerpt && (
-            <p className="text-xl text-[#666666] mb-8 leading-relaxed">{post.excerpt}</p>
+            <p className="text-xl text-text-secondary mb-8 leading-relaxed">{post.excerpt}</p>
           )}
           <MarkdownContent content={post.content} />
         </div>

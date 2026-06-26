@@ -5,7 +5,7 @@ import Navbar from "@/components/public/Navbar";
 export default function MinimalPreview() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <Navbar variant="minimal" currentPath="/preview/minimal" />
+      <Navbar />
 
       <main className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero Section */}
@@ -20,7 +20,7 @@ export default function MinimalPreview() {
           <h2 className="text-2xl font-semibold mb-8">作品集</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {works.map((work) => (
-              <WorkCard key={work.id} work={work} variant="minimal" />
+              <WorkCard key={work.id} work={work} />
             ))}
           </div>
         </section>

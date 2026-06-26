@@ -5,7 +5,7 @@ import Navbar from "@/components/public/Navbar";
 export default function WarmPreview() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800">
-      <Navbar variant="warm" currentPath="/preview/warm" />
+      <Navbar />
 
       <main className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero Section */}
@@ -24,7 +24,7 @@ export default function WarmPreview() {
           <p className="text-center text-gray-500 mb-8">这里是我的一些项目展示</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {works.map((work) => (
-              <WorkCard key={work.id} work={work} variant="warm" />
+              <WorkCard key={work.id} work={work} />
             ))}
           </div>
         </section>

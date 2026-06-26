@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/public/Navbar";
-import { useStyle } from "@/lib/contexts/StyleContext";
+import { StyleProvider, useStyle } from "@/lib/contexts/StyleContext";
 
-export default function AboutPage() {
+function AboutContent() {
   const { style } = useStyle();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -127,5 +127,13 @@ export default function AboutPage() {
         © 2024 Simon
       </footer>
     </div>
+  );
+}
+
+export default function AboutPage() {
+  return (
+    <StyleProvider>
+      <AboutContent />
+    </StyleProvider>
   );
 }

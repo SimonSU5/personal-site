@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/public/Navbar";
-import { useStyle } from "@/lib/contexts/StyleContext";
+import { StyleProvider, useStyle } from "@/lib/contexts/StyleContext";
 
-export default function ContactPage() {
+function ContactContent() {
   const { style } = useStyle();
   const [submitted, setSubmitted] = useState(false);
   const [content, setContent] = useState<any>(null);
@@ -147,5 +147,13 @@ export default function ContactPage() {
         {content.footer[style]}
       </footer>
     </div>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <StyleProvider>
+      <ContactContent />
+    </StyleProvider>
   );
 }

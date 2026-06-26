@@ -5,7 +5,7 @@ import Navbar from "@/components/public/Navbar";
 export default function TechPreview() {
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
-      <Navbar variant="tech" currentPath="/preview/tech" />
+      <Navbar />
 
       <main className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero Section with Gradient */}
@@ -23,7 +23,7 @@ export default function TechPreview() {
           <h2 className="text-2xl font-semibold mb-8 text-cyan-400">作品集</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {works.map((work) => (
-              <WorkCard key={work.id} work={work} variant="tech" />
+              <WorkCard key={work.id} work={work} />
             ))}
           </div>
         </section>

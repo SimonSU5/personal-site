@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/public/Navbar";
-import { useStyle } from "@/lib/contexts/StyleContext";
+import { useTheme } from "@/lib/contexts/ThemeContext";
 import Link from "next/link";
 
 export default function BlogPage() {
-  const { style } = useStyle();
+  const { font } = useTheme();
   const [posts, setPosts] = useState<any[]>([]);
+  const [activeFilter, setActiveFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,55 +29,74 @@ export default function BlogPage() {
     }
   };
 
-  const variants = {
-    tech: {
-      page: "min-h-screen bg-gray-950 text-gray-100",
-      title: "text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-8",
-      postCard: "border border-cyan-500/20 bg-gray-900/50 hover:border-cyan-500/40 transition-all p-6",
-      postTitle: "text-xl font-semibold text-cyan-400 hover:text-cyan-300",
-      postMeta: "text-sm text-gray-500",
-      postExcerpt: "text-gray-400 mt-2",
-      categoryTag: "px-2 py-1 text-xs bg-cyan-500/10 text-cyan-400 rounded",
-    },
-    warm: {
-      page: "min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800",
-      title: "text-4xl font-bold text-gray-900 mb-8 text-center",
-      postCard: "bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6",
-      postTitle: "text-xl font-semibold text-gray-800 hover:text-amber-600",
-      postMeta: "text-sm text-gray-500",
-      postExcerpt: "text-gray-600 mt-2",
-      categoryTag: "px-2 py-1 text-xs bg-amber-100 text-amber-700 rounded-full",
-    },
-  };
+  // 从博客中提取所有分类
+  const categories = ["all", ...new Set(posts.map(p => p.category || "other").filter(Boolean))];
 
-  const v = variants[style];
+  // 过滤博客
+  const filteredPosts = activeFilter === "all"
+    ? posts
+    : posts.filter(p => (p.category || "other") === activeFilter);
 
   return (
-    <div className={v.page}>
+    <div className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className={v.title}>技术博客</h1>
-        <p className={`mb-12 ${style === "warm" ? "text-center text-gray-600" : "text-gray-500"}`}>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent mb-8">
+          技术博客
+        </h1>
+        <p className="mb-8 text-text-secondary text-center">
           分享技术见解和学习心得
         </p>
 
+        {/* 分类筛选导航栏 */}
+        <div className="mb-8" style={{ borderBottom: "1px solid var(--border-color)" }}>
+          <div className="flex gap-6" style={{ paddingBottom: "8px" }}>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveFilter(category)}
+                className="transition-colors"
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 500,
+                  color: activeFilter === category
+                    ? "var(--accent-primary, #D4AF37)"
+                    : "var(--text-muted, #999)",
+                  borderBottom: activeFilter === category
+                    ? "2px solid var(--accent-primary, #D4AF37)"
+                    : "none",
+                  paddingBottom: "6px",
+                  background: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {category === "all" ? "全部" : category}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {loading ? (
-          <p className="text-gray-500">加载中...</p>
-        ) : posts.length === 0 ? (
-          <p className="text-gray-500">暂无文章</p>
+          <p className="text-text-muted">加载中...</p>
+        ) : filteredPosts.length === 0 ? (
+          <p className="text-text-muted">暂无文章</p>
         ) : (
           <div className="space-y-6">
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <Link key={post.id} href={`/blog/${post.id}`}>
-                <article className={v.postCard}>
+                <article className="card border border-border-color bg-bg-card hover:border-accent-primary transition-all p-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className={v.categoryTag}>{post.category}</span>
-                    <span className={v.postMeta}>{post.date}</span>
-                    <span className={v.postMeta}>· {post.readTime}阅读</span>
+                    <span className="px-2 py-1 text-xs bg-accent-primary/10 text-accent-primary rounded">
+                      {post.category || "技术"}
+                    </span>
+                    <span className="text-sm text-text-muted">{post.date}</span>
+                    <span className="text-sm text-text-muted">· {post.readTime} 阅读</span>
                   </div>
-                  <h2 className={v.postTitle}>{post.title}</h2>
-                  <p className={v.postExcerpt}>{post.excerpt}</p>
+                  <h2 className="text-xl font-semibold text-text-primary hover:text-accent-primary transition-colors">
+                    {post.title}
+                  </h2>
+                  <p className="text-text-secondary mt-2">{post.excerpt}</p>
                 </article>
               </Link>
             ))}
@@ -85,7 +105,7 @@ export default function BlogPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto py-8 text-center text-gray-500">
+      <footer className="mt-auto py-8 text-center text-text-muted">
         © 2024 Simon
       </footer>
     </div>
