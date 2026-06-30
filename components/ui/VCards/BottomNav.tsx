@@ -10,11 +10,12 @@ interface BottomNavProps {
   items: NavItem[];
   activeId: string;
   onNavigate: (id: string) => void;
+  className?: string;
 }
 
-export default function BottomNav({ items, activeId, onNavigate }: BottomNavProps) {
+export default function BottomNav({ items, activeId, onNavigate, className = "" }: BottomNavProps) {
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${className}`}>
       <ul className="navbar-list">
         {items.map((item) => {
           const isActive = activeId === item.id;

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import BottomNav from "@/components/ui/VCards/BottomNav";
 import { Code, Cpu, Rocket, Globe, FileText, User } from "lucide-react";
 
 interface ContactItem {
@@ -172,13 +171,40 @@ export default function AdminLayout({ children, activePage, onPageChange }: Admi
         {/* Right Main Content */}
         <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
           {/* Navigation Bar - Sticky */}
-          <div className="flex-shrink-0 sticky top-0 z-20 bg-bg-card">
-            <BottomNav
-              items={navItems}
-              activeId={activePage}
-              onNavigate={onPageChange || (() => {})}
-            />
-          </div>
+          <nav className="navbar sticky top-0 z-20 bg-bg-card">
+            <ul className="navbar-list">
+              <li className="navbar-item">
+                <a href="/admin/content" className={`navbar-link ${activePage === "content" ? "active" : ""}`}>
+                  内容编辑
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a href="/admin/resume" className={`navbar-link ${activePage === "resume" ? "active" : ""}`}>
+                  简历管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a href="/admin/works" className={`navbar-link ${activePage === "works" ? "active" : ""}`}>
+                  作品管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a href="/admin/blog" className={`navbar-link ${activePage === "blog" ? "active" : ""}`}>
+                  博客管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a href="/admin/contact" className={`navbar-link ${activePage === "contact" ? "active" : ""}`}>
+                  联系管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a href="/admin/github-settings" className={`navbar-link ${activePage === "github" ? "active" : ""}`}>
+                  GitHub 同步
+                </a>
+              </li>
+            </ul>
+          </nav>
 
           {/* Admin Content */}
           {children}

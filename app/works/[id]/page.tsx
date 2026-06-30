@@ -61,7 +61,7 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
               href={work.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-6 py-3 bg-accent-color text-white rounded-lg hover:opacity-90 transition-opacity"
+              className="inline-block px-6 py-3 bg-accent-primary text-text-inverse rounded-lg hover:opacity-90 transition-opacity"
             >
               查看演示
             </a>

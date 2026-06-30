@@ -157,7 +157,7 @@ export default function PortfolioSection({ works = [], isActive = false }: Portf
                     href={selectedWork.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block px-4 py-2 bg-accent-color text-white rounded-lg hover:opacity-90 transition-opacity"
+                    className="inline-block px-4 py-2 bg-accent-primary text-text-inverse rounded-lg hover:opacity-90 transition-opacity"
                   >
                     查看演示
                   </a>

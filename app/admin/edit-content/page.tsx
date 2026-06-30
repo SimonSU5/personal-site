@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 interface ContentData {
   siteName: string;
@@ -96,230 +97,229 @@ export default function EditContentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900">编辑网站内容</h1>
-          <a href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">
-            ← 返回
-          </a>
-        </div>
-      </header>
+    <div className="min-h-screen bg-bg-primary">
+      <main className="main-container">
+        <header className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => router.push("/admin/dashboard")}
+            className="flex items-center gap-2 text-text-secondary hover:text-accent-primary transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>返回</span>
+          </button>
+          <h1 className="text-xl font-semibold text-text-primary">编辑网站内容</h1>
+          <div style={{ width: "80px" }}></div>
+        </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab("hero")}
-            className={`px-4 py-2 rounded-lg ${activeTab === "hero" ? "bg-blue-600 text-white" : "bg-white text-gray-700"}`}
+            className={`px-4 py-2 rounded-lg ${activeTab === "hero" ? "admin-btn admin-btn-primary" : "bg-bg-card text-text-secondary"}`}
           >
             首页横幅
           </button>
           <button
             onClick={() => setActiveTab("sections")}
-            className={`px-4 py-2 rounded-lg ${activeTab === "sections" ? "bg-blue-600 text-white" : "bg-white text-gray-700"}`}
+            className={`px-4 py-2 rounded-lg ${activeTab === "sections" ? "admin-btn admin-btn-primary" : "bg-bg-card text-text-secondary"}`}
           >
             区块标题
           </button>
           <button
             onClick={() => setActiveTab("footer")}
-            className={`px-4 py-2 rounded-lg ${activeTab === "footer" ? "bg-blue-600 text-white" : "bg-white text-gray-700"}`}
+            className={`px-4 py-2 rounded-lg ${activeTab === "footer" ? "admin-btn admin-btn-primary" : "bg-bg-card text-text-secondary"}`}
           >
             页脚
           </button>
           <button
             onClick={() => setActiveTab("social")}
-            className={`px-4 py-2 rounded-lg ${activeTab === "social" ? "bg-blue-600 text-white" : "bg-white text-gray-700"}`}
+            className={`px-4 py-2 rounded-lg ${activeTab === "social" ? "admin-btn admin-btn-primary" : "bg-bg-card text-text-secondary"}`}
           >
             社交链接
           </button>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm space-y-6">
+        <div className="admin-content active" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {activeTab === "hero" && (
-            <>
-              <h3 className="font-medium text-gray-900 mb-4">温暖风格</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">问候语</label>
-                  <input
-                    type="text"
-                    value={data.hero.warm.greeting}
-                    onChange={(e) => updateValue(["hero", "warm", "greeting"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">标题</label>
-                  <input
-                    type="text"
-                    value={data.hero.warm.title}
-                    onChange={(e) => updateValue(["hero", "warm", "title"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">标语</label>
-                  <input
-                    type="text"
-                    value={data.hero.warm.tagline}
-                    onChange={(e) => updateValue(["hero", "warm", "tagline"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-                  />
-                </div>
+            <div className="bg-bg-card border border-border-color rounded-xl p-6" style={{ width: "100%", maxWidth: "1400px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <h3 className="text-text-primary font-medium">温暖风格</h3>
+              <div>
+                <label className="block text-sm text-text-secondary mb-1">问候语</label>
+                <input
+                  type="text"
+                  value={data.hero.warm.greeting}
+                  onChange={(e) => updateValue(["hero", "warm", "greeting"], e.target.value)}
+                  className="admin-input w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-1">标题</label>
+                <input
+                  type="text"
+                  value={data.hero.warm.title}
+                  onChange={(e) => updateValue(["hero", "warm", "title"], e.target.value)}
+                  className="admin-input w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-1">标语</label>
+                <input
+                  type="text"
+                  value={data.hero.warm.tagline}
+                  onChange={(e) => updateValue(["hero", "warm", "tagline"], e.target.value)}
+                  className="admin-input w-full"
+                />
               </div>
 
-              <h3 className="font-medium text-gray-900 mb-4 mt-6">科技风格</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">标题</label>
-                  <input
-                    type="text"
-                    value={data.hero.tech.title}
-                    onChange={(e) => updateValue(["hero", "tech", "title"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">标语</label>
-                  <input
-                    type="text"
-                    value={data.hero.tech.tagline}
-                    onChange={(e) => updateValue(["hero", "tech", "tagline"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-                  />
-                </div>
+              <h3 className="text-text-primary font-medium mt-2">科技风格</h3>
+              <div>
+                <label className="block text-sm text-text-secondary mb-1">标题</label>
+                <input
+                  type="text"
+                  value={data.hero.tech.title}
+                  onChange={(e) => updateValue(["hero", "tech", "title"], e.target.value)}
+                  className="admin-input w-full"
+                />
               </div>
-            </>
+              <div>
+                <label className="block text-sm text-text-secondary mb-1">标语</label>
+                <input
+                  type="text"
+                  value={data.hero.tech.tagline}
+                  onChange={(e) => updateValue(["hero", "tech", "tagline"], e.target.value)}
+                  className="admin-input w-full"
+                />
+              </div>
+            </div>
           )}
 
           {activeTab === "sections" && (
-            <div className="space-y-4">
-              <h3 className="font-medium text-gray-900">作品区块</h3>
+            <div className="bg-bg-card border border-border-color rounded-xl p-6" style={{ width: "100%", maxWidth: "1400px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <h3 className="text-text-primary font-medium">作品区块</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">温暖风格标题</label>
+                  <label className="block text-sm text-text-secondary mb-1">温暖风格标题</label>
                   <input
                     type="text"
                     value={data.sections.works.warm}
                     onChange={(e) => updateValue(["sections", "works", "warm"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                    className="admin-input w-full"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">科技风格标题</label>
+                  <label className="block text-sm text-text-secondary mb-1">科技风格标题</label>
                   <input
                     type="text"
                     value={data.sections.works.tech}
                     onChange={(e) => updateValue(["sections", "works", "tech"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                    className="admin-input w-full"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">温暖风格副标题</label>
+                <label className="block text-sm text-text-secondary mb-1">温暖风格副标题</label>
                 <input
                   type="text"
                   value={data.sections.works.warmSubtitle}
                   onChange={(e) => updateValue(["sections", "works", "warmSubtitle"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
 
-              <h3 className="font-medium text-gray-900 mt-6">关于区块</h3>
+              <h3 className="text-text-primary font-medium mt-2">关于区块</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">温暖风格</label>
+                  <label className="block text-sm text-text-secondary mb-1">温暖风格</label>
                   <input
                     type="text"
                     value={data.sections.about.warm}
                     onChange={(e) => updateValue(["sections", "about", "warm"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                    className="admin-input w-full"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">科技风格</label>
+                  <label className="block text-sm text-text-secondary mb-1">科技风格</label>
                   <input
                     type="text"
                     value={data.sections.about.tech}
                     onChange={(e) => updateValue(["sections", "about", "tech"], e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                    className="admin-input w-full"
                   />
                 </div>
               </div>
 
-              <h3 className="font-medium text-gray-900 mt-6">联系区块</h3>
+              <h3 className="text-text-primary font-medium mt-2">联系区块</h3>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">标题</label>
+                <label className="block text-sm text-text-secondary mb-1">标题</label>
                 <input
                   type="text"
                   value={data.sections.contact.title}
                   onChange={(e) => updateValue(["sections", "contact", "title"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">温暖风格副标题</label>
+                <label className="block text-sm text-text-secondary mb-1">温暖风格副标题</label>
                 <input
                   type="text"
                   value={data.sections.contact.warmSubtitle}
                   onChange={(e) => updateValue(["sections", "contact", "warmSubtitle"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
             </div>
           )}
 
           {activeTab === "footer" && (
-            <div className="space-y-4">
+            <div className="bg-bg-card border border-border-color rounded-xl p-6" style={{ width: "100%", maxWidth: "1400px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">温暖风格页脚</label>
+                <label className="block text-sm text-text-secondary mb-1">温暖风格页脚</label>
                 <input
                   type="text"
                   value={data.footer.warm}
                   onChange={(e) => updateValue(["footer", "warm"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">科技风格页脚</label>
+                <label className="block text-sm text-text-secondary mb-1">科技风格页脚</label>
                 <input
                   type="text"
                   value={data.footer.tech}
                   onChange={(e) => updateValue(["footer", "tech"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
             </div>
           )}
 
           {activeTab === "social" && (
-            <div className="space-y-4">
+            <div className="bg-bg-card border border-border-color rounded-xl p-6" style={{ width: "100%", maxWidth: "1400px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">GitHub</label>
+                <label className="block text-sm text-text-secondary mb-1">GitHub</label>
                 <input
                   type="text"
                   value={data.socialLinks.github}
                   onChange={(e) => updateValue(["socialLinks", "github"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">Email</label>
+                <label className="block text-sm text-text-secondary mb-1">Email</label>
                 <input
                   type="text"
                   value={data.socialLinks.email}
                   onChange={(e) => updateValue(["socialLinks", "email"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">微信</label>
+                <label className="block text-sm text-text-secondary mb-1">微信</label>
                 <input
                   type="text"
                   value={data.socialLinks.weixin}
                   onChange={(e) => updateValue(["socialLinks", "weixin"], e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
+                  className="admin-input w-full"
                 />
               </div>
             </div>
@@ -328,7 +328,7 @@ export default function EditContentPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="admin-btn admin-btn-primary w-full py-3 flex items-center justify-center gap-2"
           >
             {saving ? "保存中..." : "保存更改"}
           </button>

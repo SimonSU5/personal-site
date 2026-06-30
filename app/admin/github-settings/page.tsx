@@ -128,8 +128,8 @@ export default function GithubSettingsPage() {
         </aside>
 
         {/* Main Content */}
-        <div className="main-content">
-          <nav className="navbar">
+        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+          <nav className="navbar sticky top-0 z-20 bg-bg-card">
             <ul className="navbar-list">
               <li className="navbar-item">
                 <Link href="/admin/content" className="navbar-link">
@@ -164,12 +164,12 @@ export default function GithubSettingsPage() {
             </ul>
           </nav>
 
-          <article className="admin-content active">
-            <header className="article-header article-header-sticky">
+          <article className="admin-content active flex flex-col h-full overflow-hidden">
+            <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
               <h2 className="h2 article-title">GitHub 同步设置</h2>
             </header>
 
-            <section className="article-content"
+            <section className="article-content flex-1 overflow-y-auto overflow-x-hidden px-5 pb-5"
             style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
               {/* 配置表单 */}
               <div className="admin-section">
