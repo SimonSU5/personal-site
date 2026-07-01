@@ -19,8 +19,8 @@ export default function Navbar() {
   const navItems = [
     { name: "首页", href: "/" },
     { name: "博客", href: "/blog" },
-    { name: "作品", href: "#works" },
-    { name: "联系", href: "#contact" },
+    { name: "关于", href: "/about" },
+    { name: "联系", href: "/contact" },
   ];
 
   return (

@@ -7,7 +7,7 @@
     "category": "misc",
     "date": "2026-06-26",
     "readTime": "3分钟",
-    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/assets/images/launchctl总结-封面.png",
+    "cover": "https://cdn.jsdelivr.net/gh/SimonSU5/personal-site-content@main/assets/images/launchctl总结-封面.png",
     "source": "github",
     "githubPath": "blogs/misc-mac系统级定时任务launchctl部署.md"
   },
@@ -19,7 +19,7 @@
     "category": "数通",
     "date": "2026-06-26",
     "readTime": "1分钟",
-    "cover": "https://raw.githubusercontent.com/SimonSU5/personal-site-content/main/assets/images/医药公司组网排查-封面.png",
+    "cover": "https://cdn.jsdelivr.net/gh/SimonSU5/personal-site-content@main/assets/images/医药公司组网排查-封面.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某医药公司丢包排查.md"
   }

@@ -171,7 +171,7 @@ async function syncPosts(owner: string, repo: string, token: string) {
 
       // 获取文件所在目录（用于处理相对路径）
       const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
-      const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main`;
+      const baseUrl = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main`;
 
       // 处理封面图片路径
       if (cover && !cover.startsWith("http")) {
@@ -309,7 +309,7 @@ async function syncWorks(owner: string, repo: string, token: string) {
 
       // 获取文件所在目录（用于处理相对路径）
       const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
-      const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main`;
+      const baseUrl = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main`;
 
       // 处理封面图片路径
       if (cover && !cover.startsWith("http")) {

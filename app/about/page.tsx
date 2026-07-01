@@ -1,139 +1,175 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Navbar from "@/components/public/Navbar";
-import { StyleProvider, useStyle } from "@/lib/contexts/StyleContext";
+import { useState, useEffect } from "react";
+import Sidebar from "@/components/ui/Sidebar";
+import BottomNav from "@/components/ui/VCards/BottomNav";
+import ResumeSection from "@/components/ui/VCards/ResumeSection";
+import { Code, Cpu, Rocket, Globe } from "lucide-react";
 
-function AboutContent() {
-  const { style } = useStyle();
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch("/api/about");
-      if (res.ok) {
-        const jsonData = await res.json();
-        setData(jsonData);
-      }
-    } catch (err) {
-      console.error("Failed to fetch about data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const variants = {
-    tech: {
-      page: "min-h-screen bg-gray-950 text-gray-100",
-      title: "text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-8",
-      sectionTitle: "text-2xl font-semibold mb-4 text-cyan-400",
-      text: "text-gray-400 leading-relaxed",
-      skillTag: "px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded",
-      timelineItem: "border-l border-cyan-500/30 pl-6 pb-8",
-      timelineDot: "w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]",
-    },
-    warm: {
-      page: "min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 text-gray-800",
-      title: "text-4xl font-bold text-gray-900 mb-8 text-center",
-      sectionTitle: "text-2xl font-semibold mb-4 text-amber-600",
-      text: "text-gray-600 leading-relaxed",
-      skillTag: "px-3 py-1 text-sm bg-amber-100 text-amber-700 rounded-full",
-      timelineItem: "border-l-2 border-amber-200 pl-6 pb-8",
-      timelineDot: "w-4 h-4 bg-amber-400 rounded-full",
-    },
-  };
-
-  const v = variants[style];
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">加载中...</p>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">加载失败</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className={v.page}>
-      <Navbar />
-
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className={v.title}>关于我</h1>
-
-        {/* 简介 */}
-        <section className="mb-16">
-          <p className={`${v.text} text-lg mb-6`}>{data.intro}</p>
-          <p className={v.text}>{data.additional}</p>
-        </section>
-
-        {/* 技能 */}
-        <section className={`mb-16 ${style === "warm" ? "bg-white rounded-3xl shadow-lg p-8" : ""}`}>
-          <h2 className={v.sectionTitle}>技术技能</h2>
-          <div className="space-y-6">
-            {data.skills.map((skillGroup: any) => (
-              <div key={skillGroup.category}>
-                <h3 className={`font-medium mb-3 ${style === "tech" ? "text-gray-300" : "text-gray-700"}`}>
-                  {skillGroup.category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skillGroup.items.map((skill: string) => (
-                    <span key={skill} className={v.skillTag}>
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 经历 */}
-        <section className={`mb-16 ${style === "warm" ? "bg-white rounded-3xl shadow-lg p-8" : ""}`}>
-          <h2 className={v.sectionTitle}>工作经历</h2>
-          <div className="mt-6">
-            {data.timeline.map((item: any, index: number) => (
-              <div key={index} className={v.timelineItem}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={v.timelineDot} />
-                  <span className={`font-semibold ${style === "tech" ? "text-cyan-400" : ""}`}>
-                    {item.year}
-                  </span>
-                </div>
-                <h3 className={`font-medium ${style === "tech" ? "text-gray-200" : "text-gray-800"}`}>
-                  {item.title}
-                </h3>
-                <p className={v.text}>{item.company}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="mt-auto py-8 text-center text-gray-500">
-        © 2024 Simon
-      </footer>
-    </div>
-  );
+interface ContactItem {
+  id: string;
+  label: string;
+  value: string;
+  icon?: string;
+  iconType?: "preset" | "upload";
 }
 
+interface Service {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+// Convert lucide icons to ionicons for display
+const iconMap: Record<string, React.ReactNode> = {
+  "language-outline": <Globe size={32} />,
+  "code-slash-outline": <Code size={32} />,
+  "hardware-chip-outline": <Cpu size={32} />,
+  "rocket-outline": <Rocket size={32} />,
+};
+
 export default function AboutPage() {
+  const [content, setContent] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const fetchContent = async () => {
+      try {
+        const res = await fetch("/api/content");
+        if (res.ok) {
+          const data = await res.json();
+          setContent(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch content", err);
+      }
+    };
+    fetchContent();
+  }, []);
+
+  if (!content) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <p className="text-text-muted">加载中...</p>
+      </div>
+    );
+  }
+
+  // Convert socialLinks to contactItems
+  const contactItems: ContactItem[] = [];
+  const socialLinks = content.socialLinks || {};
+
+  const fieldMapping: Record<string, { label: string; icon: string }> = {
+    email: { label: "Email", icon: "mail-outline" },
+    mail: { label: "Email", icon: "mail-outline" },
+    邮箱: { label: "Email", icon: "mail-outline" },
+    phone: { label: "Phone", icon: "phone-portrait-outline" },
+    电话: { label: "Phone", icon: "phone-portrait-outline" },
+    location: { label: "Location", icon: "location-outline" },
+    地址: { label: "Location", icon: "location-outline" },
+    birthday: { label: "Birthday", icon: "calendar-outline" },
+    生日: { label: "Birthday", icon: "calendar-outline" },
+    github: { label: "GitHub", icon: "Github" },
+  };
+
+  // Process standard fields
+  Object.entries(fieldMapping).forEach(([key, config]) => {
+    if (socialLinks[key]) {
+      contactItems.push({
+        id: key,
+        label: config.label,
+        value: socialLinks[key],
+        icon: config.icon,
+        iconType: "preset",
+      });
+    }
+  });
+
+  // Process custom fields
+  Object.entries(socialLinks).forEach(([key, value]) => {
+    if (!fieldMapping[key] && value) {
+      contactItems.push({
+        id: key,
+        label: key,
+        value: value as string,
+        icon: "ellipse-outline",
+        iconType: "preset",
+      });
+    }
+  });
+
+  const services: Service[] = content.services?.map((s: any) => ({
+    icon: iconMap[s.icon] || <Code size={32} />,
+    title: s.title,
+    description: s.description,
+  })) || [];
+
   return (
-    <StyleProvider>
-      <AboutContent />
-    </StyleProvider>
+    <div className="min-h-screen bg-bg-primary">
+      <main className="main-container">
+        {/* Left Sidebar */}
+        <Sidebar
+          name={content.siteName || "Simon"}
+          title={content.hero?.warm?.tagline || ""}
+          contactItems={contactItems}
+        />
+
+        {/* Right Main Content */}
+        <div className="main-content">
+          {/* Navigation Bar */}
+          <BottomNav
+            items={[
+              { id: "about", label: "关于" },
+              { id: "resume", label: "简历" },
+            ]}
+            activeId="about"
+            onNavigate={() => {}}
+          />
+
+          {/* About Section */}
+          <article className="about active" data-page="about">
+            <header>
+              <h2 className="h2 article-title">关于我</h2>
+            </header>
+
+            {/* About Text */}
+            <section className="about-text">
+              <p>
+                <strong>{content.about?.greeting || ""}</strong>
+              </p>
+              <p>{content.about?.title || ""}</p>
+              {content.about?.description?.map((line: string, index: number) => (
+                <p key={index}>{line}</p>
+              ))}
+            </section>
+
+            {/* Services */}
+            <section className="service">
+              <h3 className="h3 service-title">服务领域</h3>
+              <ul className="service-list">
+                {services.map((service, index) => (
+                  <li className="service-item" key={index}>
+                    <div className="service-icon-box">{service.icon}</div>
+                    <div className="service-content-box">
+                      <h4 className="h4 service-item-title">{service.title}</h4>
+                      <p className="service-item-text">{service.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </article>
+
+          {/* Resume Section */}
+          <ResumeSection
+            education={content.education || []}
+            experience={content.experience || []}
+            skills={content.skills || []}
+            isActive={false}
+          />
+        </div>
+      </main>
+    </div>
   );
 }

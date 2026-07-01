@@ -118,7 +118,7 @@ const CodeBlock = ({ className, children }: any) => {
   }
 
   if (!match) {
-    return <code className="px-2 py-1 rounded bg-gray-100 text-[#E83E8C] text-sm">{children}</code>;
+    return <code className="px-2 py-1 rounded bg-bg-secondary text-accent-primary text-sm">{children}</code>;
   }
 
   return (

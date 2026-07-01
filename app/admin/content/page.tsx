@@ -284,7 +284,7 @@ export default function ContentPage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               {services.map((service, index) => (
-                <div key={index} className="bg-bg-card border border-border-color rounded-xl" style={{ padding: "20px 24px" }}>
+                <div key={index} className="bg-bg-card border border-border-color rounded-xl" style={{ width: "100%", maxWidth: "1400px", padding: "20px 24px" }}>
                   <div className="flex items-start justify-between" style={{ marginBottom: "16px" }}>
                     <span className="text-sm text-text-muted">服务 #{index + 1}</span>
                     {services.length > 1 && (

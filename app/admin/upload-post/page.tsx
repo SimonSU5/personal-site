@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, FileText } from "lucide-react";
 
 export default function UploadPostPage() {
   const router = useRouter();
@@ -12,8 +13,6 @@ export default function UploadPostPage() {
     category: "",
     readTime: "",
   });
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -49,7 +48,6 @@ export default function UploadPostPage() {
       });
 
       if (res.ok) {
-        alert("博客文章发布成功！");
         router.push("/admin/dashboard");
       } else {
         alert("发布失败，请重试");
@@ -62,81 +60,139 @@ export default function UploadPostPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200"
-      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px" }}>
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900">发布博客文章</h1>
-          <a href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">
-            ← 返回
-          </a>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto"
-      style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "32px", paddingBottom: "32px" }}>
-        <form onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          <div className="bg-white rounded-xl shadow-sm"
-          style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-            <h3 className="font-medium text-gray-900">文章信息</h3>
-
-            <input
-              type="text"
-              placeholder="文章标题"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
-              required
-            />
-
-            <input
-              type="text"
-              placeholder="分类（如：React、TypeScript）"
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
-              required
-            />
-
-            <input
-              type="text"
-              placeholder="阅读时间（如：5 分钟）"
-              value={formData.readTime}
-              onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl focus:border-blue-500 outline-none"
-              style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "12px", paddingBottom: "12px" }}
-              required
-            />
-
-            <textarea
-              placeholder="文章摘要"
-              value={formData.excerpt}
-              onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none min-h-[80px]"
-              required
-            />
-
-            <textarea
-              placeholder="文章内容（支持 Markdown）"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 outline-none min-h-[300px] font-mono text-sm"
-              required
-            />
+    <div className="min-h-screen bg-bg-primary">
+      <main className="main-container">
+        {/* Admin Sidebar - Simplified */}
+        <aside className="sidebar">
+          <div className="sidebar-info">
+            <figure className="avatar-box">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 border-2 border-accent-primary flex items-center justify-center">
+                <span className="text-2xl text-accent-primary">👨‍💻</span>
+              </div>
+            </figure>
+            <div className="info-content">
+              <h1 className="name">管理员</h1>
+              <p className="title">后台管理</p>
+            </div>
           </div>
+        </aside>
 
-          <button
-            type="submit"
-            disabled={uploading}
-            className="w-full bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
-            style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "12px", paddingBottom: "12px" }}
-          >
-            {uploading ? "发布中..." : "发布文章"}
-          </button>
-        </form>
+        {/* Main Content */}
+        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+          <nav className="navbar sticky top-0 z-20 bg-bg-card">
+            <ul className="navbar-list">
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/content")} className="navbar-link cursor-pointer">
+                  内容编辑
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/resume")} className="navbar-link cursor-pointer">
+                  简历管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/works")} className="navbar-link cursor-pointer">
+                  作品管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/blog")} className="navbar-link active cursor-pointer">
+                  博客管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/contact")} className="navbar-link cursor-pointer">
+                  联系管理
+                </a>
+              </li>
+              <li className="navbar-item">
+                <a onClick={() => router.push("/admin/github-settings")} className="navbar-link cursor-pointer">
+                  GitHub 同步
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <article className="admin-content active flex flex-col h-full overflow-hidden">
+            <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
+              <div className="flex items-center justify-between">
+                <h2 className="h2 article-title">发布文章</h2>
+                <button
+                  type="button"
+                  onClick={() => router.push("/admin/dashboard")}
+                  className="admin-btn admin-btn-secondary flex items-center"
+                  style={{ gap: "8px" }}
+                >
+                  <ArrowLeft size={16} />
+                  返回
+                </button>
+              </div>
+            </header>
+
+            <section className="article-content flex-1 overflow-y-auto overflow-x-hidden px-5 pb-5">
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                <div className="bg-bg-card border border-border-color rounded-xl p-6" style={{ width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <h3 className="text-text-primary font-medium flex items-center gap-2">
+                    <FileText size={18} className="text-accent-primary" />
+                    <span>文章信息</span>
+                  </h3>
+
+                  <input
+                    type="text"
+                    placeholder="文章标题"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="admin-input w-full"
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="分类（如：React、TypeScript）"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="admin-input w-full"
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="阅读时间（如：5 分钟）"
+                    value={formData.readTime}
+                    onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                    className="admin-input w-full"
+                    required
+                  />
+
+                  <textarea
+                    placeholder="文章摘要"
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                    className="admin-input w-full min-h-[80px] resize-y"
+                    required
+                  />
+
+                  <textarea
+                    placeholder="文章内容（支持 Markdown）"
+                    value={formData.content}
+                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    className="admin-input w-full min-h-[300px] resize-y font-mono text-sm"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={uploading}
+                  className="admin-btn admin-btn-primary w-full py-3 flex items-center justify-center gap-2"
+                >
+                  {uploading ? "发布中..." : "发布文章"}
+                </button>
+              </form>
+            </section>
+          </article>
+        </div>
       </main>
     </div>
   );
