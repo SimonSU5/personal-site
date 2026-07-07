@@ -1,0 +1,56 @@
+import { ConfigService as NestConfigService } from '@nestjs/config';
+export interface ServiceIdentityDto {
+    name: string;
+    apiVersion: 'v1';
+    prefix: '/api/v1';
+    status: 'alive';
+    timestamp: string;
+}
+export declare class AppConfigService {
+    private readonly inner;
+    constructor(inner: NestConfigService);
+    get nodeEnv(): 'development' | 'production' | 'test';
+    get isProduction(): boolean;
+    get port(): number;
+    get host(): string;
+    get mongoUri(): string;
+    get mongoDbName(): string;
+    get mongoConnectMaxRetries(): number;
+    get mongoConnectBackoffMs(): number;
+    get jwtAccessSecret(): string;
+    get jwtRefreshSecret(): string;
+    get jwtAccessTtl(): string;
+    get jwtRefreshTtl(): string;
+    get refreshAbsoluteLifetimeDays(): number;
+    get allowedOrigins(): string[];
+    get frontendOrigins(): string[];
+    get corsAllowedOrigins(): string[];
+    get adminBootstrapUsername(): string;
+    get adminBootstrapPassword(): string;
+    get bcryptCost(): number;
+    get throttleTtlSeconds(): number;
+    get throttleLimit(): number;
+    get bodyLimitBytes(): number;
+    get payloadMaxDepth(): number;
+    get shutdownGraceMs(): number;
+    get githubEncryptionKey(): string;
+    get githubWebhookSecret(): string;
+    get githubToken(): string | undefined;
+    get githubRepo(): string | undefined;
+    get githubSyncConcurrency(): number;
+    get githubFileTimeoutMs(): number;
+    get githubAutoUnpublishStaleCount(): number;
+    get ossRegion(): string;
+    get ossBucket(): string;
+    get ossAccessKeyId(): string;
+    get ossAccessKeySecret(): string;
+    get ossEndpoint(): string | undefined;
+    get ossPublicBaseUrl(): string;
+    get ossHeadBucketTimeoutMs(): number;
+    get enableOssReadyCheck(): boolean;
+    get maxFeaturedWorks(): number;
+    get logLevel(): string;
+    private require;
+    private intOr;
+    private listOr;
+}
