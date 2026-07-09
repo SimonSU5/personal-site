@@ -38,8 +38,12 @@ export class ThrottleStorageModule {}
 @Module({
   imports: [
     ConfigModule,
+    // forRootAsync resolves its `inject` against THIS module's imports, so the
+    // storage's host module must be declared here (a sibling declaration is
+    // NOT visible to the async factory's DI scope).
     ThrottleStorageModule,
     ThrottlerModule.forRootAsync({
+      imports: [ThrottleStorageModule],
       inject: [MongoThrottlerStorage, AppConfigService],
       useFactory: (storage: MongoThrottlerStorage, config: AppConfigService) => ({
         throttlers: [

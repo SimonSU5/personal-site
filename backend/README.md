@@ -21,24 +21,24 @@ package and consume the contracts (response envelope, error code enum,
 ## Run locally
 
 The backend requires MongoDB running as a **1-node replica set** (transactions
-+ majority writes used by sync upsert + seed). Quick start with Docker:
++ majority writes used by sync upsert + seed). A ready-made dev stack lives at
+the repo root:
 
 ```bash
-# 1) Spin up Mongo as a replica set (one-time init).
-docker run --rm -d --name mongo-rs \
-  -p 27017:27017 \
-  mongo:7 --replSet rs0
+# 1) Start the dev Mongo replica set (mongo:8 + auto-init sidecar).
+#    From the REPO ROOT:
+docker compose -f docker-compose.dev.yml up -d
+#    Connect: mongodb://localhost:27017/<db>?replicaSet=rs0
+#    Stop (keep data):  docker compose -f docker-compose.dev.yml down
+#    Wipe data:         docker compose -f docker-compose.dev.yml down -v
 
-# Initialise the replica set (run once).
-docker exec -it mongo-rs mongosh --eval 'rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "127.0.0.1:27017" }]})'
-
-# 2) Configure env.
+# 2) Configure env (backend/ dir).
 cp .env.example .env
 #   fill in real secrets — DO NOT leave the placeholders in production:
 #   JWT_ACCESS_SECRET / JWT_REFRESH_SECRET / GITHUB_ENCRYPTION_KEY (64 hex) /
 #   OSS_* / ADMIN_BOOTSTRAP_PASSWORD
 
-# 3) Install + run.
+# 3) Install + run (backend/ dir).
 npm install
 npm run start:dev    # nest start --watch
 ```
@@ -46,6 +46,17 @@ npm run start:dev    # nest start --watch
 The API mounts under `/api/v1` (e.g. `GET http://localhost:3001/api/v1/health`).
 The raw `GET /health` (text/plain `alive`) sits outside the prefix and is
 reserved for nginx / LB probing.
+
+## Tests
+
+The e2e suites need the dev Mongo replica set running (`docker compose -f
+docker-compose.dev.yml up -d`).
+
+- `app.e2e-spec.ts` — scaffolding smoke (HTTP-framework plumbing, Mongo-free
+  stub controllers).
+- `integration.e2e-spec.ts` — boots the **full `AppModule`** against the dev
+  Mongo (real Mongoose + Seed + Throttle + Health wiring). This is the test
+  that catches production wiring bugs the smoke suite cannot.
 
 ## Scripts
 

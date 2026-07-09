@@ -1,0 +1,60 @@
+# Dev/test MongoDB — single-node replica set (transactions enabled, SPEC OQ-7).
+# Used by backend Jest integration tests AND local dev. NOT the production
+# stack (that lives in docker-compose.yml once the full migration lands).
+#
+#   docker compose -f docker-compose.dev.yml up -d
+#   docker compose -f docker-compose.dev.yml down       # keep data volume
+#   docker compose -f docker-compose.dev.yml down -v    # wipe data
+#
+# Connection string (host-side):
+#   mongodb://localhost:27017/<db>?replicaSet=rs0
+
+services:
+  mongo:
+    image: mongo:8
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      # Primary once the replica set is initiated + elected.
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.hello().isWritablePrimary' | grep -q true"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+  # One-shot: waits for mongo to accept commands, then initiates the replset
+  # (idempotent — errors are swallowed so re-runs are safe).
+  mongo-init:
+    image: mongo:8
+    depends_on:
+      mongo:
+        condition: service_started
+    restart: "no"
+    entrypoint: ["bash", "-c"]
+    command:
+      - |
+        echo "waiting for mongod...";
+        for i in $$(seq 1 60); do
+          if mongosh --host mongo --quiet --eval 'db.runCommand({ping:1}).ok' 2>/dev/null | grep -q '^1'; then
+            echo "mongod up, initiating replica set...";
+            break;
+          fi
+          sleep 1;
+        done
+        mongosh --host mongo --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"localhost:27017"}]})' 2>/dev/null || echo "replset already initiated";
+        echo "waiting for primary...";
+        for i in $$(seq 1 60); do
+          if mongosh --host mongo --quiet --eval 'db.hello().isWritablePrimary' 2>/dev/null | grep -q true; then
+            echo "primary ready";
+            exit 0;
+          fi
+          sleep 1;
+        done
+        echo "ERROR: primary never became ready" >&2;
+        exit 1;
+
+volumes:
+  mongodata:
