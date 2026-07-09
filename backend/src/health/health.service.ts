@@ -26,11 +26,19 @@ export interface ReadinessReport {
 @Injectable()
 export class HealthService {
   private readonly logger = new Logger('HealthService');
+  // Flipped true on SIGTERM so the readiness probe immediately reports
+  // NOT_READY while in-flight requests drain (SPEC §3.4 FR-23).
+  private shuttingDown = false;
 
   constructor(
     @InjectConnection() private readonly connection: Connection,
     private readonly config: AppConfigService,
   ) {}
+
+  /** Called from the SIGTERM handler in main.ts to mark the service draining. */
+  markShuttingDown(): void {
+    this.shuttingDown = true;
+  }
 
   /**
    * Check Mongo via `db.admin().ping()`. Bounded by OSS_HEAD_BUCKET_TIMEOUT_MS
@@ -116,8 +124,10 @@ export class HealthService {
     return { mongo, oss };
   }
 
-  /** Whether the report indicates overall readiness (every non-skipped dep up). */
+  /** Whether the report indicates overall readiness (every non-skipped dep up
+   * AND not currently draining). */
   isReady(report: ReadinessReport): boolean {
+    if (this.shuttingDown) return false;
     const deps: DependencyCheck[] = [report.mongo, report.oss];
     return deps.every((d) => d.status === 'up' || d.status === 'skipped');
   }

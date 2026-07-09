@@ -1,12 +1,16 @@
 import { ValidationPipe, HttpStatus, Logger } from '@nestjs/common';
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { json, urlencoded } from 'express';
+import { json, urlencoded, type Express, type Request, type Response, type NextFunction } from 'express';
 import helmet from 'helmet';
+import type { Express as ExpressType } from 'express';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/config.service';
 import { GlobalExceptionFilter } from './common/exception.filter';
 import { ResponseInterceptor } from './common/response.interceptor';
+import { HealthService } from './health/health.service';
+import { ErrorCode, HTTP_STATUS_BY_ERROR_CODE } from './common/error-code';
+import { randomUUID } from 'crypto';
 
 /**
  * SPEC §2.7 — Bootstrap order.
@@ -48,22 +52,15 @@ async function bootstrap(): Promise<void> {
   const config = app.get(AppConfigService);
 
   // --- Body parser: enforce PAYLOAD_TOO_LARGE on overflow (FR-13/14) ---
-  app.use(
-    json({
-      limit: config.bodyLimitBytes,
-      // Override the default parser error so the global filter sees a clean
-      // BAD_REQUEST instead of a raw "Unexpected token" body-parser message.
-      verify: (_req, _res, buf) => buf,
-    }),
-  );
-  app.use(
-    urlencoded({ extended: true, limit: config.bodyLimitBytes }),
-  );
+  app.use(json({ limit: config.bodyLimitBytes }));
+  app.use(urlencoded({ extended: true, limit: config.bodyLimitBytes }));
 
-  // --- Global prefix; raw /health is excluded so it sits OUTSIDE /api/v1 ---
-  app.setGlobalPrefix('api/v1', {
-    exclude: ['health'],
-  });
+  // --- Global prefix. The raw GET /health route is mounted directly on the
+  // underlying Express instance BELOW (outside the prefix); we deliberately do
+  // NOT use `exclude: ['health']` because that would ALSO strip the prefix
+  // from HealthController (@Controller('health')) and collide the liveness
+  // envelope route with the raw probe (review finding #1).
+  app.setGlobalPrefix('api/v1');
 
   // --- Global ValidationPipe (whitelist + forbidNonWhitelisted + transform) ---
   app.useGlobalPipes(
@@ -79,10 +76,12 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  // --- Helmet (FR-27): CSP disabled (frontend owns CSP); keep HSTS/noSniff/...
+  // --- Helmet (FR-27): CSP disabled (frontend owns CSP); frameguard DENY
+  // (SPEC §3.6 — the default SAMEORIGIN is weaker than required).
   app.use(
     helmet({
       contentSecurityPolicy: false,
+      frameguard: { action: 'deny' },
     }),
   );
 
@@ -118,13 +117,25 @@ async function bootstrap(): Promise<void> {
 
   // --- Global ExceptionFilter (needs HttpAdapterHost from DI) ---
   const httpAdapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapterHost));
+  const globalFilter = new GlobalExceptionFilter(httpAdapterHost);
+  app.useGlobalFilters(globalFilter);
 
   // ResponseInterceptor is registered via APP_INTERCEPTOR in AppModule
   // (DI-aware, needs Reflector). It is the canonical envelope wrapper.
 
   // --- Graceful shutdown (FR-23) ---
   app.enableShutdownHooks();
+
+  const expressApp = app.getHttpAdapter().getInstance() as ExpressType;
+
+  // --- Raw GET /health OUTSIDE /api/v1 (nginx/LB probe). Mounted on the
+  // Express instance BEFORE app.listen() (which registers Nest's router) so it
+  // sits AHEAD of the router in the middleware chain and wins the match.
+  // Bypasses the envelope + middleware (text/plain 'alive' literally). Never
+  // 5xx even when Mongo/OSS are down.
+  expressApp.get('/health', (_req: Request, res: Response) => {
+    res.type('text/plain').send('alive');
+  });
 
   // --- Listen with bind-error handling (FR-24) ---
   const port = config.port;
@@ -145,15 +156,60 @@ async function bootstrap(): Promise<void> {
     process.exit(1);
   });
 
-  // SIGTERM: mark readiness NOT_READY immediately; let in-flight finish within
-  // SHUTDOWN_GRACE_MS; close mongoose; exit 0.
+  // --- Express-level error handler: body-parser / payload errors originate in
+  // Express middleware BEFORE the Nest router, so they never reach the Nest
+  // exception filter. Normalize them into the uniform envelope here (review
+  // finding #5). Registered AFTER app.listen (which registers Nest's router)
+  // so it is the final error handler.
+  expressApp.use(
+    (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+      const requestId = randomUUID();
+      let httpStatus = 500;
+      let code: ErrorCode = ErrorCode.INTERNAL_ERROR;
+      let message: string | undefined;
+      const errAny = err as { status?: number; type?: string; message?: string };
+      if (typeof errAny.status === 'number') {
+        if (errAny.type === 'entity.too.large' || errAny.status === 413) {
+          httpStatus = HTTP_STATUS_BY_ERROR_CODE[ErrorCode.PAYLOAD_TOO_LARGE];
+          code = ErrorCode.PAYLOAD_TOO_LARGE;
+          message = 'Request body too large.';
+        } else {
+          // entity.parse.failed and any other body-parser 400 → BAD_REQUEST.
+          httpStatus = errAny.status >= 400 && errAny.status < 500
+            ? errAny.status
+            : HTTP_STATUS_BY_ERROR_CODE[ErrorCode.BAD_REQUEST];
+          code = ErrorCode.BAD_REQUEST;
+          message = 'Malformed request body.';
+        }
+      }
+      if (!res.headersSent) {
+        res.setHeader('X-Request-Id', requestId);
+        res.status(httpStatus).json({
+          success: false,
+          error: { code, ...(message ? { message } : {}) },
+          requestId,
+        });
+      }
+      if (!(err instanceof Error)) {
+        void errAny; // satisfy linter for non-Error branch
+      }
+    },
+  );
+
+  // SIGTERM: mark readiness NOT_READY immediately (FR-23); let in-flight drain
+  // within SHUTDOWN_GRACE_MS; close mongoose; exit 0.
   const log = new Logger('Bootstrap');
   let shuttingDown = false;
   const shutdown = async (signal: string) => {
     if (shuttingDown) return;
     shuttingDown = true;
     log.log(`Received ${signal}; draining for up to ${config.shutdownGraceMs}ms.`);
-    // Mark not-ready by closing the HTTP listener after a brief grace.
+    // Flip readiness to NOT_READY immediately so the LB stops sending traffic.
+    try {
+      app.get(HealthService).markShuttingDown();
+    } catch {
+      // HealthService unavailable (e.g. partial boot) — best effort.
+    }
     try {
       await server.close();
     } catch (err) {

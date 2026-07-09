@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
 
@@ -6,6 +6,12 @@ import { Request } from 'express';
  * SPEC §2.8 — `tracker` = X-Forwarded-For FIRST/leftmost entry (consistent
  * with nginx). Override `getTracker` to honor that. Falls back to `req.ip`
  * when no XFF header is present (e.g. direct dev access).
+ *
+ * Fail-closed behavior (storage unreachable → 503 DEPENDENCY_DOWN) is handled
+ * implicitly: MongoThrottlerStorage.increment() throws the underlying
+ * MongoError, which propagates uncaught through the guard to the global
+ * exception filter (mapped via isMongoFatal). There is no `shouldThrow` hook
+ * in @nestjs/throttler v6 to override; the default is already to propagate.
  */
 @Injectable()
 export class XffThrottlerGuard extends ThrottlerGuard {
@@ -19,22 +25,5 @@ export class XffThrottlerGuard extends ThrottlerGuard {
       if (first.length > 0) return first;
     }
     return req.ip ?? '';
-  }
-
-  /**
-   * Fail-closed: when the storage is unreachable, the underlying MongoError
-   * propagates out of `super.handleException`/`shouldThrow`. The global
-   * exception filter maps it to 503 DEPENDENCY_DOWN. We keep the default
-   * (throw) — NEVER silently allow.
-   */
-  protected async shouldThrow(_err: Error): Promise<boolean> {
-    return true;
-  }
-
-  protected async shouldSkip(
-    _context: ExecutionContext,
-  ): Promise<boolean> {
-    // Default: do not skip. Per-route opt-outs use @SkipThrottle().
-    return false;
   }
 }

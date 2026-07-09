@@ -54,6 +54,13 @@ export class ThrottleStorageModule {}
           },
         ],
         storage,
+        // Override the default key generator. The default returns a sha256
+        // hash of `${ClassName}-${handlerName}-${name}-${tracker}`, which loses
+        // the tracker IP — so the throttler doc would store a meaningless hash
+        // instead of the XFF IP (SPEC §3.2). Our key keeps tracker readable so
+        // MongoThrottlerStorage can persist it for per-IP aggregation.
+        generateKey: (_ctx, tracker, name) =>
+          `${name || 'default'}:${tracker}`,
       }),
     }),
   ],

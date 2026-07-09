@@ -80,13 +80,19 @@ function extractValidationDetails(
 }
 
 function statusToCode(status: number, response: unknown): ErrorCode {
+  // Honor an explicit ErrorCode carried on the response, regardless of status.
+  // Lets handlers throw BadRequestException({ code: 'PAYLOAD_TOO_DEEP', ... })
+  // and have the SPEC-correct code surface instead of being collapsed to the
+  // status's default code (review finding #2).
+  if (isObject(response) && isErrorCode((response as { code?: unknown }).code)) {
+    return (response as { code: ErrorCode }).code;
+  }
   switch (status) {
     case HttpStatus.UNPROCESSABLE_ENTITY:
       return ErrorCode.VALIDATION_ERROR;
     case HttpStatus.BAD_REQUEST:
-      // Distinguish validation (already remapped to 422 by ValidationPipe)
-      // from malformed JSON / generic 400. Anything reaching here at 400 is
-      // treated as BAD_REQUEST per SPEC.
+      // Anything reaching here at 400 without an explicit ErrorCode is a
+      // malformed/generic bad request.
       return ErrorCode.BAD_REQUEST;
     case HttpStatus.PAYLOAD_TOO_LARGE:
       return ErrorCode.PAYLOAD_TOO_LARGE;
@@ -99,11 +105,6 @@ function statusToCode(status: number, response: unknown): ErrorCode {
     case HttpStatus.SERVICE_UNAVAILABLE:
       return ErrorCode.NOT_READY;
     default:
-      // Heuristic: if the response itself carries a known ErrorCode, honor it
-      // (lets domain filters delegate or throw with a code in details).
-      if (isObject(response) && isErrorCode((response as { code?: unknown }).code)) {
-        return (response as { code: ErrorCode }).code;
-      }
       if (status >= 500) return ErrorCode.INTERNAL_ERROR;
       if (status >= 400) return ErrorCode.BAD_REQUEST;
       return ErrorCode.INTERNAL_ERROR;
@@ -143,11 +144,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? crypto.randomUUID()
         : '');
 
-    const isProduction =
-      process.env.NODE_ENV === 'production' ||
-      process.env.NODE_ENV === 'test'
-        ? process.env.NODE_ENV === 'production'
-        : false;
+    const isProduction = process.env.NODE_ENV === 'production';
 
     let httpStatus: number;
     let detail: ErrorDetail;

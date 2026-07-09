@@ -160,12 +160,15 @@ function splitKey(
   key: string,
   fallbackRoute: string,
 ): { tracker: string; routeName: string } {
-  // throttler v6 default key format: `${tracker}-${throttlerName}`.
-  const idx = key.lastIndexOf('-');
+  // Our custom generateKey (see throttle.module.ts) produces
+  // `${throttlerName}:${tracker}` — split on the FIRST ':' so IPv6/bracketed
+  // trackers (which can contain ':') survive as the tracker segment. The
+  // leading segment (throttler name) never contains ':'.
+  const idx = key.indexOf(':');
   if (idx > -1) {
     return {
-      tracker: key.slice(0, idx),
-      routeName: key.slice(idx + 1) || fallbackRoute,
+      routeName: key.slice(0, idx) || fallbackRoute,
+      tracker: key.slice(idx + 1),
     };
   }
   return { tracker: key, routeName: fallbackRoute };

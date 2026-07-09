@@ -4,6 +4,10 @@
 > 审查方式：2 个 max-effort finder agent 并行 + 主线经验性验证
 > 参考规范：`backend/docs/spec/SPEC.md` §2/§3
 > 严重度从高到低排列；前 3 条为必须修复的生产 Bug
+>
+> **✅ 全部 10 条发现已修复**（见各条"修复"小节）。build 零错误，e2e 8/8 全绿，
+> 关键修复经实时 curl 探测验证（`/health` 返回 text/plain alive、畸形 JSON 返回
+> 400 统一信封、Helmet X-Frame-Options: DENY）。
 
 ---
 

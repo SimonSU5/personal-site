@@ -32,7 +32,9 @@ describe('App integration (real AppModule + Mongo)', () => {
     app = moduleFixture.createNestApplication<NestExpressApplication>({
       bodyParser: false,
     });
-    app.setGlobalPrefix('api/v1', { exclude: ['health'] } as never);
+    // Mirror production main.ts exactly: NO exclude (would collide the two
+    // health routes), and mount the raw /health probe directly on Express.
+    app.setGlobalPrefix('api/v1');
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -43,6 +45,14 @@ describe('App integration (real AppModule + Mongo)', () => {
     );
     const httpAdapterHost = app.get(HttpAdapterHost);
     app.useGlobalFilters(new GlobalExceptionFilter(httpAdapterHost));
+
+    // Mount raw GET /health outside the prefix (as main.ts does in prod),
+    // BEFORE app.init() so it registers ahead of Nest's router and wins the match.
+    const expressApp = app.getHttpAdapter().getInstance() as import('express').Express;
+    expressApp.get('/health', (_req: unknown, res: import('express').Response) => {
+      res.type('text/plain').send('alive');
+    });
+
     await app.init();
   }, 90_000);
 

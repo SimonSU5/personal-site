@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Header,
   HttpException,
   HttpStatus,
   Req,
@@ -10,19 +9,21 @@ import {
 import { Request } from 'express';
 import { HealthService, ReadinessReport, DepState } from './health.service';
 import { ErrorCode } from '../common/error-code';
-import { RawResponse } from '../common/response.interceptor';
 import { AppConfigService } from '../config/config.service';
 
 /**
  * SPEC §3.1 — health endpoints.
  *
- *   GET /health                  → 200 text/plain 'alive' (raw, NO envelope)
+ *   GET /health                  → 200 text/plain 'alive' (raw, NO envelope) —
+ *                                 mounted directly on Express in main.ts.
  *   GET /api/v1                  → service identity envelope
  *   GET /api/v1/health           → liveness envelope (ZERO dep round-trips)
  *   GET /api/v1/health/ready     → readiness; 503 NOT_READY when any dep down
  *
- * The raw `/health` route is excluded from the global `/api/v1` prefix in
- * main.ts. It bypasses the ResponseInterceptor via `@RawResponse()`.
+ * The raw `/health` route lives in main.ts (mounted on the Express instance)
+ * rather than here, because using `setGlobalPrefix({ exclude: ['health'] })`
+ * with a @Controller() @Get('health') collides with @Controller('health')
+ * under the same path (review finding #1).
  */
 
 const SERVICE_NAME = 'surong-personal-backend';
@@ -98,25 +99,6 @@ export class RootController {
       status: 'alive',
       timestamp: new Date().toISOString(),
     };
-  }
-}
-
-/**
- * GET /health — raw liveness, OUTSIDE /api/v1.
- *
- * Returns text/plain body literally `alive`. Bypasses the envelope via
- * `@RawResponse()` and writes a plain string. Excluded from the global
- * prefix in main.ts.
- *
- * Reserved for nginx/LB probing; never 5xx even when Mongo/OSS are down.
- */
-@Controller()
-export class RawHealthController {
-  @Get('health')
-  @Header('Content-Type', 'text/plain; charset=utf-8')
-  @RawResponse()
-  rawLiveness(): string {
-    return 'alive';
   }
 }
 

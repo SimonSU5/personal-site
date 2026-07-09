@@ -36,7 +36,8 @@ export class AppConfigService {
   get port(): number {
     const raw = this.inner.get<string>('PORT') ?? '3001';
     const n = Number.parseInt(raw, 10);
-    return Number.isFinite(n) ? n : 3001;
+    // Floor at 1 (0 is valid for "ephemeral" but a typo like -1 must not bind).
+    return Number.isFinite(n) && n > 0 ? n : 3001;
   }
 
   get host(): string {
@@ -115,23 +116,25 @@ export class AppConfigService {
   // --- throttle / body / depth ---
 
   get throttleTtlSeconds(): number {
-    return this.intOr('THROTTLE_TTL', 60);
+    return Math.max(1, this.intOr('THROTTLE_TTL', 60));
   }
 
   get throttleLimit(): number {
-    return this.intOr('THROTTLE_LIMIT', 100);
+    // 0 would reject ALL traffic; floor at 1 to prevent a typo bricking the API.
+    return Math.max(1, this.intOr('THROTTLE_LIMIT', 100));
   }
 
   get bodyLimitBytes(): number {
-    return this.intOr('BODY_LIMIT_BYTES', 20 * 1024 * 1024);
+    // Floor at 1KB so a misconfigured 0 does not disable body parsing entirely.
+    return Math.max(1024, this.intOr('BODY_LIMIT_BYTES', 20 * 1024 * 1024));
   }
 
   get payloadMaxDepth(): number {
-    return this.intOr('PAYLOAD_MAX_DEPTH', 8);
+    return Math.max(1, this.intOr('PAYLOAD_MAX_DEPTH', 8));
   }
 
   get shutdownGraceMs(): number {
-    return this.intOr('SHUTDOWN_GRACE_MS', 10_000);
+    return Math.max(0, this.intOr('SHUTDOWN_GRACE_MS', 10_000));
   }
 
   // --- github ---
