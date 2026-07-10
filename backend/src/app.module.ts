@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
+import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { ThrottleModule } from './throttle/throttle.module';
 import { SeedModule } from './seed/seed.module';
@@ -59,6 +60,7 @@ import { ResponseInterceptor } from './common/response.interceptor';
     }),
     ThrottleModule,
     HealthModule,
+    AuthModule,
     SeedModule,
   ],
   providers: [

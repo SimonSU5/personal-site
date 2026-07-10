@@ -32,6 +32,29 @@ export const ErrorCode = {
   BIND_ERROR: 'BIND_ERROR',
   /** unhandled non-HttpException */
   INTERNAL_ERROR: 'INTERNAL_ERROR',
+  // --- Auth-domain codes (SPEC §2.2 / §4 — owned by the Auth domain).
+  // Auth extends the global code table per SPEC §2.2 ("each domain may extend
+  // with domain-specific codes"). These MUST be registered here so the global
+  // exception filter's `statusToCode` honors an explicit `code` on a thrown
+  // HttpException response (it gates on `isErrorCode`, which checks membership
+  // in this object). Without registration, a thrown 401 {code:'INVALID_TOKEN'}
+  // would be collapsed to 400 BAD_REQUEST by the status-based fallback. */
+  /** missing/wrong-scheme Authorization header on a protected route */
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  /** valid token but insufficient role */
+  FORBIDDEN: 'FORBIDDEN',
+  /** wrong password or unknown identifier (byte-identical) */
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  /** malformed / expired / bad-signature / alg:none / deleted user (sets WWW-Authenticate) */
+  INVALID_TOKEN: 'INVALID_TOKEN',
+  /** refresh cookie beyond sliding 7d */
+  TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+  /** replay of consumed refresh token -> family revoked */
+  TOKEN_REVOKED: 'TOKEN_REVOKED',
+  /** per-route throttle (login lockout, refresh, upload). Carries Retry-After. */
+  RATE_LIMITED: 'RATE_LIMITED',
+  /** /auth/refresh Origin/Referer not in allowlist */
+  ORIGIN_FORBIDDEN: 'ORIGIN_FORBIDDEN',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
@@ -52,6 +75,15 @@ export const HTTP_STATUS_BY_ERROR_CODE: Readonly<Record<ErrorCode, number>> = {
   [ErrorCode.DEPENDENCY_DOWN]: 503,
   [ErrorCode.BIND_ERROR]: 500,
   [ErrorCode.INTERNAL_ERROR]: 500,
+  // Auth-domain status map (SPEC §2.2).
+  [ErrorCode.UNAUTHORIZED]: 401,
+  [ErrorCode.FORBIDDEN]: 403,
+  [ErrorCode.INVALID_CREDENTIALS]: 401,
+  [ErrorCode.INVALID_TOKEN]: 401,
+  [ErrorCode.TOKEN_EXPIRED]: 401,
+  [ErrorCode.TOKEN_REVOKED]: 401,
+  [ErrorCode.RATE_LIMITED]: 429,
+  [ErrorCode.ORIGIN_FORBIDDEN]: 403,
 };
 
 export function isErrorCode(value: unknown): value is ErrorCode {

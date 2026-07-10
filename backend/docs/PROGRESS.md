@@ -1,6 +1,6 @@
 # 前后端分离迁移 — 进度报告
 
-> 最后更新：2026-07-07
+> 最后更新：2026-07-10
 > 方法论：Loop Engineering（PM↔Architect 共识 + Engineer↔Verifier 闭环）
 
 ---
@@ -12,7 +12,7 @@
 | **阶段 1：SPEC 共识** | ✅ 完成 | 8 域 PM↔Architect 闭环，7/8 共识，产出 96KB SPEC |
 | **阶段 1 检查点** | ✅ 通过 | 8 个开放问题用户已拍板（见 SPEC §13） |
 | **阶段 2a：脚手架** | ✅ 完成 | NestJS 骨架 build 零错误 + e2e 冒烟 4/4 全绿 |
-| **阶段 2b：Auth** | 🔄 进行中 | users / JWT access+refresh / guard / seed |
+| **阶段 2b：Auth** | ✅ 完成 | users / JWT access+refresh 轮换 / 家系撤销 / 3 类限流 / guard / seed。23/23 测试全绿，Verifier 残留 2 条已修+防回归 |
 | 阶段 2c：业务模块 | ⏳ 待开始 | Content / Posts / Works / Upload(OSS) / GitHub 同步 |
 | 阶段 2d：前端重构 | ⏳ 待开始 | 移入 frontend/、api-client、AuthContext、RSC fetch |
 | 数据迁移 | ⏳ 待开始 | data/*.json 全量导入 MongoDB |

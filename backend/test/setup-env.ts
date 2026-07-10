@@ -19,7 +19,10 @@ const VALID_ENV: Record<string, string> = {
   MONGO_DB_NAME: 'surong_test',
   JWT_ACCESS_SECRET: 'a'.repeat(48),
   JWT_REFRESH_SECRET: 'b'.repeat(48),
-  ALLOWED_ORIGINS: 'http://localhost:3000',
+  // Intentionally DIFFERENT from FRONTEND_ORIGIN so tests can verify the
+  // refresh-cookie endpoint reads ALLOWED_ORIGINS (not the CORS list). Keeping
+  // them equal would mask the AC-13 bug (review residual #1).
+  ALLOWED_ORIGINS: 'https://refresh-test.example',
   GITHUB_ENCRYPTION_KEY: '0123456789abcdef'.repeat(4),
   GITHUB_WEBHOOK_SECRET: 'whsec-test',
   OSS_REGION: 'oss-cn-test',
