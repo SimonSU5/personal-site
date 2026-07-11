@@ -1,0 +1,2 @@
+# 这个目录存放 GitHub 同步（/api/github/sync）从 contents 仓库拉取的 Obsidian 附件。
+# 实际文件由同步生成、被 .gitignore 忽略，此占位文件仅用于保留目录结构。

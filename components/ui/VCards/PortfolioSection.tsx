@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, Eye } from "lucide-react";
 import DetailView from "./DetailView";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface Work {
   id: string;
@@ -19,9 +20,10 @@ interface Work {
 interface PortfolioSectionProps {
   works?: Work[];
   isActive?: boolean;
+  notes?: ObsidianNote[];
 }
 
-export default function PortfolioSection({ works = [], isActive = false }: PortfolioSectionProps) {
+export default function PortfolioSection({ works = [], isActive = false, notes }: PortfolioSectionProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
 
@@ -145,6 +147,7 @@ export default function PortfolioSection({ works = [], isActive = false }: Portf
             content={selectedWork.content || ""}
             cover={selectedWork.cover}
             type="work"
+            notes={notes}
             meta={
               <div className="flex gap-4 text-sm text-text-secondary">
                 <span>{selectedWork.category || ""}</span>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
 async function savePosts(posts: any[]) {
@@ -48,6 +48,72 @@ function processImagePaths(content: string, fileDir: string, baseUrl: string): s
   });
 }
 
+// 递归拉取 contents 仓库的 assets/ 目录，写到本地 public/assets/（保留子目录结构）
+async function fetchAndSaveAssets(
+  owner: string,
+  repo: string,
+  token: string,
+  dirPath: string,
+  rootDir: string,
+  localBase: string
+): Promise<number> {
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      // 该子目录不存在，跳过
+      return 0;
+    }
+    throw new Error(`GitHub API error (assets ${dirPath}): ${response.statusText}`);
+  }
+
+  const items = await response.json();
+  let count = 0;
+
+  for (const item of items) {
+    if (item.type === "file") {
+      // 取文件内容（base64）
+      const contentRes = await fetch(item.url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      });
+      const contentData = await contentRes.json();
+      const buffer = Buffer.from(contentData.content, "base64");
+
+      // item.path 形如 "assets/sub/bar.png"，映射到本地 public/assets/sub/bar.png
+      const relative = item.path.startsWith(rootDir + "/")
+        ? item.path.slice(rootDir.length + 1)
+        : item.path;
+      const localPath = path.join(localBase, relative);
+      await mkdir(path.dirname(localPath), { recursive: true });
+      await writeFile(localPath, buffer);
+      count++;
+    } else if (item.type === "dir") {
+      count += await fetchAndSaveAssets(owner, repo, token, item.path, rootDir, localBase);
+    }
+  }
+
+  return count;
+}
+
+// 同步 contents 仓库的 assets/ → 本地 public/assets/
+async function syncAssets(owner: string, repo: string, token: string): Promise<number> {
+  const rootDir = "assets";
+  const localBase = path.join(process.cwd(), "public", "assets");
+  await mkdir(localBase, { recursive: true });
+  return fetchAndSaveAssets(owner, repo, token, rootDir, rootDir, localBase);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { githubToken, githubRepo } = await req.json();
@@ -68,6 +134,9 @@ export async function POST(req: NextRequest) {
     // 同步作品集
     const works = await syncWorks(owner, repoName, token);
 
+    // 同步 assets（Obsidian 附件，写到 public/assets/）
+    const assetsSynced = await syncAssets(owner, repoName, token);
+
     // 保存到本地
     if (posts.length > 0) {
       await savePosts(posts);
@@ -80,6 +149,7 @@ export async function POST(req: NextRequest) {
       success: true,
       posts,
       works,
+      assetsSynced,
       saved: true,
       timestamp: new Date().toISOString(),
     });
