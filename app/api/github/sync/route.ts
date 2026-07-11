@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { isImageFilename, splitObsidianTarget } from "@/lib/remark-obsidian";
+
+// 同步后的资源 URL 前缀。文件落在项目根 assets/，由 app/assets/[...path]/route.ts 提供服务。
+const ASSETS_URL_PREFIX = "/assets";
 
 async function savePosts(posts: any[]) {
   const filePath = path.join(process.cwd(), "data", "posts.json");
@@ -12,39 +16,46 @@ async function saveWorks(works: any[]) {
   await writeFile(filePath, JSON.stringify(works, null, 2));
 }
 
-// 处理 Markdown 内容中的图片路径，将相对路径转换为 GitHub raw URL
-function processImagePaths(content: string, fileDir: string, baseUrl: string): string {
-  // 匹配 Markdown 图片语法：![alt](path) 和 ![alt](path "title")
+// 把对 assets/ 的引用（cover 或图片名）解析为本地 /assets/<path>。
+// 支持 "assets/covers/foo.png"、"images/foo.png"、"foo.png"；bare 文件名会用索引补全子目录。
+function resolveAssetRef(ref: string, index: Record<string, string>): string {
+  let p = ref.trim().replace(/^\/+/, "");
+  if (p.startsWith("assets/")) p = p.slice("assets/".length);
+  if (!p.includes("/") && index[p]) p = index[p];
+  return encodeURI(`${ASSETS_URL_PREFIX}/${p}`.replace(/\/{2,}/g, "/"));
+}
+
+// 同步期把 Obsidian 图片嵌入 ![[file.png]] 改写成标准 markdown，指向本地 /assets/...
+// 笔记链接 [[note]] 不在此处理（留给渲染层 remark 插件）。
+function rewriteObsidianImages(body: string, index: Record<string, string>): string {
+  const re = /!\[\[([^\]\n]+)\]\]/g;
+  return body.replace(re, (m, inner: string) => {
+    const { name } = splitObsidianTarget(inner);
+    if (!name || !isImageFilename(name)) return m; // 非图片嵌入，保留给渲染层
+    const url = name.includes("/")
+      ? encodeURI(`${ASSETS_URL_PREFIX}/${name}`.replace(/\/{2,}/g, "/"))
+      : resolveAssetRef(name, index);
+    return `![${name}](${url})`;
+  });
+}
+
+// 兜底：把标准 markdown 相对图片 ![alt](rel) 归到 /assets/ 下（已是绝对/完整 URL 的保留）
+function processImagePaths(content: string): string {
   const imageRegex = /!\[(.*?)\]\(([^)]+?)\)/g;
-
   return content.replace(imageRegex, (match, alt, imagePath) => {
-    // 移除可能存在的 title 部分
     const cleanPath = imagePath.split(/\s+/)[0];
-
-    // 如果已经是完整 URL，直接返回
-    if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://")) {
-      return match;
-    }
-
-    // 处理路径
-    let fullPath: string;
-    if (cleanPath.startsWith("/")) {
-      // 绝对路径（从仓库根目录）
-      fullPath = `${baseUrl}${cleanPath}`;
-    } else {
-      // 相对路径（从当前文件所在目录）
-      fullPath = `${baseUrl}/${fileDir}/${cleanPath}`;
-    }
-
-    // 保持原有的 alt 和可能的 title
+    if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://")) return match;
+    if (cleanPath.startsWith("/")) return match; // 绝对路径（如 /assets/...）保留
+    let p = cleanPath;
+    if (p.startsWith("assets/")) p = p.slice("assets/".length);
+    const url = encodeURI(`${ASSETS_URL_PREFIX}/${p}`.replace(/\/{2,}/g, "/"));
     const hasTitle = imagePath.includes('"');
     if (hasTitle) {
       const titleMatch = imagePath.match(/"([^"]+)"/);
       const title = titleMatch ? `"${titleMatch[1]}"` : "";
-      return `![${alt}](${fullPath} ${title})`;
+      return `![${alt}](${url} ${title})`;
     }
-
-    return `![${alt}](${fullPath})`;
+    return `![${alt}](${url})`;
   });
 }
 
@@ -52,18 +63,20 @@ interface AssetsSyncResult {
   count: number;
   failed: number;
   truncated: boolean;
+  // basename → assets/ 下的相对路径，供 cover / ![[file]] 解析子目录
+  index: Record<string, string>;
 }
 
-// 同步 contents 仓库的 assets/ → 本地 public/assets/（保留子目录结构）。
-// 注意：GitHub Contents API 单文件 GET 在 >1MB 时会 404（大封面图会踩中），
-// 所以这里用 Git Trees API（recursive，一次列出所有 blob）+ Blobs API（支持到 100MB）取内容。
+// 同步 contents 仓库的 assets/ → 本地项目根 assets/（保留子目录结构），
+// 并构建 basename → 相对路径 的索引。用 Git Trees API（recursive）+ Blobs API 取内容，
+// 绕开 Contents API 单文件 1MB 限制。
 async function syncAssets(
   owner: string,
   repo: string,
   token: string
 ): Promise<AssetsSyncResult> {
   const rootPrefix = "assets/";
-  const localBase = path.join(process.cwd(), "public", "assets");
+  const localBase = path.join(process.cwd(), "assets");
   await mkdir(localBase, { recursive: true });
 
   const headers = {
@@ -71,16 +84,15 @@ async function syncAssets(
     Accept: "application/vnd.github.v3+json",
   };
 
+  const empty: AssetsSyncResult = { count: 0, failed: 0, truncated: false, index: {} };
+
   // 1) 递归列出整棵树，筛出 assets/ 下的文件
   const treeRes = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`,
     { headers }
   );
   if (!treeRes.ok) {
-    if (treeRes.status === 404) {
-      // 没有 assets/ 目录，跳过
-      return { count: 0, failed: 0, truncated: false };
-    }
+    if (treeRes.status === 404) return empty; // 没有 assets/ 目录
     throw new Error(`GitHub API error (assets tree): ${treeRes.statusText}`);
   }
   const treeData = await treeRes.json();
@@ -89,6 +101,7 @@ async function syncAssets(
   );
 
   // 2) 逐个 blob 取内容并落盘；单个失败不影响其余
+  const index: Record<string, string> = {};
   let count = 0;
   let failed = 0;
   for (const blob of blobs) {
@@ -112,13 +125,16 @@ async function syncAssets(
       await mkdir(path.dirname(localPath), { recursive: true });
       await writeFile(localPath, buffer);
       count++;
+      // basename → 相对路径（同 basename 以先入为准；cover 走全路径不受影响）
+      const base = relative.split("/").pop();
+      if (base && !index[base]) index[base] = relative;
     } catch (err) {
       console.error(`syncAssets: failed for ${blob.path}:`, err);
       failed++;
     }
   }
 
-  return { count, failed, truncated: !!treeData.truncated };
+  return { count, failed, truncated: !!treeData.truncated, index };
 }
 
 export async function POST(req: NextRequest) {
@@ -135,23 +151,25 @@ export async function POST(req: NextRequest) {
 
     const [owner, repoName] = repo.split("/");
 
-    // 同步博客文章
-    const posts = await syncPosts(owner, repoName, token);
+    // 先同步 assets 并构建索引（cover / 正文 ![[file]] 解析要用）；
+    // 即便 assets 同步抛错也只降级为没有索引，不影响内容同步
+    let assetsResult: AssetsSyncResult = { count: 0, failed: 0, truncated: false, index: {} };
+    try {
+      assetsResult = await syncAssets(owner, repoName, token);
+    } catch (e: any) {
+      console.error("syncAssets error:", e);
+    }
 
-    // 同步作品集
-    const works = await syncWorks(owner, repoName, token);
+    // 同步博客 / 作品（用 assets 索引解析本地资源路径）
+    const posts = await syncPosts(owner, repoName, token, assetsResult.index);
+    const works = await syncWorks(owner, repoName, token, assetsResult.index);
 
-    // 先保存内容（posts/works），再同步 assets —— 即便 assets 同步抛错，
-    // 已落盘的内容也不会丢
     if (posts.length > 0) {
       await savePosts(posts);
     }
     if (works.length > 0) {
       await saveWorks(works);
     }
-
-    // 同步 assets（Obsidian 附件，写到 public/assets/）
-    const assetsResult = await syncAssets(owner, repoName, token);
 
     return NextResponse.json({
       success: true,
@@ -169,7 +187,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function syncPosts(owner: string, repo: string, token: string) {
+async function syncPosts(owner: string, repo: string, token: string, index: Record<string, string>) {
   // 获取 blogs 目录下的文件
   const response = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/blogs`,
@@ -249,27 +267,13 @@ async function syncPosts(owner: string, repo: string, token: string) {
         }
       }
 
-      // 获取文件所在目录（用于处理相对路径）
-      const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
-      const baseUrl = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main`;
-
-      // 处理封面图片路径
+      // 封面解析为本地 /assets/...（用同步下来的 assets）
       if (cover && !cover.startsWith("http")) {
-        // 相对路径，转换为 GitHub raw URL
-        if (cover.startsWith("/")) {
-          // 绝对路径（从仓库根目录）
-          cover = `${baseUrl}${cover}`;
-        } else if (cover.startsWith("assets/") || cover.startsWith("images/")) {
-          // 以 assets/ 或 images/ 开头，视为从仓库根目录
-          cover = `${baseUrl}/${cover}`;
-        } else {
-          // 其他相对路径，从当前文件所在目录
-          cover = `${baseUrl}/${fileDir}/${cover}`;
-        }
+        cover = resolveAssetRef(cover, index);
       }
 
-      // 处理正文中的图片引用
-      const processedBody = processImagePaths(body, fileDir, baseUrl);
+      // 正文：先改写 Obsidian 图片嵌入 ![[..]]，再兜底处理标准 markdown 相对图片
+      const processedBody = processImagePaths(rewriteObsidianImages(body, index));
 
       // 从文件名提取日期
       const dateMatch = file.name.match(/^(\d{4}-\d{2}-\d{2})/);
@@ -297,7 +301,7 @@ async function syncPosts(owner: string, repo: string, token: string) {
   return posts;
 }
 
-async function syncWorks(owner: string, repo: string, token: string) {
+async function syncWorks(owner: string, repo: string, token: string, index: Record<string, string>) {
   // 获取 works 目录下的文件
   const response = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/works`,
@@ -387,27 +391,13 @@ async function syncWorks(owner: string, repo: string, token: string) {
         }
       }
 
-      // 获取文件所在目录（用于处理相对路径）
-      const fileDir = file.path.substring(0, file.path.lastIndexOf("/"));
-      const baseUrl = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main`;
-
-      // 处理封面图片路径
+      // 封面解析为本地 /assets/...（用同步下来的 assets）
       if (cover && !cover.startsWith("http")) {
-        // 相对路径，转换为 GitHub raw URL
-        if (cover.startsWith("/")) {
-          // 绝对路径（从仓库根目录）
-          cover = `${baseUrl}${cover}`;
-        } else if (cover.startsWith("assets/") || cover.startsWith("images/")) {
-          // 以 assets/ 或 images/ 开头，视为从仓库根目录
-          cover = `${baseUrl}/${cover}`;
-        } else {
-          // 其他相对路径，从当前文件所在目录
-          cover = `${baseUrl}/${fileDir}/${cover}`;
-        }
+        cover = resolveAssetRef(cover, index);
       }
 
-      // 处理正文中的图片引用
-      const processedBody = processImagePaths(body, fileDir, baseUrl);
+      // 正文：先改写 Obsidian 图片嵌入 ![[..]]，再兜底处理标准 markdown 相对图片
+      const processedBody = processImagePaths(rewriteObsidianImages(body, index));
 
       works.push({
         id: file.name.replace(".md", ""),

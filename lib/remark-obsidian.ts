@@ -33,6 +33,20 @@ const HAS_WIKI = /\[\[[^\]\n]+\]\]/;
 // 拆分用的 global 正则：捕获可选的前导 "!"（嵌入）和内部内容
 const WIKI_RE = /(!?)\[\[([^\]\n]+)\]\]/g;
 
+export function isImageFilename(name: string): boolean {
+  return IMAGE_EXT.test(name);
+}
+
+// 解析 Obsidian 链接内部：[[target|alias]] / [[target#heading|alias]] → { name, alias }
+export function splitObsidianTarget(inner: string): { name: string; alias?: string } {
+  const pipeIdx = inner.indexOf("|");
+  const leftRaw = pipeIdx === -1 ? inner : inner.slice(0, pipeIdx);
+  const alias = pipeIdx === -1 ? undefined : inner.slice(pipeIdx + 1).trim() || undefined;
+  const hashIdx = leftRaw.indexOf("#");
+  const name = (hashIdx === -1 ? leftRaw : leftRaw.slice(0, hashIdx)).trim();
+  return { name, alias };
+}
+
 function normalize(s: string): string {
   return s.trim().toLowerCase();
 }
@@ -54,21 +68,11 @@ export function remarkObsidian(options: RemarkObsidianOptions = {}) {
   const assetsPrefix = options.assetsPrefix ?? "/assets";
   const notesMap = buildNotesMap(options.notes);
 
-  function parseInner(inner: string) {
-    const pipeIdx = inner.indexOf("|");
-    const leftRaw = pipeIdx === -1 ? inner : inner.slice(0, pipeIdx);
-    const alias = pipeIdx === -1 ? undefined : inner.slice(pipeIdx + 1).trim() || undefined;
-
-    const hashIdx = leftRaw.indexOf("#");
-    const name = (hashIdx === -1 ? leftRaw : leftRaw.slice(0, hashIdx)).trim();
-    return { name, alias };
-  }
-
   function buildNode(inner: string, isEmbed: boolean) {
-    const { name, alias } = parseInner(inner);
+    const { name, alias } = splitObsidianTarget(inner);
     if (!name) return null;
 
-    if (isEmbed && IMAGE_EXT.test(name)) {
+    if (isEmbed && isImageFilename(name)) {
       const url = encodeURI(`${assetsPrefix}/${name}`.replace(/\/{2,}/g, "/"));
       return { type: "image", url, alt: alias || name };
     }
