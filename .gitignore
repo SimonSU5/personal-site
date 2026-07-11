@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Local runtime data (tracked defaults stay; local edits ignored)
 /data/
+
+# Synced Obsidian assets (regenerable via /api/github/sync → project root assets/)
+/assets/

@@ -7,9 +7,12 @@ import rehypeSanitize from "rehype-sanitize";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import mermaid from "mermaid";
+import { remarkObsidian, type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface MarkdownContentProps {
   content: string;
+  /** 用于解析 Obsidian 内部链接 [[笔记]] 的笔记清单（id/title → /blog|/works/{id}） */
+  notes?: ObsidianNote[];
 }
 
 let mermaidInitialized = false;
@@ -142,13 +145,45 @@ const CodeBlock = ({ className, children }: any) => {
   );
 };
 
-export default function MarkdownContent({ content }: MarkdownContentProps) {
+// Obsidian 内部链接渲染：
+// - 已匹配的 [[笔记]] → 普通 <a>（指向 /blog|/works/{id}）
+// - 未匹配的 → href 以 "#obsidian-unresolved-" 开头，渲染成灰色文本（内联样式，不动 globals.css）
+const ObsidianAnchor = ({ href, children, ...rest }: any) => {
+  if (typeof href === "string" && href.startsWith("#obsidian-unresolved")) {
+    return (
+      <span
+        title="未解析的内部链接"
+        style={{
+          color: "var(--text-muted)",
+          background: "var(--bg-secondary)",
+          padding: "0 0.35em",
+          borderRadius: "4px",
+          fontSize: "0.9em",
+          cursor: "default",
+        }}
+      >
+        {children}
+      </span>
+    );
+  }
+  return (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  );
+};
+
+export default function MarkdownContent({ content, notes }: MarkdownContentProps) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[
+        remarkGfm,
+        [remarkObsidian, { notes, assetsPrefix: "/assets" }],
+      ]}
       rehypePlugins={[rehypeSanitize]}
       components={{
         code: CodeBlock,
+        a: ObsidianAnchor,
       }}
     >
       {content}

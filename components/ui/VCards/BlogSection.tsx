@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import DetailView from "./DetailView";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface Post {
   id: string;
@@ -17,9 +18,10 @@ interface Post {
 interface BlogSectionProps {
   posts?: Post[];
   isActive?: boolean;
+  notes?: ObsidianNote[];
 }
 
-export default function BlogSection({ posts = [], isActive = false }: BlogSectionProps) {
+export default function BlogSection({ posts = [], isActive = false, notes }: BlogSectionProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
@@ -169,6 +171,7 @@ export default function BlogSection({ posts = [], isActive = false }: BlogSectio
             content={selectedPost.content || ""}
             cover={selectedPost.cover}
             type="post"
+            notes={notes}
             meta={
               <div className="flex gap-4 text-sm text-text-secondary">
                 <span>{selectedPost.date || ""}</span>

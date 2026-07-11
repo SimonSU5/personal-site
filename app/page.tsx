@@ -9,6 +9,7 @@ import PortfolioSection from "@/components/ui/VCards/PortfolioSection";
 import BlogSection from "@/components/ui/VCards/BlogSection";
 import ContactSection from "@/components/ui/VCards/ContactSection";
 import { Code, Cpu, Rocket, Globe } from "lucide-react";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface ContactItem {
   id: string;
@@ -139,6 +140,12 @@ export default function Home() {
     description: s.description,
   })) || [];
 
+  // Obsidian 内部链接 [[笔记]] 解析用的笔记清单（博客 + 作品）
+  const notes: ObsidianNote[] = [
+    ...posts.map((p: any) => ({ id: String(p.id), title: p.title, type: "post" as const })),
+    ...works.map((w: any) => ({ id: String(w.id), title: w.title, type: "work" as const })),
+  ];
+
   return (
     <div className="min-h-screen bg-bg-primary">
       <main className="main-container">
@@ -179,12 +186,14 @@ export default function Home() {
           <PortfolioSection
             works={works}
             isActive={activePage === "portfolio"}
+            notes={notes}
           />
 
           {/* Blog Page */}
           <BlogSection
             posts={posts}
             isActive={activePage === "blog"}
+            notes={notes}
           />
 
           {/* Contact Page */}

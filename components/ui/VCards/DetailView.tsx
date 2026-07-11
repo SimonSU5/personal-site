@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MarkdownContent from "@/components/MarkdownContent";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface DetailViewProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ interface DetailViewProps {
   meta?: React.ReactNode;
   actions?: React.ReactNode;
   type: "work" | "post";
+  /** 解析 Obsidian 内部链接用的笔记清单 */
+  notes?: ObsidianNote[];
 }
 
 export default function DetailView({
@@ -24,6 +27,7 @@ export default function DetailView({
   meta,
   actions,
   type,
+  notes,
 }: DetailViewProps) {
   // ESC key to close
   useEffect(() => {
@@ -77,7 +81,7 @@ export default function DetailView({
 
             {/* Content */}
             <div className="detail-content">
-              <MarkdownContent content={content} />
+              <MarkdownContent content={content} notes={notes} />
             </div>
           </div>
         </motion.div>
