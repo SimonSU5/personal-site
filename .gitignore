@@ -43,3 +43,6 @@ data/github-settings.json
 *.tsbuildinfo
 next-env.d.ts
 .claude/
+
+# Local runtime data (tracked defaults stay; local edits ignored)
+/data/
