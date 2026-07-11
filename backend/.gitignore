@@ -1,9 +1,0 @@
-
-# Local test mongo binary
-.cache/
-
-# Build output
-dist/
-
-# dependencies
-node_modules/
