@@ -283,7 +283,13 @@ export default function GithubSettingsPage() {
                     </p>
                     <p className="text-sm text-text-secondary">
                       同步了 {syncResult.assetsSynced ?? 0} 个 assets 附件
+                      {syncResult.assetsFailed ? `（${syncResult.assetsFailed} 个失败）` : ""}
                     </p>
+                    {syncResult.assetsTruncated && (
+                      <p className="text-sm text-yellow-400">
+                        ⚠️ assets 列表被 GitHub 截断，可能有文件未同步
+                      </p>
+                    )}
                     <p className="text-xs text-text-muted mt-2">
                       时间: {new Date(syncResult.timestamp).toLocaleString("zh-CN")}
                     </p>

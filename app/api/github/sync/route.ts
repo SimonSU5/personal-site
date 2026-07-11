@@ -48,70 +48,77 @@ function processImagePaths(content: string, fileDir: string, baseUrl: string): s
   });
 }
 
-// 递归拉取 contents 仓库的 assets/ 目录，写到本地 public/assets/（保留子目录结构）
-async function fetchAndSaveAssets(
+interface AssetsSyncResult {
+  count: number;
+  failed: number;
+  truncated: boolean;
+}
+
+// 同步 contents 仓库的 assets/ → 本地 public/assets/（保留子目录结构）。
+// 注意：GitHub Contents API 单文件 GET 在 >1MB 时会 404（大封面图会踩中），
+// 所以这里用 Git Trees API（recursive，一次列出所有 blob）+ Blobs API（支持到 100MB）取内容。
+async function syncAssets(
   owner: string,
   repo: string,
-  token: string,
-  dirPath: string,
-  rootDir: string,
-  localBase: string
-): Promise<number> {
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github.v3+json",
-      },
+  token: string
+): Promise<AssetsSyncResult> {
+  const rootPrefix = "assets/";
+  const localBase = path.join(process.cwd(), "public", "assets");
+  await mkdir(localBase, { recursive: true });
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/vnd.github.v3+json",
+  };
+
+  // 1) 递归列出整棵树，筛出 assets/ 下的文件
+  const treeRes = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`,
+    { headers }
+  );
+  if (!treeRes.ok) {
+    if (treeRes.status === 404) {
+      // 没有 assets/ 目录，跳过
+      return { count: 0, failed: 0, truncated: false };
     }
+    throw new Error(`GitHub API error (assets tree): ${treeRes.statusText}`);
+  }
+  const treeData = await treeRes.json();
+  const blobs: any[] = (treeData.tree || []).filter(
+    (e: any) => e.type === "blob" && typeof e.path === "string" && e.path.startsWith(rootPrefix)
   );
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      // 该子目录不存在，跳过
-      return 0;
-    }
-    throw new Error(`GitHub API error (assets ${dirPath}): ${response.statusText}`);
-  }
-
-  const items = await response.json();
+  // 2) 逐个 blob 取内容并落盘；单个失败不影响其余
   let count = 0;
+  let failed = 0;
+  for (const blob of blobs) {
+    try {
+      const blobRes = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/git/blobs/${blob.sha}`,
+        { headers }
+      );
+      if (!blobRes.ok) {
+        failed++;
+        continue;
+      }
+      const blobData = await blobRes.json();
+      const buffer = Buffer.from(
+        blobData.content || "",
+        blobData.encoding === "base64" ? "base64" : "utf-8"
+      );
 
-  for (const item of items) {
-    if (item.type === "file") {
-      // 取文件内容（base64）
-      const contentRes = await fetch(item.url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      });
-      const contentData = await contentRes.json();
-      const buffer = Buffer.from(contentData.content, "base64");
-
-      // item.path 形如 "assets/sub/bar.png"，映射到本地 public/assets/sub/bar.png
-      const relative = item.path.startsWith(rootDir + "/")
-        ? item.path.slice(rootDir.length + 1)
-        : item.path;
+      const relative = blob.path.slice(rootPrefix.length);
       const localPath = path.join(localBase, relative);
       await mkdir(path.dirname(localPath), { recursive: true });
       await writeFile(localPath, buffer);
       count++;
-    } else if (item.type === "dir") {
-      count += await fetchAndSaveAssets(owner, repo, token, item.path, rootDir, localBase);
+    } catch (err) {
+      console.error(`syncAssets: failed for ${blob.path}:`, err);
+      failed++;
     }
   }
 
-  return count;
-}
-
-// 同步 contents 仓库的 assets/ → 本地 public/assets/
-async function syncAssets(owner: string, repo: string, token: string): Promise<number> {
-  const rootDir = "assets";
-  const localBase = path.join(process.cwd(), "public", "assets");
-  await mkdir(localBase, { recursive: true });
-  return fetchAndSaveAssets(owner, repo, token, rootDir, rootDir, localBase);
+  return { count, failed, truncated: !!treeData.truncated };
 }
 
 export async function POST(req: NextRequest) {
@@ -134,10 +141,8 @@ export async function POST(req: NextRequest) {
     // 同步作品集
     const works = await syncWorks(owner, repoName, token);
 
-    // 同步 assets（Obsidian 附件，写到 public/assets/）
-    const assetsSynced = await syncAssets(owner, repoName, token);
-
-    // 保存到本地
+    // 先保存内容（posts/works），再同步 assets —— 即便 assets 同步抛错，
+    // 已落盘的内容也不会丢
     if (posts.length > 0) {
       await savePosts(posts);
     }
@@ -145,11 +150,16 @@ export async function POST(req: NextRequest) {
       await saveWorks(works);
     }
 
+    // 同步 assets（Obsidian 附件，写到 public/assets/）
+    const assetsResult = await syncAssets(owner, repoName, token);
+
     return NextResponse.json({
       success: true,
       posts,
       works,
-      assetsSynced,
+      assetsSynced: assetsResult.count,
+      assetsFailed: assetsResult.failed,
+      assetsTruncated: assetsResult.truncated,
       saved: true,
       timestamp: new Date().toISOString(),
     });
