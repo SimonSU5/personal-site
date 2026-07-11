@@ -411,8 +411,11 @@ article,
 
 .prose ul,
 .prose ol {
-  margin-left: 1.5rem;
+  /* Tailwind v4 preflight 清零了 ol/ul 的 padding，列表标记画在 padding-inline-start 区域，
+     用 padding 而非 margin 给标记留位，否则序号/圆点会被裁掉看不见。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
 }
 
 .prose li {
@@ -1974,8 +1977,10 @@ textarea.form-input {
 
 .detail-content ul,
 .detail-content ol {
-  margin-left: 1.5rem;
+  /* 同 .prose：用 padding-inline-start 给列表标记留位，避免被 preflight 裁掉。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
 }
 
 .detail-content li {
