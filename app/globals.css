@@ -411,8 +411,11 @@ article,
 
 .prose ul,
 .prose ol {
-  margin-left: 1.5rem;
+  /* Tailwind v4 preflight 清零了 ol/ul 的 padding；列表标记画在 padding-inline-start 区，
+     用 padding 而非 margin 给标记留位（外层有 overflow 时 margin 里的标记会被裁掉）。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
 }
 
 .prose li {
@@ -1974,8 +1977,21 @@ textarea.form-input {
 
 .detail-content ul,
 .detail-content ol {
-  margin-left: 1.5rem;
+  /* 同 .prose：用 padding-inline-start 给标记留位；外层 .detail-scroll-area 有 overflow，
+     margin 里的标记会被裁掉，必须放进 padding。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
+}
+
+/* 详情弹层（.detail-content）原先缺 list-style-type，被 preflight 的 list-style:none 覆盖，
+   导致 ol 序号 / ul 圆点都不显示。这里补上。 */
+.detail-content ul {
+  list-style-type: disc;
+}
+
+.detail-content ol {
+  list-style-type: decimal;
 }
 
 .detail-content li {
