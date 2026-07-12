@@ -44,8 +44,5 @@ data/github-settings.json
 next-env.d.ts
 .claude/
 
-# Local runtime data (tracked defaults stay; local edits ignored)
-/data/
-
-# Synced Obsidian assets (regenerable via /api/github/sync → project root assets/)
-/assets/
+# data/ 与 assets/ 已纳入版本管理（内容数据 + 同步资源）。
+# 仅 data/github-settings.json 含凭证，保持忽略（见上方 sensitive data files）。
