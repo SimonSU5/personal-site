@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, readdir, rm } from "fs/promises";
 import path from "path";
 import { isImageFilename, splitObsidianTarget } from "@/lib/remark-obsidian";
+import { compressImageBuffer, isCompressibleImage } from "@/lib/image-compress";
 
 // 同步后的资源 URL 前缀。文件落在项目根 assets/，由 app/assets/[...path]/route.ts 提供服务。
 const ASSETS_URL_PREFIX = "/assets";
@@ -21,7 +22,10 @@ async function saveWorks(works: any[]) {
 function resolveAssetRef(ref: string, index: Record<string, string>): string {
   let p = ref.trim().replace(/^\/+/, "");
   if (p.startsWith("assets/")) p = p.slice("assets/".length);
-  if (!p.includes("/") && index[p]) p = index[p];
+  // 统一：先取 basename 查索引（命中压缩后的实际落盘路径，如 foo.png → covers/foo.webp），
+  // 未命中再回退原拼接。这样 cover 全路径与 ![[bare]] 都能正确解析到压缩版。
+  const base = p.split("/").pop();
+  if (base && index[base]) p = index[base];
   return encodeURI(`${ASSETS_URL_PREFIX}/${p}`.replace(/\/{2,}/g, "/"));
 }
 
@@ -32,9 +36,8 @@ function rewriteObsidianImages(body: string, index: Record<string, string>): str
   return body.replace(re, (m, inner: string) => {
     const { name } = splitObsidianTarget(inner);
     if (!name || !isImageFilename(name)) return m; // 非图片嵌入，保留给渲染层
-    const url = name.includes("/")
-      ? encodeURI(`${ASSETS_URL_PREFIX}/${name}`.replace(/\/{2,}/g, "/"))
-      : resolveAssetRef(name, index);
+    // 无论 name 是带子目录还是 bare 文件名，统一走 resolveAssetRef（basename 查索引）
+    const url = resolveAssetRef(name, index);
     return `![${name}](${url})`;
   });
 }
@@ -63,13 +66,33 @@ interface AssetsSyncResult {
   count: number;
   failed: number;
   truncated: boolean;
-  // basename → assets/ 下的相对路径，供 cover / ![[file]] 解析子目录
+  compressed: number; // 实际压缩为 webp 的张数
+  skipped: number; // 跳过（gif/svg/非图/sharp 失败）
+  originalBytes: number; // 同步下来原始体积合计
+  compressedBytes: number; // 落盘体积合计
+  // basename → assets/ 下的相对路径（压缩后），供 cover / ![[file]] 解析子目录
   index: Record<string, string>;
 }
 
+// 同步前清空 assets/（保留 .gitkeep），避免上一次的旧 .png 在改名 .webp 后残留成孤儿文件。
+async function cleanAssets(base: string) {
+  try {
+    const entries = await readdir(base, { withFileTypes: true });
+    await Promise.all(
+      entries.map((e) =>
+        e.name === ".gitkeep"
+          ? Promise.resolve()
+          : rm(path.join(base, e.name), { recursive: true, force: true })
+      )
+    );
+  } catch {
+    // 目录不存在等，忽略（下面 mkdir 会建）
+  }
+}
+
 // 同步 contents 仓库的 assets/ → 本地项目根 assets/（保留子目录结构），
-// 并构建 basename → 相对路径 的索引。用 Git Trees API（recursive）+ Blobs API 取内容，
-// 绕开 Contents API 单文件 1MB 限制。
+// 落盘前把图片压缩为 WebP（≤ MAX_BYTES），并构建 basename → 压缩后相对路径 的索引。
+// 用 Git Trees API（recursive）+ Blobs API 取内容，绕开 Contents API 单文件 1MB 限制。
 async function syncAssets(
   owner: string,
   repo: string,
@@ -78,13 +101,23 @@ async function syncAssets(
   const rootPrefix = "assets/";
   const localBase = path.join(process.cwd(), "assets");
   await mkdir(localBase, { recursive: true });
+  await cleanAssets(localBase);
 
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github.v3+json",
   };
 
-  const empty: AssetsSyncResult = { count: 0, failed: 0, truncated: false, index: {} };
+  const empty: AssetsSyncResult = {
+    count: 0,
+    failed: 0,
+    truncated: false,
+    compressed: 0,
+    skipped: 0,
+    originalBytes: 0,
+    compressedBytes: 0,
+    index: {},
+  };
 
   // 1) 递归列出整棵树，筛出 assets/ 下的文件
   const treeRes = await fetch(
@@ -100,10 +133,15 @@ async function syncAssets(
     (e: any) => e.type === "blob" && typeof e.path === "string" && e.path.startsWith(rootPrefix)
   );
 
-  // 2) 逐个 blob 取内容并落盘；单个失败不影响其余
+  // 2) 逐个 blob 取内容 → 压缩 → 落盘；单个失败不影响其余
   const index: Record<string, string> = {};
   let count = 0;
   let failed = 0;
+  let compressed = 0;
+  let skipped = 0;
+  let originalBytes = 0;
+  let compressedBytes = 0;
+
   for (const blob of blobs) {
     try {
       const blobRes = await fetch(
@@ -119,22 +157,54 @@ async function syncAssets(
         blobData.content || "",
         blobData.encoding === "base64" ? "base64" : "utf-8"
       );
+      originalBytes += buffer.length;
 
-      const relative = blob.path.slice(rootPrefix.length);
-      const localPath = path.join(localBase, relative);
+      const relative = blob.path.slice(rootPrefix.length); // 例: covers/foo.png
+
+      // 图片：压缩为 webp（gif/svg/失败原样）；非图片：原样落盘
+      let outBuffer: Buffer = buffer;
+      let outRelative = relative;
+      if (isCompressibleImage(blob.path)) {
+        const result = await compressImageBuffer(buffer, blob.path);
+        outBuffer = result.buffer;
+        if (result.compressed) {
+          const origExt = path.extname(relative);
+          outRelative = origExt
+            ? relative.slice(0, -origExt.length) + result.outExt
+            : relative + result.outExt;
+          compressed++;
+        } else {
+          skipped++;
+        }
+      } else {
+        skipped++;
+      }
+
+      const localPath = path.join(localBase, outRelative);
       await mkdir(path.dirname(localPath), { recursive: true });
-      await writeFile(localPath, buffer);
+      await writeFile(localPath, outBuffer);
+      compressedBytes += outBuffer.length;
       count++;
-      // basename → 相对路径（同 basename 以先入为准；cover 走全路径不受影响）
+
+      // 原 basename（含原扩展）→ 压缩后相对路径（同 basename 以先入为准）
       const base = relative.split("/").pop();
-      if (base && !index[base]) index[base] = relative;
+      if (base && !index[base]) index[base] = outRelative;
     } catch (err) {
       console.error(`syncAssets: failed for ${blob.path}:`, err);
       failed++;
     }
   }
 
-  return { count, failed, truncated: !!treeData.truncated, index };
+  return {
+    count,
+    failed,
+    truncated: !!treeData.truncated,
+    compressed,
+    skipped,
+    originalBytes,
+    compressedBytes,
+    index,
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -153,7 +223,16 @@ export async function POST(req: NextRequest) {
 
     // 先同步 assets 并构建索引（cover / 正文 ![[file]] 解析要用）；
     // 即便 assets 同步抛错也只降级为没有索引，不影响内容同步
-    let assetsResult: AssetsSyncResult = { count: 0, failed: 0, truncated: false, index: {} };
+    let assetsResult: AssetsSyncResult = {
+      count: 0,
+      failed: 0,
+      truncated: false,
+      compressed: 0,
+      skipped: 0,
+      originalBytes: 0,
+      compressedBytes: 0,
+      index: {},
+    };
     try {
       assetsResult = await syncAssets(owner, repoName, token);
     } catch (e: any) {
@@ -178,6 +257,10 @@ export async function POST(req: NextRequest) {
       assetsSynced: assetsResult.count,
       assetsFailed: assetsResult.failed,
       assetsTruncated: assetsResult.truncated,
+      assetsCompressed: assetsResult.compressed,
+      assetsSkipped: assetsResult.skipped,
+      originalBytes: assetsResult.originalBytes,
+      compressedBytes: assetsResult.compressedBytes,
       saved: true,
       timestamp: new Date().toISOString(),
     });
