@@ -1526,7 +1526,7 @@ textarea.form-input {
 
   .project-list,
   .blog-posts-list {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .article-title {
@@ -1632,8 +1632,8 @@ textarea.form-input {
   }
 
   .project-list {
-    /* 三列均分，设置最小宽度确保卡片不会过窄 */
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    /* 三列均分；minmax(0,1fr) 避免 1fr 隐含 min-width:auto 撑爆容器 */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .blog-banner-box {
@@ -1774,11 +1774,11 @@ textarea.form-input {
 
   /* 保持三列 */
   .project-list {
-    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .blog-posts-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1794,11 +1794,11 @@ textarea.form-input {
 
   /* 保持三列，设置合理的最小宽度 */
   .project-list {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .blog-posts-list {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   /* 博客横幅更高 */
