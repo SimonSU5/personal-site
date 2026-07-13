@@ -44,8 +44,8 @@ personal-site-content/
 **同步**（后台「GitHub 同步」点「立即同步」，或 `POST /api/github/sync`，或配置 webhook 自动触发）会：
 
 1. 用 **Git Trees API（recursive）+ Blobs API** 拉 `blogs/`、`works/`、`assets/`（绕开 Contents API 单文件 1MB 限制，大封面图也能拉）；
-2. 解析 frontmatter → 写 `data/posts.json` / `data/works.json`；`assets/` 落到**项目根 `assets/**`**；
-3. 把 `cover` 和正文里的 `![[图片]]` 改写为本地 `/assets/...`；
+2. **图片压缩**：`assets/` 落盘前经 sharp 压缩为 **WebP，单图 ≤300KB**（`lib/image-compress.ts`；gif/svg 跳过，小图兜底保留原图）→ 写**项目根 `assets/**/*.webp`**；
+3. 解析 frontmatter → 写 `data/posts.json` / `data/works.json`；`cover` 与正文 `![[图片]]` 改写为本地 `/assets/**.webp`；
 4. 渲染时 `[[笔记]]` → `/blog/{id}` 或 `/works/{id}`（未匹配则灰色文本）。
 
 `assets/` 不在 `public/` 下，由 [`app/assets/[...path]/route.ts`](app/assets/[...path]/route.ts) 提供静态服务（带目录穿越防护）。
@@ -65,15 +65,15 @@ surong-personal/
 ├── components/               # ui/（vCard 组件、DetailView、MarkdownContent）admin/ public/
 ├── lib/                      # auth/csrf/contexts/remark-obsidian
 ├── types/                    # 类型定义（以 types/index.ts 为准）
-├── data/                     # content/posts/works.json + github-settings.json（运行时数据）
-├── assets/                   # 同步下来的 Obsidian 附件（运行时数据）
+├── data/                     # content/posts/works.json（内容数据）+ github-settings.json（gitignore）
+├── assets/                   # 同步下来、已压缩为 WebP 的附件（≤300KB/张）
 ├── docs/                     # FRONTEND_GUIDE.md
 └── public/                   # 上传图片等
 ```
 
 ## 数据与资源
 
-- `data/{content,posts,works}.json`、根 `assets/` 都是**运行时数据**：`.gitignore` 忽略 + `--skip-worktree` 冻结本地改动，仓库里只保留一份**示例快照**。后台编辑 / 重新同步产生的本地变更不入 git。
+- `data/{content,posts,works}.json`、根 `assets/`（压缩后的 WebP）**已纳入版本管理**（随仓库走，2026-07 起）。后台编辑 / 重新同步会覆盖本地内容。
 - `data/github-settings.json` 存 GitHub 仓库与 PAT，**已 gitignore**，不会进仓库。
 
 ## 环境变量（`.env.local`，已 gitignore）
@@ -92,7 +92,7 @@ surong-personal/
 
 支持任何能跑 Next.js 的长驻 node 环境（`npm run build` + `npm run start`）。
 
-> 说明：`assets/` 与 `data/` 是运行时数据。新环境部署后，**跑一次 GitHub 同步**才会生成实际附件（仓库里的示例快照可直接展示，但最新内容仍需同步）。
+> 说明：`assets/`（WebP）与 `data/` 已随仓库提交，新环境开箱即可展示；如需最新内容，**跑一次 GitHub 同步**覆盖本地。
 
 ## 与 PerLog 后端的关系
 

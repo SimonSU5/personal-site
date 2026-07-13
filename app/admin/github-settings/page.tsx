@@ -308,15 +308,15 @@ export default function GithubSettingsPage() {
                     <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
                     style={{ padding: "12px" }}>
 {`personal-site-content/
-├── blogs/                    # 博客文章
-│   ├── 2024-01-15-hello-world.md
-│   └── 2024-02-20-react-hooks.md
-├── works/                    # 作品文章
-│   ├── project-name.md
-│   └── another-project.md
-└── assets/                   # 图片资源
-    ├── images/
-    └── works/`}
+├── blogs/                    # 博客
+│   ├── drafts/
+│   └── 2024-01-15-hello-world.md
+├── works/                    # 作品
+│   ├── drafts/
+│   └── project-name.md
+└── assets/
+    ├── covers/               # 封面
+    └── images/               # 正文截图`}
                     </pre>
                   </div>
 
@@ -325,17 +325,57 @@ export default function GithubSettingsPage() {
                     <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
                     style={{ padding: "12px" }}>
 {`---
-title: 你好世界
-category: 技术
-excerpt: 这是文章摘要
----
-
-这里是文章正文内容...`}
+title:
+excerpt:
+category:
+tags:
+cover: assets/covers/image.jpg
+date: <% tp.date.now("YYYY-MM-DD") %>
+published: false
+---`}
                     </pre>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-text-primary mb-2">3. Webhook 配置</h4>
+                    <h4 className="font-medium text-text-primary mb-2">3. 作品文章格式</h4>
+                    <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
+                    style={{ padding: "12px" }}>
+{`---
+title:
+description:
+cover: assets/covers/project-cover.jpg
+category:
+demo:
+repo:
+date: <% tp.date.now("YYYY-MM-DD") %>
+published: false
+---
+#
+
+## 项目简介
+
+项目介绍...
+
+## 技术栈
+
+- 技术1
+- 技术2
+- 技术3
+
+## 主要功能
+
+- 功能1
+- 功能2
+- 功能3
+
+## 项目成果
+
+项目成果和数据...`}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-text-primary mb-2">4. Webhook 配置</h4>
                     <p className="text-sm">
                       在仓库 Settings → Webhooks → Add webhook 中配置：
                     </p>
