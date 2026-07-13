@@ -46,3 +46,6 @@ next-env.d.ts
 
 # data/ 与 assets/ 已纳入版本管理（内容数据 + 同步资源）。
 # 仅 data/github-settings.json 含凭证，保持忽略（见上方 sensitive data files）。
+
+# docs/ 本地维护（FRONTEND_GUIDE.md 不入库，随本地更新）
+/docs/
