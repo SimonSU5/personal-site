@@ -1631,10 +1631,7 @@ textarea.form-input {
     gap: 20px 25px;
   }
 
-  .project-list {
-    /* 三列均分；minmax(0,1fr) 避免 1fr 隐含 min-width:auto 撑爆容器 */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  /* project-list 不在此设 3 列：与 blog-posts-list 统一，3 列推迟到 1400px 断点 */
 
   .blog-banner-box {
     height: 230px;
