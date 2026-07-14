@@ -1822,7 +1822,7 @@ textarea.form-input {
 .article-header-sticky {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   background: var(--bg-card);
   backdrop-filter: blur(10px);
   padding: 16px 20px 12px !important;
