@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { readFile } from "fs/promises";
 import path from "path";
 import MarkdownContent from "@/components/MarkdownContent";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface WorkPageProps {
   params: Promise<{
@@ -23,6 +24,20 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
   if (!work) {
     notFound();
   }
+
+  // 读取 posts.json 以解析 Obsidian 内部链接（作品可能链接到博客）
+  let posts: any[] = [];
+  try {
+    const postsFile = path.join(process.cwd(), "data", "posts.json");
+    posts = JSON.parse(await readFile(postsFile, "utf-8"));
+  } catch {
+    posts = [];
+  }
+
+  const notes: ObsidianNote[] = [
+    ...posts.map((p: any) => ({ id: String(p.id), title: p.title, type: "post" as const })),
+    ...works.map((w: any) => ({ id: String(w.id), title: w.title, type: "work" as const })),
+  ];
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -80,7 +95,7 @@ export default async function WorkDetailPage({ params }: WorkPageProps) {
 
         {work.content && (
           <div className="prose prose-invert prose-lg max-w-none detail-markdown">
-            <MarkdownContent content={work.content} />
+            <MarkdownContent content={work.content} notes={notes} />
           </div>
         )}
       </div>

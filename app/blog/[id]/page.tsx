@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { readFile } from "fs/promises";
 import path from "path";
 import MarkdownContent from "@/components/MarkdownContent";
+import { type ObsidianNote } from "@/lib/remark-obsidian";
 
 interface BlogPageProps {
   params: Promise<{
@@ -23,6 +24,20 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
   if (!post) {
     notFound();
   }
+
+  // 读取 works.json 以解析 Obsidian 内部链接（博客可能链接到作品）
+  let works: any[] = [];
+  try {
+    const worksFile = path.join(process.cwd(), "data", "works.json");
+    works = JSON.parse(await readFile(worksFile, "utf-8"));
+  } catch {
+    works = [];
+  }
+
+  const notes: ObsidianNote[] = [
+    ...posts.map((p: any) => ({ id: String(p.id), title: p.title, type: "post" as const })),
+    ...works.map((w: any) => ({ id: String(w.id), title: w.title, type: "work" as const })),
+  ];
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -46,7 +61,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
           {post.excerpt && (
             <p className="text-xl text-text-secondary mb-8 leading-relaxed">{post.excerpt}</p>
           )}
-          <MarkdownContent content={post.content} />
+          <MarkdownContent content={post.content} notes={notes} />
         </div>
       </div>
     </div>

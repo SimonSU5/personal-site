@@ -141,7 +141,7 @@ export default function ContactPage() {
         </aside>
 
         {/* Main Content */}
-        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+        <div className="main-content admin-main flex flex-col h-[850px] w-full overflow-hidden">
           <nav className="navbar sticky top-0 z-20 bg-bg-card">
             <ul className="navbar-list">
               <li className="navbar-item">
@@ -177,7 +177,7 @@ export default function ContactPage() {
             </ul>
           </nav>
 
-          <article className="admin-content active flex flex-col h-full overflow-hidden">
+          <article className="admin-content active flex flex-col overflow-hidden">
             <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
               <div className="flex items-center justify-between">
                 <h2 className="h2 article-title">联系管理</h2>

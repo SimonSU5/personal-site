@@ -411,8 +411,11 @@ article,
 
 .prose ul,
 .prose ol {
-  margin-left: 1.5rem;
+  /* Tailwind v4 preflight 清零了 ol/ul 的 padding；列表标记画在 padding-inline-start 区，
+     用 padding 而非 margin 给标记留位（外层有 overflow 时 margin 里的标记会被裁掉）。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
 }
 
 .prose li {
@@ -1523,7 +1526,7 @@ textarea.form-input {
 
   .project-list,
   .blog-posts-list {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .article-title {
@@ -1628,10 +1631,7 @@ textarea.form-input {
     gap: 20px 25px;
   }
 
-  .project-list {
-    /* 三列均分，设置最小宽度确保卡片不会过窄 */
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
-  }
+  /* project-list 不在此设 3 列：与 blog-posts-list 统一，3 列推迟到 1400px 断点 */
 
   .blog-banner-box {
     height: 230px;
@@ -1771,11 +1771,11 @@ textarea.form-input {
 
   /* 保持三列 */
   .project-list {
-    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .blog-posts-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1791,11 +1791,11 @@ textarea.form-input {
 
   /* 保持三列，设置合理的最小宽度 */
   .project-list {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .blog-posts-list {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   /* 博客横幅更高 */
@@ -1822,7 +1822,7 @@ textarea.form-input {
 .article-header-sticky {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   background: var(--bg-card);
   backdrop-filter: blur(10px);
   padding: 16px 20px 12px !important;
@@ -1974,8 +1974,21 @@ textarea.form-input {
 
 .detail-content ul,
 .detail-content ol {
-  margin-left: 1.5rem;
+  /* 同 .prose：用 padding-inline-start 给标记留位；外层 .detail-scroll-area 有 overflow，
+     margin 里的标记会被裁掉，必须放进 padding。 */
+  padding-inline-start: 1.5rem;
   margin-bottom: 1rem;
+  list-style-position: outside;
+}
+
+/* 详情弹层（.detail-content）原先缺 list-style-type，被 preflight 的 list-style:none 覆盖，
+   导致 ol 序号 / ul 圆点都不显示。这里补上。 */
+.detail-content ul {
+  list-style-type: disc;
+}
+
+.detail-content ol {
+  list-style-type: decimal;
 }
 
 .detail-content li {
@@ -2952,5 +2965,31 @@ textarea.form-input {
 
   .skill-progress-slider {
     width: 100%;
+  }
+}
+
+/* ============================================
+   Admin <1024px：navbar 不 fixed/blur，main-content 限高 fit viewport
+   （.navbar 的 <1024 fixed+blur 是公共站移动底部导航样式，admin 复用导致整页毛玻璃；
+    admin-main 限高 + navbar sticky 相对 main-content，避免 navbar 跑出工作区）
+   ============================================ */
+@media (max-width: 1023px) {
+  .admin-main {
+    flex: none;
+    height: calc(100vh - 220px); /* fit */
+    max-height: calc(100vh - 220px); /* fit */
+  }
+
+  .admin-main > .navbar {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    background: var(--bg-card);
+    backdrop-filter: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--border-color);
   }
 }

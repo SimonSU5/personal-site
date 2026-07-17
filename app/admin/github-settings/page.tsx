@@ -128,7 +128,7 @@ export default function GithubSettingsPage() {
         </aside>
 
         {/* Main Content */}
-        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+        <div className="main-content admin-main flex flex-col h-[850px] w-full overflow-hidden">
           <nav className="navbar sticky top-0 z-20 bg-bg-card">
             <ul className="navbar-list">
               <li className="navbar-item">
@@ -164,7 +164,7 @@ export default function GithubSettingsPage() {
             </ul>
           </nav>
 
-          <article className="admin-content active flex flex-col h-full overflow-hidden">
+          <article className="admin-content active flex flex-col overflow-hidden">
             <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
               <h2 className="h2 article-title">GitHub 同步设置</h2>
             </header>
@@ -281,6 +281,15 @@ export default function GithubSettingsPage() {
                     <p className="text-sm text-text-secondary">
                       同步了 {syncResult.works?.length || 0} 个作品
                     </p>
+                    <p className="text-sm text-text-secondary">
+                      同步了 {syncResult.assetsSynced ?? 0} 个 assets 附件
+                      {syncResult.assetsFailed ? `（${syncResult.assetsFailed} 个失败）` : ""}
+                    </p>
+                    {syncResult.assetsTruncated && (
+                      <p className="text-sm text-yellow-400">
+                        ⚠️ assets 列表被 GitHub 截断，可能有文件未同步
+                      </p>
+                    )}
                     <p className="text-xs text-text-muted mt-2">
                       时间: {new Date(syncResult.timestamp).toLocaleString("zh-CN")}
                     </p>
@@ -299,15 +308,15 @@ export default function GithubSettingsPage() {
                     <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
                     style={{ padding: "12px" }}>
 {`personal-site-content/
-├── blogs/                    # 博客文章
-│   ├── 2024-01-15-hello-world.md
-│   └── 2024-02-20-react-hooks.md
-├── works/                    # 作品文章
-│   ├── project-name.md
-│   └── another-project.md
-└── assets/                   # 图片资源
-    ├── images/
-    └── works/`}
+├── blogs/                    # 博客
+│   ├── drafts/
+│   └── 2024-01-15-hello-world.md
+├── works/                    # 作品
+│   ├── drafts/
+│   └── project-name.md
+└── assets/
+    ├── covers/               # 封面
+    └── images/               # 正文截图`}
                     </pre>
                   </div>
 
@@ -316,17 +325,57 @@ export default function GithubSettingsPage() {
                     <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
                     style={{ padding: "12px" }}>
 {`---
-title: 你好世界
-category: 技术
-excerpt: 这是文章摘要
----
-
-这里是文章正文内容...`}
+title:
+excerpt:
+category:
+tags:
+cover: assets/covers/image.jpg
+date: <% tp.date.now("YYYY-MM-DD") %>
+published: false
+---`}
                     </pre>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-text-primary mb-2">3. Webhook 配置</h4>
+                    <h4 className="font-medium text-text-primary mb-2">3. 作品文章格式</h4>
+                    <pre className="bg-bg-card rounded-lg text-sm overflow-x-auto border border-border-color"
+                    style={{ padding: "12px" }}>
+{`---
+title:
+description:
+cover: assets/covers/project-cover.jpg
+category:
+demo:
+repo:
+date: <% tp.date.now("YYYY-MM-DD") %>
+published: false
+---
+#
+
+## 项目简介
+
+项目介绍...
+
+## 技术栈
+
+- 技术1
+- 技术2
+- 技术3
+
+## 主要功能
+
+- 功能1
+- 功能2
+- 功能3
+
+## 项目成果
+
+项目成果和数据...`}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-text-primary mb-2">4. Webhook 配置</h4>
                     <p className="text-sm">
                       在仓库 Settings → Webhooks → Add webhook 中配置：
                     </p>
