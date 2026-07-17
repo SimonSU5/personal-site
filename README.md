@@ -7,7 +7,7 @@
 ## 功能
 
 - **vCard 暗色主题**：左侧 vCard 侧边栏（头像 / 姓名 / 联系方式 / 社交），右侧按导航切换 About / Resume / Portfolio / Blog / Contact
-- **两套风格**（`tech` 科技暗色 / `warm` 暖色，存 localStorage）× **三种字体**（poppins / inter / space-grotesk）
+- **三种字体**（poppins / inter / space-grotesk，存 localStorage）
 - **作品集 & 博客**：列表 + 详情弹层（framer-motion）；博客/作品也支持独立详情页 `/blog/[id]`、`/works/[id]`（RSC 直读 JSON）
 - **Markdown 渲染**：react-markdown + remark-gfm + rehype-sanitize，支持 mermaid 流程图、代码高亮
 - **Obsidian 内部链接**：正文里的 `[[笔记]]` / `![[图片]]` 自动解析（`lib/remark-obsidian.ts`）
@@ -44,8 +44,8 @@ personal-site-content/
 **同步**（后台「GitHub 同步」点「立即同步」，或 `POST /api/github/sync`，或配置 webhook 自动触发）会：
 
 1. 用 **Git Trees API（recursive）+ Blobs API** 拉 `blogs/`、`works/`、`assets/`（绕开 Contents API 单文件 1MB 限制，大封面图也能拉）；
-2. 解析 frontmatter → 写 `data/posts.json` / `data/works.json`；`assets/` 落到**项目根 `assets/**`**；
-3. 把 `cover` 和正文里的 `![[图片]]` 改写为本地 `/assets/...`；
+2. **图片压缩**：`assets/` 落盘前经 sharp 压缩为 **WebP，单图 ≤300KB**（gif/svg 跳过）→ 写项目根 `assets/**/*.webp`；
+3. 解析 frontmatter → 写 `data/posts.json` / `data/works.json`；`cover` 与正文图片改写为本地 `/assets/**.webp`；
 4. 渲染时 `[[笔记]]` → `/blog/{id}` 或 `/works/{id}`（未匹配则灰色文本）。
 
 `assets/` 不在 `public/` 下，由 [`app/assets/[...path]/route.ts`](app/assets/[...path]/route.ts) 提供静态服务（带目录穿越防护）。
@@ -65,15 +65,15 @@ surong-personal/
 ├── components/               # ui/（vCard 组件、DetailView、MarkdownContent）admin/ public/
 ├── lib/                      # auth/csrf/contexts/remark-obsidian
 ├── types/                    # 类型定义（以 types/index.ts 为准）
-├── data/                     # content/posts/works.json + github-settings.json（运行时数据）
-├── assets/                   # 同步下来的 Obsidian 附件（运行时数据）
+├── data/                     # content/posts/works.json（内容数据）+ github-settings.json（gitignore）
+├── assets/                   # 同步下来、已压缩为 WebP 的附件（≤300KB/张）
 ├── docs/                     # FRONTEND_GUIDE.md
 └── public/                   # 上传图片等
 ```
 
 ## 数据与资源
 
-- `data/{content,posts,works}.json`、根 `assets/` 都是**运行时数据**：`.gitignore` 忽略 + `--skip-worktree` 冻结本地改动，仓库里只保留一份**示例快照**。后台编辑 / 重新同步产生的本地变更不入 git。
+- `data/{content,posts,works}.json`、根 `assets/`（同步压缩后的 WebP）**已纳入版本管理**（随仓库走）。后台编辑 / 重新同步会覆盖本地内容。
 - `data/github-settings.json` 存 GitHub 仓库与 PAT，**已 gitignore**，不会进仓库。
 
 ## 环境变量（`.env.local`，已 gitignore）
@@ -85,14 +85,12 @@ surong-personal/
 ## 安全须知
 
 - 🔴 生产**务必修改 `ADMIN_PASSWORD`**（默认 `admin123`）。
-- 🔴 仓库历史里曾出现明文 GitHub PAT，**请轮换**；现 PAT 只在 gitignore 的 `data/github-settings.json`。
-- ⚠️ 已知薄弱点：CSRF 仅在 `/api/auth/login` 强制；`/api/github/sync` 无鉴权；admin 路由保护靠每个页面 `useEffect` 调 `/api/auth/check`（`proxy.ts` 未挂载为 middleware）。详见 [`docs/FRONTEND_GUIDE.md`](docs/FRONTEND_GUIDE.md) §6。
 
 ## 部署
 
 支持任何能跑 Next.js 的长驻 node 环境（`npm run build` + `npm run start`）。
 
-> 说明：`assets/` 与 `data/` 是运行时数据。新环境部署后，**跑一次 GitHub 同步**才会生成实际附件（仓库里的示例快照可直接展示，但最新内容仍需同步）。
+> 说明：`assets/`（WebP）与 `data/` 已随仓库提交，新环境开箱即可展示；如需最新内容，**跑一次 GitHub 同步**覆盖本地。
 
 ## 与 PerLog 后端的关系
 
