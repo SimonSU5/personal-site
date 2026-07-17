@@ -132,7 +132,7 @@ export default function ContentPage() {
 
   return (
     <AdminLayout activePage="content">
-      <article className="admin-content active flex flex-col h-full overflow-hidden">
+      <article className="admin-content active flex flex-col overflow-hidden">
         <header className="article-header article-header-sticky flex-shrink-0 sticky top-0 z-10 bg-bg-card">
           <div className="flex items-center justify-between">
             <h2 className="h2 article-title">内容编辑</h2>

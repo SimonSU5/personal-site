@@ -2967,3 +2967,29 @@ textarea.form-input {
     width: 100%;
   }
 }
+
+/* ============================================
+   Admin <1024px：navbar 不 fixed/blur，main-content 限高 fit viewport
+   （.navbar 的 <1024 fixed+blur 是公共站移动底部导航样式，admin 复用导致整页毛玻璃；
+    admin-main 限高 + navbar sticky 相对 main-content，避免 navbar 跑出工作区）
+   ============================================ */
+@media (max-width: 1023px) {
+  .admin-main {
+    flex: none;
+    height: calc(100vh - 220px); /* fit */
+    max-height: calc(100vh - 220px); /* fit */
+  }
+
+  .admin-main > .navbar {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    background: var(--bg-card);
+    backdrop-filter: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+}

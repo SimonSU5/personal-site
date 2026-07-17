@@ -169,7 +169,7 @@ export default function AdminLayout({ children, activePage, onPageChange }: Admi
         />
 
         {/* Right Main Content */}
-        <div className="main-content flex flex-col h-[850px] w-full overflow-hidden">
+        <div className="main-content admin-main flex flex-col h-[850px] w-full overflow-hidden">
           {/* Navigation Bar - Sticky */}
           <nav className="navbar sticky top-0 z-20 bg-bg-card">
             <ul className="navbar-list">
