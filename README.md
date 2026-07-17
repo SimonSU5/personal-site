@@ -7,7 +7,7 @@
 ## 功能
 
 - **vCard 暗色主题**：左侧 vCard 侧边栏（头像 / 姓名 / 联系方式 / 社交），右侧按导航切换 About / Resume / Portfolio / Blog / Contact
-- **两套风格**（`tech` 科技暗色 / `warm` 暖色，存 localStorage）× **三种字体**（poppins / inter / space-grotesk）
+- **三种字体**（poppins / inter / space-grotesk，存 localStorage）
 - **作品集 & 博客**：列表 + 详情弹层（framer-motion）；博客/作品也支持独立详情页 `/blog/[id]`、`/works/[id]`（RSC 直读 JSON）
 - **Markdown 渲染**：react-markdown + remark-gfm + rehype-sanitize，支持 mermaid 流程图、代码高亮
 - **Obsidian 内部链接**：正文里的 `[[笔记]]` / `![[图片]]` 自动解析（`lib/remark-obsidian.ts`）
