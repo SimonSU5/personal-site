@@ -16,6 +16,8 @@ async function saveWorks(works: any[]) {
 export async function GET() {
   try {
     const works = await getWorks();
+    // 按 date 从新到旧（缺失 date 的排最后）
+    works.sort((a: any, b: any) => (b.date || "").localeCompare(a.date || ""));
     return Response.json(works);
   } catch (error) {
     return Response.json({ error: "Failed to read works" }, { status: 500 });

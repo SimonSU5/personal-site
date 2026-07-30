@@ -16,6 +16,8 @@ async function savePosts(posts: any[]) {
 export async function GET() {
   try {
     const posts = await getPosts();
+    // 按 date 从新到旧（缺失 date 的排最后）
+    posts.sort((a: any, b: any) => (b.date || "").localeCompare(a.date || ""));
     return Response.json(posts);
   } catch (error) {
     return Response.json({ error: "Failed to read posts" }, { status: 500 });

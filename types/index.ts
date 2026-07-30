@@ -5,6 +5,7 @@ export interface Work {
   cover?: string;
   tech?: string[];
   category?: string;
+  date?: string;
   content?: string;
   demo?: string;
   repo?: string;

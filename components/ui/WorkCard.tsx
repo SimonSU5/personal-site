@@ -41,6 +41,14 @@ export default function WorkCard({ work }: WorkCardProps) {
         <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors mb-2">
           {work.title}
         </h3>
+        {work.date && (
+          <time
+            dateTime={work.date}
+            style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 8 }}
+          >
+            {work.date}
+          </time>
+        )}
         <p className="text-text-secondary text-sm line-clamp-2 mb-4">
           {work.description || "暂无描述"}
         </p>
