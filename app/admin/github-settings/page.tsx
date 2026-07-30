@@ -215,14 +215,14 @@ export default function GithubSettingsPage() {
                       </p>
                     </div>
                   ) : (
-                    <div className="bg-green-900/20 rounded-lg border border-green-500/30"
+                    <div className="bg-success-bg rounded-lg border border-success"
                     style={{ padding: "16px" }}>
                       <div className="flex items-center"
                       style={{ gap: "8px" }}>
-                        <CheckCircle size={18} className="text-green-500" />
-                        <span className="text-sm font-medium text-green-400">环境变量已配置</span>
+                        <CheckCircle size={18} className="text-success" />
+                        <span className="text-sm font-medium text-success">环境变量已配置</span>
                       </div>
-                      <p className="text-sm text-green-300/80"
+                      <p className="text-sm text-success/80"
                       style={{ marginTop: "4px" }}>
                         正在使用环境变量 GITHUB_TOKEN，无需手动输入
                       </p>
@@ -230,7 +230,7 @@ export default function GithubSettingsPage() {
                   )}
 
                   {error && (
-                    <div className="flex items-center bg-red-900/20 text-red-400 rounded-lg text-sm border border-red-500/30"
+                    <div className="flex items-center bg-danger-bg text-danger rounded-lg text-sm border border-danger"
                     style={{ gap: "8px", padding: "12px" }}>
                       <AlertCircle size={16} />
                       {error}
@@ -265,15 +265,15 @@ export default function GithubSettingsPage() {
                 </button>
 
                 {useEnvToken && (
-                  <p className="text-sm text-green-400 mt-2">
+                  <p className="text-sm text-success mt-2">
                     ✓ 已配置环境变量 GITHUB_TOKEN，无需手动输入
                   </p>
                 )}
 
                 {syncResult && (
-                  <div className="bg-green-900/20 rounded-lg border border-green-500/30"
+                  <div className="bg-success-bg rounded-lg border border-success"
                   style={{ marginTop: "16px", padding: "16px" }}>
-                    <p className="text-green-400 font-medium"
+                    <p className="text-success font-medium"
                     style={{ marginBottom: "8px" }}>同步成功！</p>
                     <p className="text-sm text-text-secondary">
                       同步了 {syncResult.posts?.length || 0} 篇博客文章
@@ -286,7 +286,7 @@ export default function GithubSettingsPage() {
                       {syncResult.assetsFailed ? `（${syncResult.assetsFailed} 个失败）` : ""}
                     </p>
                     {syncResult.assetsTruncated && (
-                      <p className="text-sm text-yellow-400">
+                      <p className="text-sm text-warning">
                         ⚠️ assets 列表被 GitHub 截断，可能有文件未同步
                       </p>
                     )}

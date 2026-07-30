@@ -20,6 +20,18 @@ Next.js 16.2.9（App Router）· React 19 · TypeScript（strict）· Tailwind C
 
 > ⚠️ Next.js 16 有破坏性变更，写代码前读 `node_modules/next/dist/docs/`，留意 deprecation。
 
+## 主题系统（配色）
+
+全站配色由**单一数据源** [`lib/themes.ts`](lib/themes.ts) 驱动（"宏"）：9 套主题（暗色香槟金 + 8 套低饱和浅色），每套含页面/卡片底色、三级文字、强调色（同色相明暗渐变）、语义色（danger/success/warning）。
+
+- **生成**：`npm run gen:themes` 读 `lib/themes.ts` → 生成 [`app/themes.generated.css`](app/themes.generated.css)（入库如 lockfile，确定性产物）。`predev`/`prebuild` 自动跑；开发时改了 `lib/themes.ts`，手动跑一次 `npm run gen:themes` 或另开 `npm run dev:themes` 监听。
+- **机制**：每套主题生成 `:root[data-theme="<id>"]` 覆盖块（特异性高于裸 `:root`，切换必胜）；同时覆盖 raw 原语 + 语义层，保证直接引用 `var(--white-2)`/`var(--jet)` 的规则也跟随。
+- **切换**：首页侧栏社交行 🎨 图标 → Apple 风格圆点色块选择器；选择存 localStorage（key `theme`），首访默认「香槟金·暗色」。[`app/layout.tsx`](app/layout.tsx) 的防闪内联脚本保证首屏即正确主题、无 FOUC。
+- **admin 后台跟随公开站主题**（共享 `globals.css`，95% 走 token）。
+- **代码块 / mermaid** 按主题模式（dark/light）切换（oneDark/oneLight；mermaid dark/default 主题 + 当前强调色）。
+- **新增主题**：在 `lib/themes.ts` 的 `THEMES` 加一项（`id`/`name`/`mode`/`swatch`/`colors`），**同步** [`app/layout.tsx`](app/layout.tsx) 防闪脚本里的 theme-id 白名单，跑 `npm run gen:themes`。
+- **设计约束**：强调色只用于图标 / 分割线 / 激活态 / ≥18px 标题 / 渐变，**不用作小字正文或链接**（香槟金作正文对比度仅 2.27，不达标）；浅色主题靠阴影分层、暗色靠底色深浅；图片上的标签盖层用固定 `--on-image-bg/-fg`（跨主题不变）。
+
 ## 快速开始
 
 ```bash

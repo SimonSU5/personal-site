@@ -61,10 +61,10 @@ export default function BlogPage() {
                   fontSize: "15px",
                   fontWeight: 500,
                   color: activeFilter === category
-                    ? "var(--accent-primary, #D4AF37)"
-                    : "var(--text-muted, #999)",
+                    ? "var(--text-primary)"
+                    : "var(--text-muted)",
                   borderBottom: activeFilter === category
-                    ? "2px solid var(--accent-primary, #D4AF37)"
+                    ? "2px solid var(--accent-primary)"
                     : "none",
                   paddingBottom: "6px",
                   background: "none",

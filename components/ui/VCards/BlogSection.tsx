@@ -99,14 +99,14 @@ export default function BlogSection({ posts = [], isActive = false, notes }: Blo
                               zIndex: 10,
                               padding: "4px 10px",
                               borderRadius: "6px",
-                              backgroundColor: "rgba(18, 18, 23, 0.85)"
+                              backgroundColor: "var(--on-image-bg)"
                             }}
                           >
                             <span
                               style={{
                                 fontSize: "12px",
                                 fontWeight: 500,
-                                color: "rgba(255, 255, 255, 0.85)"
+                                color: "var(--on-image-fg)"
                               }}
                             >
                               {post.category}
@@ -127,14 +127,14 @@ export default function BlogSection({ posts = [], isActive = false, notes }: Blo
                               zIndex: 10,
                               padding: "4px 10px",
                               borderRadius: "6px",
-                              backgroundColor: "rgba(18, 18, 23, 0.85)"
+                              backgroundColor: "var(--on-image-bg)"
                             }}
                           >
                             <span
                               style={{
                                 fontSize: "12px",
                                 fontWeight: 500,
-                                color: "rgba(255, 255, 255, 0.85)"
+                                color: "var(--on-image-fg)"
                               }}
                             >
                               {post.category}

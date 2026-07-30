@@ -147,7 +147,7 @@ export default function ContentPage() {
             </button>
           </div>
           {saveMessage && (
-            <p className={`text-sm ${saveMessage.includes("成功") ? "text-green-500" : "text-red-500"}`}
+            <p className={`text-sm ${saveMessage.includes("成功") ? "text-success" : "text-danger"}`}
               style={{ marginTop: "8px" }}>
               {saveMessage}
             </p>
@@ -290,7 +290,7 @@ export default function ContentPage() {
                     {services.length > 1 && (
                       <button
                         onClick={() => removeService(index)}
-                        className="text-red-500 hover:text-red-400 text-sm"
+                        className="text-danger hover:opacity-70 text-sm"
                       >
                         删除
                       </button>

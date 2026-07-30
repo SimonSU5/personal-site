@@ -17,9 +17,9 @@ export default function WorkCard({ work }: WorkCardProps) {
           {work.category && (
             <div
               className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-md"
-              style={{ backgroundColor: "rgba(18, 18, 23, 0.85)" }}
+              style={{ backgroundColor: "var(--on-image-bg)" }}
             >
-              <span className="text-xs font-medium" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+              <span className="text-xs font-medium" style={{ color: "var(--on-image-fg)" }}>
                 {work.category}
               </span>
             </div>

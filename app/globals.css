@@ -1,8 +1,19 @@
 @import "tailwindcss";
+@import "./themes.generated.css";
 
 @theme inline {
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
+  /* 语义色（admin 状态/错误等，按需生成 text-/bg-/border- utility） */
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  /* 图片上的标签盖层（跨主题固定） */
+  --color-on-image-bg: var(--on-image-bg);
+  --color-on-image-fg: var(--on-image-fg);
 }
 
 /* ============================================
@@ -57,51 +68,9 @@
    * 颜色 - COLORS
    */
 
-  /* 渐变 - GRADIENTS */
-  --bg-gradient-onyx: linear-gradient(
-    to bottom right,
-    hsl(240, 1%, 25%) 3%,
-    hsl(0, 0%, 19%) 97%
-  );
-  --bg-gradient-jet: linear-gradient(
-    to bottom right,
-    hsla(240, 1%, 18%, 0.251) 0%,
-    hsla(240, 2%, 11%, 0) 100%
-  ), hsl(240, 2%, 13%);
-  --bg-gradient-yellow-1: linear-gradient(
-    to bottom right,
-    hsl(45, 100%, 71%) 0%,
-    hsla(36, 100%, 69%, 0) 50%
-  );
-  --bg-gradient-yellow-2: linear-gradient(
-    135deg,
-    hsla(45, 100%, 71%, 0.251) 0%,
-    hsla(35, 100%, 68%, 0) 59.86%
-  ), hsl(240, 2%, 13%);
-  --border-gradient-onyx: linear-gradient(
-    to bottom right,
-    hsl(0, 0%, 25%) 0%,
-    hsla(0, 0%, 25%, 0) 50%
-  );
-  --text-gradient-yellow: linear-gradient(
-    to right,
-    hsl(45, 100%, 72%),
-    hsl(35, 100%, 68%)
-  );
-
-  /* 纯色 - SOLID COLORS */
-  --jet: hsl(0, 0%, 22%);
-  --onyx: hsl(240, 1%, 17%);
-  --eerie-black-1: hsl(240, 2%, 13%);
-  --eerie-black-2: hsl(240, 2%, 12%);
-  --smoky-black: hsl(0, 0%, 7%);
-  --white-1: hsl(0, 0%, 100%);
-  --white-2: hsl(0, 0%, 98%);
-  --orange-yellow-crayola: hsl(45, 100%, 72%);
-  --vegas-gold: hsl(45, 54%, 58%);
-  --light-gray: hsl(0, 0%, 84%);
-  --light-gray-70: hsla(0, 0%, 84%, 0.7);
-  --bittersweet-shimmer: hsl(0, 43%, 51%);
+  /* 颜色（原色 + 渐变）已移至 themes.generated.css：
+     单一源 lib/themes.ts → scripts/gen-theme-css.ts 生成，按 :root[data-theme] 切换。
+     本块仅保留 TYPOGRAPHY / SHADOW / TRANSITION / 字体 / 圆角（与颜色无关）。 */
 
   /*
    * 排版 - TYPOGRAPHY
@@ -139,26 +108,8 @@
   --transition-1: 0.25s ease;
   --transition-2: 0.5s ease-in-out;
 
-  /*
-   * 映射到 Tailwind 兼容变量
-   */
-  --bg-primary: var(--smoky-black);
-  --bg-secondary: var(--eerie-black-1);
-  --bg-card: var(--eerie-black-2);
-  --bg-elevated: var(--onyx);
-
-  --text-primary: var(--white-1);
-  --text-secondary: var(--light-gray);
-  --text-muted: var(--light-gray-70);
-  --text-inverse: var(--smoky-black);
-
-  --accent-primary: var(--orange-yellow-crayola);
-  --accent-secondary: var(--vegas-gold);
-  --accent-hover: var(--orange-yellow-crayola);
-
-  --border-color: var(--jet);
-  --border-light: var(--onyx);
-  --divider-color: var(--jet);
+  /* 语义映射层（--bg-primary / --text-* / --accent-* / --border-* 等）已移至
+     themes.generated.css，随主题切换。 */
 
   /* 字体 */
   --font-sans: var(--font-poppins), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -520,7 +471,7 @@ article,
 }
 
 .sidebar.active {
-  max-height: 405px;
+  max-height: 460px;
 }
 
 .sidebar-info {
@@ -665,7 +616,7 @@ article,
   bottom: 0;
   left: 0;
   width: 100%;
-  background: hsla(240, 1%, 17%, 0.75);
+  background: var(--navbar-bg);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
   border-radius: 12px 12px 0 0;
@@ -1720,14 +1671,14 @@ textarea.form-input {
 
   body::-webkit-scrollbar-thumb {
     border: 5px solid var(--smoky-black);
-    background: hsla(0, 0%, 100%, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 20px;
-    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.11),
-      inset -1px -1px 0 hsla(0, 0%, 100%, 0.11);
+    box-shadow: inset 1px 1px 0 var(--scrollbar-thumb-hover),
+      inset -1px -1px 0 var(--scrollbar-thumb-hover);
   }
 
   body::-webkit-scrollbar-thumb:hover {
-    background: hsla(0, 0%, 100%, 0.15);
+    background: var(--scrollbar-thumb-hover);
   }
 
   body::-webkit-scrollbar-button {
@@ -1853,7 +1804,7 @@ textarea.form-input {
 
 .detail-close-btn:hover {
   background: var(--bg-gradient-yellow-1);
-  color: var(--onyx, #222);
+  color: var(--onyx);
   transform: scale(1.1);
 }
 
@@ -1964,7 +1915,7 @@ textarea.form-input {
 }
 
 .detail-content a {
-  color: var(--orange-yellow-crayola, #ffc727);
+  color: var(--accent-primary);
   text-decoration: none;
 }
 
@@ -2011,7 +1962,7 @@ textarea.form-input {
 }
 
 .detail-content blockquote {
-  border-left: 4px solid var(--orange-yellow-crayola, #ffc727);
+  border-left: 4px solid var(--accent-primary);
   padding-left: 1rem;
   margin: 1.5rem 0;
   color: var(--light-gray);
@@ -2080,7 +2031,7 @@ textarea.form-input {
 
 .project-item-button:hover .project-title,
 .blog-post-button:hover .blog-item-title {
-  color: var(--orange-yellow-crayola, #ffc727);
+  color: var(--accent-primary);
 }
 
 /* ============================================
@@ -2174,12 +2125,13 @@ textarea.form-input {
 }
 
 .admin-btn-danger {
-  background: #ef4444;
-  color: white;
+  background: var(--danger);
+  color: var(--text-on-danger);
 }
 
 .admin-btn-danger:hover {
-  background: #dc2626;
+  background: var(--danger);
+  filter: brightness(0.9);
 }
 
 /* Admin 联系项编辑模式 */
@@ -2194,7 +2146,7 @@ textarea.form-input {
   width: 20px;
   height: 20px;
   background: var(--light-gray);
-  color: var(--white);
+  color: var(--white-1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -2301,8 +2253,8 @@ textarea.form-input {
 }
 
 .timeline-item-edit .delete-btn:hover {
-  background: #ef4444;
-  color: white;
+  background: var(--danger);
+  color: var(--text-on-danger);
 }
 
 /* 技能编辑器样式 */
@@ -2417,7 +2369,7 @@ textarea.form-input {
 .admin-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--scrim);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -2633,7 +2585,7 @@ textarea.form-input {
 
 .admin-list-item-delete:hover {
   background: var(--bg-secondary);
-  color: #ef4444;
+  color: var(--danger);
 }
 
 /* Skill Progress */

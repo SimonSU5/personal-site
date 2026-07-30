@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { User, Plus, Trash2, ChevronDown, Home, Mail, MapPin, Phone, Calendar } from "lucide-react";
+import { ColorThemeSwitcher } from "@/components/ui/ColorThemeSwitcher";
 
 interface ContactItem {
   id: string;
@@ -223,6 +224,8 @@ export default function AdminSidebar({
             </a>
           </li>
         </ul>
+
+        <ColorThemeSwitcher />
       </div>
     </aside>
   );
