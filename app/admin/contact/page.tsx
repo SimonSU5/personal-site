@@ -192,7 +192,7 @@ export default function ContactPage() {
                 </button>
               </div>
               {saveMessage && (
-                <p className={`text-sm ${saveMessage.includes("成功") ? "text-green-500" : "text-red-500"}`}
+                <p className={`text-sm ${saveMessage.includes("成功") ? "text-success" : "text-danger"}`}
                   style={{ marginTop: "8px" }}>
                   {saveMessage}
                 </p>

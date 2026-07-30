@@ -36,6 +36,13 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" data-scroll-behavior="smooth" className={`${poppins.variable} ${inter.variable} ${spaceGrotesk.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
+        {/* 配色防闪：在首屏绘制前同步读 localStorage 设 data-theme。
+            theme-id 白名单需与 lib/themes.ts 的 THEMES 保持同步。 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var ok=['gold-dark','champagne-light','steel-blue','copper','teal','cobalt','mist-purple','moss','wine'];var t=localStorage.getItem('theme');if(!t||ok.indexOf(t)<0){t='gold-dark';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='gold-dark';}})();`,
+          }}
+        />
         {/* ionicons */}
         <script
           type="module"
