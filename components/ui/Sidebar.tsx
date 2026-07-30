@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { User, ChevronDown, Mail, Phone, MapPin, Calendar, Home, GitCommit} from "lucide-react";
+import { ColorThemeSwitcher } from "./ColorThemeSwitcher";
 
 interface ContactItem {
   id: string;
@@ -120,6 +121,8 @@ export default function Sidebar({
             </a>
           </li>
         </ul>
+
+        <ColorThemeSwitcher />
       </div>
     </aside>
   );

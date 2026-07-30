@@ -5,9 +5,11 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import mermaid from "mermaid";
 import { remarkObsidian, type ObsidianNote } from "@/lib/remark-obsidian";
+import { useTheme } from "@/lib/contexts/ThemeContext";
+import type { ColorMode } from "@/lib/themes";
 
 interface MarkdownContentProps {
   content: string;
@@ -15,80 +17,85 @@ interface MarkdownContentProps {
   notes?: ObsidianNote[];
 }
 
-let mermaidInitialized = false;
-if (typeof window !== "undefined" && !mermaidInitialized) {
+// mermaid 配置按当前配色模式构建：dark 用内置 dark 主题，light 用 default，
+// 均以当前主题强调色作 primaryColor。sig 守卫，仅模式/强调色变化时才重新 initialize（幂等）。
+let lastMermaidSig: string | null = null;
+function ensureMermaidInit(mode: ColorMode, accent: string, accentDark: string) {
+  const sig = `${mode}|${accent}|${accentDark}`;
+  if (lastMermaidSig === sig) return;
   mermaid.initialize({
     startOnLoad: false,
-    theme: "dark",
     securityLevel: "loose",
+    theme: mode === "light" ? "default" : "dark",
     themeVariables: {
-      dark: {
-        primaryColor: "#ffc727",
-        primaryTextColor: "#fff",
-        primaryBorderColor: "#ffc727",
-        lineColor: "#f0f0f0",
-        secondaryColor: "#e0e0e0",
-        tertiaryColor: "#f0f0f0",
-        background: "#1e1e1e",
-        mainBkg: "#2a2a2a",
-        nodeBorder: "#ffc727",
-        clusterBkg: "#2a2a2a",
-        clusterBorder: "#ffc727",
-        titleColor: "#fff",
-        edgeLabelBackground: "#2a2a2a",
-        actorBkg: "#2a2a2a",
-        actorBorder: "#ffc727",
-        actorTextColor: "#fff",
-        actorLineColor: "#f0f0f0",
-        signalColor: "#f0f0f0",
-        signalTextColor: "#fff",
-        labelBoxBkgColor: "#2a2a2a",
-        labelBoxBorderColor: "#ffc727",
-        labelTextColor: "#fff",
-        loopTextColor: "#fff",
-        noteBorderColor: "#ffc727",
-        noteBkgColor: "#2a2a2a",
-        noteTextColor: "#fff",
-        activationBorderColor: "#ffc727",
-        activationBkgColor: "#2a2a2a",
-        sequenceNumberColor: "#fff",
-      }
+      primaryColor: accent,
+      primaryBorderColor: accentDark,
+      lineColor: mode === "light" ? accentDark : "#f0f0f0",
     },
     flowchart: {
       useMaxWidth: true,
       htmlLabels: true,
-      curve: "basis"
-    }
+      curve: "basis",
+    },
   });
-  mermaidInitialized = true;
+  lastMermaidSig = sig;
 }
 
 const MermaidBlock = ({ code }: { code: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState(false);
+  const { colorMode, themeRecord } = useTheme();
+  const accent = themeRecord.colors.accentPrimary;
+  const accentDark = themeRecord.colors.accentDark;
 
   useEffect(() => {
+    // 同 effect 内先按当前模式（重新）init 再 render，保证 render 用到最新配置
+    ensureMermaidInit(colorMode, accent, accentDark);
+    let cancelled = false;
     const renderDiagram = async () => {
       try {
         const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
         const { svg } = await mermaid.render(id, code);
-        setSvg(svg);
-        setError(false);
+        if (!cancelled) {
+          setSvg(svg);
+          setError(false);
+        }
       } catch (err) {
         console.error('Mermaid rendering error:', err);
-        setError(true);
+        if (!cancelled) setError(true);
       }
     };
 
     renderDiagram();
-  }, [code]);
+    return () => {
+      cancelled = true;
+    };
+  }, [code, colorMode, accent, accentDark]);
 
   if (error) {
     return (
-      <div className="p-4 bg-red-900/30 border border-red-500 rounded-lg">
-        <p className="text-red-400 text-sm">图表渲染失败，请检查 Mermaid 语法</p>
-        <pre className="mt-2 text-xs text-red-300 overflow-x-auto">{code}</pre>
+      <div
+        className="p-4 rounded-lg"
+        style={{
+          background: "var(--danger-bg)",
+          border: "1px solid var(--danger)",
+        }}
+      >
+        <p style={{ color: "var(--danger)", fontSize: 14 }}>
+          图表渲染失败，请检查 Mermaid 语法
+        </p>
+        <pre
+          style={{
+            marginTop: 8,
+            fontSize: 12,
+            color: "var(--danger)",
+            opacity: 0.8,
+            overflowX: "auto",
+          }}
+        >
+          {code}
+        </pre>
       </div>
     );
   }
@@ -112,6 +119,7 @@ const MermaidBlock = ({ code }: { code: string }) => {
 };
 
 const CodeBlock = ({ className, children }: any) => {
+  const { colorMode } = useTheme();
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "";
   const code = String(children).replace(/\n$/, "");
@@ -121,18 +129,33 @@ const CodeBlock = ({ className, children }: any) => {
   }
 
   if (!match) {
-    return <code className="px-2 py-1 rounded bg-bg-secondary text-accent-primary text-sm">{children}</code>;
+    return (
+      <code
+        style={{
+          padding: "2px 6px",
+          borderRadius: 4,
+          background: "var(--bg-secondary)",
+          color: "var(--text-secondary)",
+          fontSize: "0.875em",
+        }}
+      >
+        {children}
+      </code>
+    );
   }
+
+  const hlStyle = colorMode === "light" ? oneLight : oneDark;
 
   return (
     <SyntaxHighlighter
-      style={oneDark}
+      style={hlStyle}
       language={language}
       PreTag="div"
-      className="rounded-lg !bg-[#1E1E1E]"
+      className="rounded-lg"
       customStyle={{
         margin: "1.5rem 0",
         borderRadius: "0.5rem",
+        background: "var(--bg-code)",
       }}
       codeTagProps={{
         style: {

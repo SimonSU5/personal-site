@@ -17,9 +17,9 @@ export default function WorkCard({ work }: WorkCardProps) {
           {work.category && (
             <div
               className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-md"
-              style={{ backgroundColor: "rgba(18, 18, 23, 0.85)" }}
+              style={{ backgroundColor: "var(--on-image-bg)" }}
             >
-              <span className="text-xs font-medium" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+              <span className="text-xs font-medium" style={{ color: "var(--on-image-fg)" }}>
                 {work.category}
               </span>
             </div>
@@ -41,6 +41,14 @@ export default function WorkCard({ work }: WorkCardProps) {
         <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors mb-2">
           {work.title}
         </h3>
+        {work.date && (
+          <time
+            dateTime={work.date}
+            style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 8 }}
+          >
+            {work.date}
+          </time>
+        )}
         <p className="text-text-secondary text-sm line-clamp-2 mb-4">
           {work.description || "暂无描述"}
         </p>

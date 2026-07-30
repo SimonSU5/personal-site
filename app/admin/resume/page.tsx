@@ -122,7 +122,7 @@ export default function ResumePage() {
           </div>
           {saveMessage && (
             <p className="text-sm"
-            style={{ marginTop: "8px", color: saveMessage.includes("成功") ? "#10b981" : "#ef4444" }}>
+            style={{ marginTop: "8px", color: saveMessage.includes("成功") ? "var(--success)" : "var(--danger)" }}>
               {saveMessage}
             </p>
           )}

@@ -312,6 +312,7 @@ async function syncPosts(owner: string, repo: string, token: string, index: Reco
       let excerpt = "";
       let category = "未分类";
       let cover = "";
+      let date = "";
       let body = content;
 
       if (frontmatterMatch) {
@@ -344,7 +345,7 @@ async function syncPosts(owner: string, repo: string, token: string, index: Reco
               cover = value;
               break;
             case "date":
-              // 如果 frontmatter 有日期，使用它
+              if (value) date = value;
               break;
           }
         }
@@ -358,9 +359,11 @@ async function syncPosts(owner: string, repo: string, token: string, index: Reco
       // 正文：先改写 Obsidian 图片嵌入 ![[..]]，再兜底处理标准 markdown 相对图片
       const processedBody = processImagePaths(rewriteObsidianImages(body, index));
 
-      // 从文件名提取日期
-      const dateMatch = file.name.match(/^(\d{4}-\d{2}-\d{2})/);
-      const date = dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0];
+      // 日期：优先 frontmatter date，其次文件名前缀，最后当天
+      if (!date) {
+        const dateMatch = file.name.match(/^(\d{4}-\d{2}-\d{2})/);
+        date = dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0];
+      }
 
       // 计算阅读时间
       const wordCount = processedBody.split(/\s+/).length;
@@ -430,6 +433,7 @@ async function syncWorks(owner: string, repo: string, token: string, index: Reco
       let demo = "";
       let repoUrl = "";
       let featured = false;
+      let date = "";
       let body = content;
 
       if (frontmatterMatch) {
@@ -470,6 +474,9 @@ async function syncWorks(owner: string, repo: string, token: string, index: Reco
             case "featured":
               featured = value.toLowerCase() === "true";
               break;
+            case "date":
+              if (value) date = value;
+              break;
           }
         }
       }
@@ -482,11 +489,18 @@ async function syncWorks(owner: string, repo: string, token: string, index: Reco
       // 正文：先改写 Obsidian 图片嵌入 ![[..]]，再兜底处理标准 markdown 相对图片
       const processedBody = processImagePaths(rewriteObsidianImages(body, index));
 
+      // 日期：优先 frontmatter date，其次文件名前缀，最后当天
+      if (!date) {
+        const dateMatch = file.name.match(/^(\d{4}-\d{2}-\d{2})/);
+        date = dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0];
+      }
+
       works.push({
         id: file.name.replace(".md", ""),
         title,
         description,
         category,
+        date,
         cover,
         tech,
         demo,
