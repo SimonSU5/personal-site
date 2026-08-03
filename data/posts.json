@@ -60,6 +60,18 @@
     "githubPath": "blogs/数通基础-BGP学习笔记02.md"
   },
   {
+    "id": "数通基础-IPv6学习笔记",
+    "title": "IPv6学习笔记",
+    "excerpt": "IPv6学习笔记",
+    "content": "1. IPv6优势\n\n2. IPv6包头",
+    "category": "学习笔记",
+    "date": "2026-08-02",
+    "readTime": "1分钟",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "source": "github",
+    "githubPath": "blogs/数通基础-IPv6学习笔记.md"
+  },
+  {
     "id": "数通基础-IS-IS学习笔记",
     "title": "IS-IS学习笔记",
     "excerpt": "IS-IS学习笔记",
@@ -247,7 +259,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E5%8D%AB%E6%B5%B4%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%A2%E5%8C%85MAC%E6%BC%82%E7%A7%BB-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E5%8D%AB%E6%B5%B4%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%A2%E5%8C%85MAC%E6%BC%82%E7%A7%BB-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某卫浴制造企业丢包与MAC漂移.md"
   },
