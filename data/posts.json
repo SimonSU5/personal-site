@@ -36,6 +36,18 @@
     "githubPath": "blogs/misc-关于个人网站的仓库管理办法.md"
   },
   {
+    "id": "数通基础-ACL+路由控制学习笔记",
+    "title": "ACL+路由控制学习笔记",
+    "excerpt": "ACL+路由控制学习笔记",
+    "content": "## ACL访问控制列表\n\n1. ACL组成\n\t1. acl number xxxx （2000-2999 basic，3000-3999 advanced，4000-4999 二层）\n\t2. rule 5（默认5步进）\n\t3. permit/deny\n\t4. 规则\n\t\t1. 基本ACL\n\t\t\t1. 源地址\n\t\t\t2. 分片信息\n\t\t\t3. 生效时间\n\t\t2. 高级ACL\n\t\t\t1. 源目IP\n\t\t\t2. 源目端口\n\t\t\t3. IP协议类型\n\t\t\t4. ICMP类型\n\t\t\t5. 生效时间段\n\t\t3. 二层ACL\n\t\t\t1. 源目MAC地址\n\t\t\t2. 二层协议\n\t\t4. 用户自定义ACL（5000-5999）\n\t\t5. 用户ACL（6000-6999）\n\t5. 默认在最尾加上全部deny\n2. ACL匹配位置\n\t1. inbound\n\t2. outbound\n\n---\n\n### 路由控制\n\n1. ACL\n\t1. config模式匹配：规则越小，越先匹配\n2. IP前缀列表\n\t1. 优点：可以匹配路由的子网掩码\n\t2. 缺点：只能匹配路由信息，无法匹配流量\n3. 结构\n\t1. ip ip-prefix name index xx permit/deny ip netmask greater-equal xx less-equal xx\n\t2. 前面的netmask规定了严格匹配\n\t3. 后面的掩码规定了子网长度\n\t4. 缺省在最后全部拒绝",
+    "category": "学习笔记",
+    "date": "2026-08-02",
+    "readTime": "1分钟",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "source": "github",
+    "githubPath": "blogs/数通基础-ACL+路由控制学习笔记.md"
+  },
+  {
     "id": "数通基础-BGP学习笔记01",
     "title": "BGP学习笔记01",
     "excerpt": "BGP学习笔记01",
@@ -58,18 +70,6 @@
     "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
     "source": "github",
     "githubPath": "blogs/数通基础-BGP学习笔记02.md"
-  },
-  {
-    "id": "数通基础-IPv6学习笔记",
-    "title": "IPv6学习笔记",
-    "excerpt": "IPv6学习笔记",
-    "content": "1. IPv6优势\n\n2. IPv6包头",
-    "category": "学习笔记",
-    "date": "2026-08-02",
-    "readTime": "1分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
-    "source": "github",
-    "githubPath": "blogs/数通基础-IPv6学习笔记.md"
   },
   {
     "id": "数通基础-IS-IS学习笔记",
@@ -216,16 +216,28 @@
     "githubPath": "blogs/数通基础-RIP学习笔记.md"
   },
   {
-    "id": "数通基础-STP学习笔记",
-    "title": "STP学习笔记",
-    "excerpt": "STP学习笔记",
-    "content": "1. 环路网络造成的问题\n\t1. 广播风暴：指定广播，未知单播，组播帧\n\t2. mac漂移\n2. 生成树作用\n\t1. 破环\n\t2. 备份\n\n---\nSTP\n1. 根桥\n\t1. 桥ID（BID）：优先级.MAC 优先级越小越优，MAC越小越优\n2. 开销\n\t1. 带宽越大，开销越小\n\t2. 根路径开销（RPC）：到根桥的开销总额\n3. 端口ID\n\t1. 优先级.接口编号\n\t2. 优先级默认128\n\t3. 接口编号为接口的名称\n4. BPDU\n\t1. 2s发一次BPDU\n\t2. 配置BPDU\n\t\t1. 组成\n\t\t\t1. 根桥ID\n\t\t\t2. 桥ID\n\t\t\t3. 接口ID\n\t\t\t4. 跟路径开销\n\t3. TCN BPDU 拓扑改变通知报文\n\t\t1. 接口更改才会发送\n5. 生成树收敛过程\n\t1. 选举根桥\n\t2. 非根桥选举根端口（举例根桥最近的端口）\n\t\t1. RPC开销：越小越优先\n\t\t2. 对端BID：越小越优先\n\t\t3. 对端接口ID：越小越优先\n\t\t4. 本端接口ID：越小越优先\n\t3. 选择指定端口（每个链路上选举指定端口）\n\t\t1. RPC开销：越小越优先\n\t\t2. 本端BID：越小越优先\n\t\t3. BID本端PID：越小越优先\n\t4. 非指定端口阻塞（不发业务报文，预备端口）\n6. 状态——防止临时环路\n\t1. 状态\n\t\t1. 禁用：关闭stp\n\t\t2. 阻塞：不转发业务报文，不发BPDU，只侦听BPDU\n\t\t3. 侦听：可侦听和转发BPDU，但是不转发业务报文\n\t\t4. 学习：可侦听和学习业务报文，但是不转发业务报文\n\t\t5. 转发：正常转发业务报文\n\t2. 3到4，4到5各有一个超时转发器，如果超时任然是指定接口或者跟接口，则进到下一个状态。超时器默认时间15秒。因此收敛需要超过30s。\n7. 拓扑变化\n\t1. 根桥故障-50s恢复时间\n\t2. 直连链路故障-30s恢复时间\n\t3. 非直连链路故障-30s恢复时间\n8. 拓扑变化导致MAC地址错误——等待老化300s才会恢复问题\n\t1. TCN BPDU用于解决此问题\n\t2. 过程\n\t\t1. 备用端口发送TCN报文\n\t\t2. 途径所有非根桥一直将TCN报文转发给根桥，每个环节都会用TCA确认\n\t\t3. 根桥收到TCN报文，回复TC报文给途径所有非根桥\n\t\t4. 途径所有非根桥将老化时间改为15s，刷新MAC地址。——全部删除\n\n---\nRSTP\n1. STP缺陷：\n\t1. 从用户角色来讲，状态很多余，阻塞侦听学习没有差别。\n\t2. STP被动算法，端口需要等待超时转发器，收敛速度慢\n\t3. 不管是新接入主机终端还是交换机，都需要等待超时转发器2个delay time\n\t4. 拓扑变更的时候会让所有的交换机都把mac表删除重建。在新增交换机的情况下完全没必要。\n2. RSTP\n\t1. 端口角色\n\t\t1. 根端口\n\t\t2. 指定端口\n\t\t3. 替代端口AP\n\t\t\t1. 根端口的备份。根端口down后，立刻将替代端口转化为根端口。\n\t\t4. 备份端口BP\n\t\t\t1. 指定端口的备份。指定端口down后，30s后转化为指定端口。\n\t\t5. 边缘端口EP\n\t\t\t1. 如果STP端口链接终端，则会设置为边缘端口。不参与STP计算。\n\t\t\t2. 一旦边缘端口收到BPDU包，就直接变为STP端口，失去边缘属性，参与STP计算。\n\t2. 端口状态重新划分\n\t\t1. discarding\n\t\t2. learning\n\t\t3. forwarding\n\t3. BPDU格式改变，利用flag字段表明端口角色。\n\t4. 配置BPDU处理\n\t\t1. STP只有根桥发送BPDU包，RSTP所有非根桥也会发送BPDU包。、\n\t\t2. STP 20s超时。RSTP只需要3个hello time即超时。\n\t\t3. 次优BPDU处\n\t\t\t1. 超时后，会认为自己为根桥，发送BPDU。\n\t\t\t2. 对端设备收到次优BPDU，立即回应rst bpdu（STP要等待20s老化后才回复）\n\t5. **P/A机制（4s左右）**\n\t\t1. 新建链路\n\t\t2. 初始状态下链路两端都为**D端口**，并且discarding\n\t\t3. 比较BPDU\n\t\t4. 次优的一方立刻变为root端口\n\t\t5. 优先的一方发送**P置位**的bpdu\n\t\t6. 次优将所有的端口除了边缘端口进入同步状态\n\t\t7. 同步后所有端口全都变为discarding，根端口发送**A置位**的bpdu\n\t\t8. 优先的一方D端口转为转发状态\n\t\t9. 次优的一方继续执行P/A机制。\n\t6. 拓扑变更机制\n\t\t1. STP使用up/down来判断是否拓扑变更。——任何变动都会导致TC报文和MAC地址刷新\n\t\t2. RSTP判断标准：一个非边缘端口变为forwarding状态——如果原来就是阻塞的端口，down了不会影响MAC地址震荡。\n\t\t3. 过程\n\t\t\t1. 拓扑改变，清空down端口的所有mac表，并且向非边缘的剩余端口发送TC报文。时间为2个hello time（TC while timer）\n\t\t\t2. 下游收到TC报文，保留TC报文进入的端口mac以及边缘端口学到的MAC，其他都删除。\n\t\t\t3. 向除了收到TC报文的端口以及边缘端口外的所有端口发送TC报文，时常为TC while timer。\n\t7. 保护机制\n\t\t1. BPDU保护——开在端口上\n\t\t\t1. 边缘端口开启保护，收到bpdu直接变成**error-down**\n\t\t2. 根保护——开在端口上\n\t\t\t1. 启动了根保护的接口，只能是指定接口。\n\t\t\t2. 收到更优的BPDU，直接转化为discarding\n\t\t\t3. 等2倍forward delay后（30s），如果没有更有的BPDU报文，则恢复forwarding\n\t\t3. 环路保护——开在端口上\n\t\t\t1. 光纤通信的情况下，单通可能引发环路问题：\n\t\t\t2. 如果根端口/AP长期收不到BPDU，则将RP和AP都改为DP，状态都是discarding。\n\t\t\t3. 当根端口/AP收到BPDU并且开始协商，则重新指定角色和状态。\n\t\t4. TC-BPDU攻击保护\n\t\t\t1. 开启后，单位时间内处理的TC-BPDU报文个数可以手动配置。\n\t8. 收敛过程\n\t\t1. 端口为D，discarding，发送bpdu。\n\t\t2. 选举根桥\n\t\t3. 从根桥开始，逐层下发P报文，收到A报文。下游设备除了A报文端口，其余全都discarding\n\t\t4. 下游端口发送P置位，因为",
+    "id": "数通基础-WLAN学习笔记",
+    "title": "WLAN学习笔记",
+    "excerpt": "WLAN学习笔记",
+    "content": "1. WLAN组网架构\n\t1. 胖AP架构：每台设备独立配置\n\t2. 瘦AP架构：使用AC+AP，CAPWAP控制协议通信\n2. AC+AP组网\n\t1. 二层组网：AC和AP在同一vlan，小型网络\n\t2. 三层组网：可以承载几十台-上百台AP\n3. AC+AP连接方式\n\t1. 直连式组网\n\t2. 旁挂式组网\n4. BSS/SSID/BSSID\n\t1. BSS\n\t\t1. 一个AP所覆盖的范围\n\t\t2. 在一个BSS范围内，STA可以相互通信\n\t2. BSSID\n\t\t1. WiFi名称，是MAC地址\n\t3. SSID\n\t\t1. WiFi别名，日常WiFi名称\n5. VAP 虚拟接入点\n\t1. 一个AP虚拟出多个AP\n\t2. 每个虚拟出的AP就是一个VAP。\n6. ESS 扩展服务集\n\t1. 多个BSS但是同一个SSID组成的服务集合区域\n7. WLAN工作流程\n\t1. AP获取IP地址上线，与AC建立链接\n\t2. WLAN业务下发\n\t3. STA接入：STA搜索到SSID并连接上线，接入网络\n\t4. WLAN业务数据转发\n\n# 华为 AC‑AP 基础上线配置\n\n> 适用：AC 控制器管理瘦 AP，CAPWAP 隧道 + WLAN 业务部署\n\n## 一、AP 上线流程\n\n### 1. AP 通过 DHCP 获取 IP 地址\n\n1. 创建 AP 管理 VLAN\n2. 在 AC 设备配置 DHCP 地址池，为瘦 AP 分配管理 IP\n\n```\n# 1、配置CAPWAP隧道源接口\ncapwap source interface Vlanif 100\n\n# 2、创建AP分组\nap-group name hcia\n\n# 3、MAC地址认证注册AP\nap-id 1 ap-mac 00e0-fc26-7030\nap-name ap1\nap-group hcia\n```\n\n## 二、无线业务参数配置\n\n### 1. SSID 模板\n\n```\nssid-profile name wlan-ssid\nssid huawei\n```\n\n### 2. 安全模板（WPA‑WPA2‑PSK+AES 加密）\n\n```\nsecurity-profile name wlan-sec\nsecurity wpa-wpa2 psk pass-phrase huawei@123 aes\n```\n\n### 3. VAP 业务模板（绑定业务 VLAN、SSID、安全策略）\n\n\n```\nvap-profile name wlan-vap\n service-vlan vlan-id 10\n ssid-profile wlan-ssid\n security-profile wlan-sec\n```\n\n### 4. 将 VAP 模板下发至 AP 组射频\n\n```\nap-group name huawei\nvap-profile wlan-vap wlan 1 radio all\n```\n\n## 三、配置思路梳理\n\n| 阶段      | 功能说明                                                        |\n| ------- | ----------------------------------------------------------- |\n| AP 管理   | Vlanif100 为 CAPWAP 源接口、DHCP 分配 AP 管理 IP、MAC 认证上线 AP、AP 分组管理 |\n| WLAN 模板 | SSID 名称、WiFi 加密策略、业务 VLAN、模板下发到 AP 射频                       |\n\t",
     "category": "学习笔记",
-    "date": "2026-07-28",
+    "date": "2026-08-02",
     "readTime": "2分钟",
     "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
     "source": "github",
-    "githubPath": "blogs/数通基础-STP学习笔记.md"
+    "githubPath": "blogs/数通基础-WLAN学习笔记.md"
+  },
+  {
+    "id": "数通汇总-各协议hello-hold time时间汇总",
+    "title": "各协议hello-hold time时间汇总",
+    "excerpt": "各协议hello-hold time时间汇总",
+    "content": "# 华为设备 全协议 Keep‑Alive / Hello / 定时器完整参数（仅华为 VRP 默认值，HCIE‑Datacom 专用）\n\n> 名词释义\n> \n> Hello‑interval：邻居保活报文发送周期\n> \n> Hold‑time / 死亡超时：连续收不到 Hello 判定邻居 Down\n> \n> 健壮值 Robustness‑Value (RV) 华为默认 = 2\n\n## 一、生成树协议 STP/RSTP/MSTP/PVST+（华为全部版本默认）\n\n表格\n\n|定时器|默认数值|说明|\n|---|---|---|\n|Hello‑Time|2 s|根桥发送 BPDU 周期，取值范围 1～10s|\n|Max‑Age|20 s|BPDU 报文 Message‑Age 到达 20‑s，视作失效|\n|Forward‑Delay|15 s|侦听、学习状态停留时长|\n|边缘端口 BPDU 超时时间|3×Hello‑Time = 6 s|收到 BPDU 之后关闭边缘端口的计时器|\n\n## 二、三层组播协议（华为原厂默认）\n\n### 1. IGMP‑v2\n\n表格\n\n|参数|华为默认|解释|\n|---|---|---|\n|普遍组查询间隔 Query‑interval|60 s|接口周期性发送全网查询报文|\n|最大响应时间 Max‑Resp‑Time|10 s|主机随机 0~10s 回复成员报告|\n|特定组查询间隔 Last‑Member‑Query‑Interval|1 s|收到 Leave 报文后发送查询的周期|\n|最后成员查询发送次数|2|连发两次|\n|组成员超时时间|130 s<br><br>计算公式：Query‑interval × RV + Max‑Resp‑Time<br><br>60*2+10=130s|接口侧 IGMP 成员表项老化时长|\n\n### 2. IGMP‑Snooping 二层交换机\n\n表格\n\n|参数|华为默认值|\n|---|---|\n|VLAN 普遍组查询周期|60 s|\n|最大响应时间|10 s|\n|特定组查询间隔|1 s|\n|路由器端口老化定时器|180 s|\n|成员端口老化时间|130 s|\n\n### 3. MLD（IPv6‑IGMP）\n\n- 普遍查询间隔：60 s\n- 最大响应时间：10 s\n- 特定组查询间隔：1 s\n- 组播成员超时：130 s\n\n### 4. PIM‑DM / PIM‑SM\n\n表格\n\n|参数|华为默认|\n|---|---|\n|PIM Hello 发送间隔|30 s|\n|PIM Hold‑Time（邻居死亡超时）|90 s（Hello × 3）|\n\n## 三、IGP 路由协议\n\n表格\n\n|协议类型|Hello 间隔|Hold‑Time (死亡超时)|备注|\n|---|---|---|---|\n|OSPFv2 / OSPFv3 广播、P2P、P2MP|10 s|40 s（Hello×4）|NBMA 默认同样 10/40|\n|IS‑IS（P2P、LAN）|10 s|30 s（Hello×3）|L1、L2 共用参数|\n|EIGRP（华为兼容实现）广播链路|5 s|15 s|Hello*3|\n|EIGRP NBMA 低速链路|60 s|180 s|Hello*3|\n\n## 四、BGP、MPLS‑LDP\n\n表格\n\n|协议|Keepalive 报文周期|Hold‑Time|\n|---|---|---|\n|BGP|60 s|180 s|\n|LDP|5 s|15 s（Hello ×3）|\n\n> BGP 协商规则：两端取较小 Hold‑Time；keepalive = HoldTime ÷ 3；Hold‑Time=0 关闭邻居探测\n\n## 五、二层可靠性协议（VRP 默认）\n\n表格\n\n|协议|Hello 间隔|故障判定超时|\n|---|---|---|\n|VRRP|1 s|3 s|\n|LACP|慢周期 30 s；快周期 1 s|发送周期 × 3|\n|RRPP|1 s|3 s|\n|ERPS|5 s|15 s|\n\n## 六、接入、隧道协议\n\n表格\n\n|协议|保活周期|超时时间|\n|---|---|---|\n|PPPoE LCP Echo‑Request|30 s|90 s（3 次没有应答断开）|\n\n## 七、BFD 双向转发检测（华为默认参数）\n\n- 最小发送间隔 min‑tx‑interval：100 ms\n- 最小接收间隔 min‑rx‑interval：100 ms\n- 检测倍数 detect‑multiplier：3\n- 检测超时 = 100 × 3 = 300ms\n\n## 八、各种表项老化定时器（华为设备）\n\n表格\n\n|条目类型|默认老化时长|\n|---|---|\n|ARP 表项|1200 s（20 min）|\n|IPv6 ND 邻居缓存|1800 s（30 min）|\n|DHCP‑Snooping 绑定表老化时间|300 s|\n\n## 九、传输层 & 应用层保活\n\n1. TCP（Linux 内核默认，华为设备 Linux 平台一致）\n\n- tcp_keepalive_time=7200 s（空闲 2h 开启探测）\n- tcp_keepalive_intvl=75 s\n- tcp_keepalive_probes=9\n\n2. SSH 服务端空闲保活：300 s\n3. Nginx keepalive_timeout：60 s\n\n|协议|Hello|Hold‑Time|\n|---|---|---|\n|OSPF|10s|40s|\n|IS‑IS|10s|30s|\n|BGP|60s|180s|\n|LDP|5s|15s|\n|PIM|30s|90s|\n|VRRP|1s|3s|\n|STP Hello|2s|Max‑Age 20s|\n|IGMP 查询周期|60s|成员超时 130s|",
+    "category": "学习笔记",
+    "date": "2026-08-06",
+    "readTime": "2分钟",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "source": "github",
+    "githubPath": "blogs/数通汇总-各协议hello-hold time时间汇总.md"
   },
   {
     "id": "网络维护-某制造企业专线卫士会话不通",
