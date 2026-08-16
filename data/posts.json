@@ -7,7 +7,7 @@
     "category": "misc",
     "date": "2026-06-22",
     "readTime": "3分钟",
-    "cover": "/assets/covers/launchctl%E6%80%BB%E7%BB%93-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/launchctl%E6%80%BB%E7%BB%93-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/misc-mac系统级定时任务launchctl部署.md"
   },
@@ -19,7 +19,7 @@
     "category": "misc",
     "date": "2026-07-04",
     "readTime": "4分钟",
-    "cover": "/assets/covers/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/misc-个人网站部署方案.md"
   },
@@ -43,7 +43,7 @@
     "category": "学习笔记",
     "date": "2026-08-02",
     "readTime": "1分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-ACL+路由控制学习笔记.md"
   },
@@ -55,7 +55,7 @@
     "category": "学习笔记",
     "date": "2026-07-21",
     "readTime": "1分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-BGP学习笔记01.md"
   },
@@ -67,7 +67,7 @@
     "category": "学习笔记",
     "date": "2026-07-21",
     "readTime": "3分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-BGP学习笔记02.md"
   },
@@ -79,7 +79,7 @@
     "category": "学习笔记",
     "date": "2026-07-21",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-IS-IS学习笔记.md"
   },
@@ -91,7 +91,7 @@
     "category": "学习笔记",
     "date": "2026-07-24",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-MPLS VPN学习笔记.md"
   },
@@ -223,9 +223,21 @@
     "category": "学习笔记",
     "date": "2026-08-02",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通基础-WLAN学习笔记.md"
+  },
+  {
+    "id": "数通汇总-优先级、Cost、 度量、选路规则、默认值汇总",
+    "title": "优先级、Cost、 度量、选路规则、默认值汇总",
+    "excerpt": "优先级、Cost、 度量、选路规则、默认值汇总",
+    "content": "## 核心总口诀\n\n> **协议优先级（Preference）：数值越小越优先（跨协议对比）**\n> \n> **同协议内部 Cost‑度量值：数值越小越优先（协议内选路）**\n> \n> 选路顺序：先比较路由优先级 → 优先级相等再比较 Cost\n\n---\n\n## 一、全部路由源 默认优先级 Preference（华为原厂标准）华为\n\n表格\n\n| 路由类型                       | 默认优先级 | 备注                       |\n| -------------------------- | ----- | ------------------------ |\n| Direct 直连路由                | 0     | 最高、不可修改                  |\n| OSPFv2/v3 区域内、域间内部路由       | 10    |                          |\n| IS‑IS Level‑1              | 15    | 区域内路由                    |\n| EBGP（外部 BGP）               | 20    | V800 新版 VRP；老版本 EBGP=255 |\n| IS‑IS Level‑2              | 18    | 骨干域路由                    |\n| Static 静态路由                | 60    | 出接口静态、下一跳静态优先级一致         |\n| DHCP‑UNR 动态用户路由            | 60    |                          |\n| RIP / RIPng                | 100   |                          |\n| OSPF‑Type‑2 外部路由、NSSA 外部路由 | 150   | 引入外部路由优先级很低              |\n| IBGP（内部 BGP）               | 255   | 可信度最低，IGP 路由永远优先 BGP     |\n\n> 优先级取值区间：1‑255；255 代表路由不可信任、不会放进路由表\n\n## 二、各 IGP 协议 Cost（度量值）默认值 & 计算规则\n\n### 1. OSPFv2 / OSPFv3\n\n1. 默认参考带宽：**100‑Mbps**\n2. 公式：`接口Cost = 参考带宽 ÷ 接口物理带宽`，计算结果＜1 则强制取值 = 1\n3. 各速率接口默认 cost\n\n| 接口带宽       | OSPF 默认 Cost |\n| ---------- | ------------ |\n| 10M        | 10           |\n| 100M       | 1            |\n| 1G/10G/25G | 1            |\n- 路径总开销：沿途所有出接口 Cost 累加\n- 命令修改参考带宽 `bandwidth‑reference 1000`（单位 Mbps）\n\n### 2. IS‑IS\n\n- **所有接口默认 cost = 10**，不受带宽影响\n- 整条路由开销 = 链路开销累加\n- L1、L2 独立 cost\n\n### 3. RIP\n\n- 度量：跳数 (Hop‑count)\n- 默认接口开销 = 1；越小优先；最大有效跳数 15，16 代表路由不可达\n\n### 4. BGP（无 Cost，依靠 BGP 属性依次选举最优路由）\n\nBGP 选路关键点：\n\n1. 本地 Preference‑Value 越大优先\n2. Local‑Pref 越大优先\n3. AS‑Path 越短优先\n4. MED 越小优先\n5. EBGP 优于 IBGP\n\n## 三、二层协议开销 / 优先级（STP、MSTP、VRRP、LACP）\n\n> **二层路径开销 Cost 依旧越小越优先**\n\n### 1. MSTP/RSTP/STP（华为 legacy 私有标准）华为\n\n表格\n\n|端口速率|默认路径开销|\n|---|---|\n|10M|2000|\n|100M|200|\n|1G|20|\n|10G|2|\n\nIEEE‑802.1d‑1998 标准：10M=100、100M=19、1G=4\n\n> 根端口选举：到达根桥总开销最小优先\n\n### 2. VRRP\n\n- VRRP 优先级：**数值越大越优先**；默认优先级 100；取值 1‑254；255 代表 IP 拥有者\n\n> 此处极易混淆！VRRP 优先级和路由优先级规则相反，越大优先\n\n### 3. LACP\n\n- 系统优先级：数值越小越优先\n- 端口优先级：数值越小越优先，默认 32768\n\n## 四、组播协议选举优先级\n\n1. PIM‑SM RP 选举：**RP 优先级数值越小越优先**，默认优先级 0\n2. DR 选举（OSPF/PIM）：接口优先级越大优先；优先级相同比较接口 IP 大的优先\n\n## 五、考试易错点整理\n\n1. 路由表优先级（preference）：**越小越好**\n2. IGP 度量 cost：**越小越好**\n3. VRRP 设备优先级：**越大越好**（高频坑）\n4. LACP 系统 / 端口优先级：越小越好\n5. RP 选举优先级：越小越好\n6. OSPF 内部 10、OSPF 外部 150，外部路由可信度很差\n7. IS‑IS L1(15)＞L2(18)\n8. IBGP 优先级 255，只要 IGP 路由存在永远优选 IGP\n\n## 清单\n\n1. 直连 0＞OSPF 内部 10＞IS‑IS L1‑15＞EBGP20＞IS‑IS L2‑18＞静态 60＞RIP100＞OSPF 外部 150＞IBGP255\n2. OSPF 千兆口 cost=1；IS‑IS 所有接口 cost=10\n3. VRRP 默认优先级 100，越大优先；其余绝大多数协议优先级越小优先\n\n\n（Hello 保活时间 / 优先级 Preference / Cost 度量 全套默认值、优先规则；纯华为设备，适配 HCIE‑Datacom）\n\n> 前置核心铁律（必背）\n> \n> 1. 路由‑Preference（路由优先级）：**数值越小越优先**\n> 2. IGP 路径 Cost / 开销：**数值越小越优先**\n> 3. 特殊例外：VRRP 优先级、PIM‑DR 接口优先级 **数值越大越优先**\n\n## 一、IGP 路由协议汇总表\n\n表格\n\n|协议|Hello 间隔|Hold‑Time 死亡超时|路由默认优先级|默认 Cost & 计算规则|\n|---|---|---|---|---|\n|OSPFv2 / OSPFv3|10 s|40 s(Hello×4)|区域内 / 域间：10<br><br>Type‑2 外部 / NSSA：150|参考带宽 100Mbps；cost=100M / 接口带宽；≥1；千兆及以上开销 = 1|\n|IS‑IS(L1/L2)|10 s|30 s(Hello×3)|L1‑15、L2‑18|所有接口默认 cost=10，和带宽无关|\n|RIP / RIPng|30 s|180 s|100|度量 = 跳数，每链路开销 1；16 跳不可达|\n\n## 二、BGP & MPLS‑LDP\n\n表格\n\n|协议|Hello/Keepalive|Hold‑Time|路由优先级|Cost 说明|\n|---|---|---|---|---|\n|BGP|60 s|180 s|EBGP‑20、IBGP‑255|BGP 不使用 IGP‑Cost；依靠 BGP 属性选路|\n|LDP|5 s|15 s|‑|无链路开销，依靠 IGP 路由建立 LSP|\n\n## 三、二层冗余协议\n\n表格\n\n|协议|Hello 周期|Hold / 故障超时|优先级规则|默认开销 / 优先级参数|\n|---|---|---|---|---|\n|STP/RSTP/MSTP|BPDU Hello‑Time=2s|Max‑Age=20s|开销越小优先|华为标准：10M=2000，100M=200，1G=20，10G=2|\n|VRRP|1 s|3 s|**优先级越大优先**|默认优先级 100；IP 拥有者优先级 255|\n|LACP|慢周期 30s / 快周期 1s|3× 发送周期|系统优先级、端口优先级越小优先|默认端口优先级 32768|\n|RRPP|1 s|3 s|开销越小优先|环上链路无默认 cost|\n|ERPS|5 s|15 s|开销越小优先|‑|\n\n## 四、组播全套协议（华为默认）\n\n表格\n\n|协议|Hello / 查询周期|超时时间|选举优先级规则|默认参数|\n|---|---|---|---|---|\n|IGMP‑v2|普遍组查询 60 s|成员老化 130s|无优先级|最大响应时间 10s；特定组查询 1s、查询次数 2|\n|IGMP‑Snooping|VLAN 查询 60 s|成员端口 130s、路由器端口 180s|‑|最大响应时间 10s|\n|PIM‑SM/DM|PIM Hello 30 s|Hold‑Time 90 s|RP 优先级越小优先；DR 接口优先级越大优先|RP 默认优先级 0|\n|MLD (IPv6 组播)|普遍查询 60s|成员老化 130s|‑|特定组查询间隔 1s|\n\n## 五、接入、隧道、BFD\n\n表格\n\n|协议|保活间隔|超时时间|优先级|备注|\n|---|---|---|---|---|\n|PPPoE LCP Echo|30 s|90 s|‑|3 次无应答断开会话|\n|BFD|最小发送间隔 100ms|检测超时 300ms|‑|检测乘数 3；可绑定 IGP/BGP/VRRP 加速故障感知|\n\n## 六、静态、直连、各类表项老化定时器\n\n表格\n\n|路由类型|路由优先级|保活 / 老化时间|\n|---|---|---|\n|Direct 直连路由|0|接口 Down 路由消失|\n|Static 静态路由|60|无 Hello|\n|DHCP‑Snooping 绑定表|‑|300 s|\n|ARP 表项|‑|1200 s（20min）|\n|IPv6 ND 邻居缓存|‑|1800 s（30min）|\n\n## 七、传输层、应用层保活\n\n表格\n\n|协议|保活参数|\n|---|---|\n|TCP 内核保活 (Linux 平台设备)|空闲 7200s 启动探测、探测间隔 75s、重试 9 次|\n|SSH 服务端空闲心跳|300s|\n\n# 汇总\n\n1. 优先级排序（从小到大）\n    \n    `直连0 > OSPF内部10 > IS‑IS L1‑15 > EBGP20 > IS‑IS L2‑18 > 静态60 > RIP100 > OSPF外部150 > IBGP255`\n2. Hello 秒数速背\n\n- OSPF10、IS‑IS10、BGP60、LDP5、PIM30、VRRP1、STP‑BPDU 2\n\n3. 特殊坑点\n\n- VRRP：**越大优先**；其余绝大多数协议优先级越小优先\n- OSPF 千兆 cost=1；IS‑IS 所有接口 cost 固定 10\n- 接口调用 ACL 末尾隐式 deny‑all；traffic‑policy 未匹配流量放行",
+    "category": "学习笔记",
+    "date": "2026-08-06",
+    "readTime": "4分钟",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
+    "source": "github",
+    "githubPath": "blogs/数通汇总-优先级、Cost、 度量、选路规则、默认值汇总.md"
   },
   {
     "id": "数通汇总-各协议hello-hold time时间汇总",
@@ -235,9 +247,33 @@
     "category": "学习笔记",
     "date": "2026-08-06",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/数通汇总-各协议hello-hold time时间汇总.md"
+  },
+  {
+    "id": "数通高级- BGP高级特性",
+    "title": "BGP高级特性",
+    "excerpt": "BGP高级特性",
+    "content": "### 路由控制\n\n1. 路由匹配工具\n\t1. ACL\n\t2. IP prefix list\n\t3. as path filter\n\t\t1. 正则表达式匹配\t\t![[数通高级- BGP高级特性#正则表达式匹配]]\n\t\t2. \n\t4. community filter\n2. 路由策略工具\n\t1. filter policy\n\t2. route policy\n\n\n\n### 正则表达式匹配\n\n#### 类型1\n\n|符号|说明|示例|\n| ---- | ---- | ---- |\n| . | 匹配任意单个的字符，包括空格 | 0.0 匹配0x0、020... |\n| ^ | 匹配行首的位置，即一个字符串的开始 | ^10 匹配10.1.1.1，不匹配20.1.1.1 |\n| $ | 匹配行尾的位置，即一个字符串的结束 | 1$ 匹配10.1.1.1，不匹配10.1.1.2 |\n| _ | 下划线，匹配任意的一个分隔符<br>匹配一个逗号 (,)、左花括号 ({)、右花括号 (})、左圆括号、右圆括号<br>匹配输入字符串的开始位置（同^）<br>匹配输入字符串的结束位置（同$）<br>匹配一个空格 | _10 匹配(10、{10、空格10等<br>10_ 匹配10)、10}、10空格等 |\n| \\| | 管道字符，逻辑或。如：x\\|y，匹配x或y | 100\\|200 匹配100或者200 |\n| \\\\ | 转义字符，用来将下一个字符（特殊字符或普通字符）标记为普通字符 | \\\\* 匹配* |\n\n#### 类型2\n\n|符号|说明|示例1|示例2|\n| ---- | ---- | ---- | ---- |\n| * | 匹配前面的子正则表达式0次或多次 | 10* 匹配1、10、100、1000、... | (10)* 匹配空、10、1010、101010... |\n| + | 匹配前面的子正则表达式1次或多次 | 10+ 匹配10、100、1000、... | (10)+ 匹配10、1010、101010... |\n| ? | 匹配前面的子正则表达式0次或1次 | 10? 匹配1或10 | (10)? 匹配空或10 |\n\n#### 类型3\n|符号|说明|示例|\n| ---- | ---- | ---- |\n| [xyz] | 匹配正则表达式中包含的任意一个字符 | [123] 匹配255中的2 |\n| [^xyz] | 匹配正则表达式中未包含的字符 | [^123] 匹配123之外的任何字符 |\n| [a-z] | 匹配正则表达式指定范围内的任意字符 | [0-9] 匹配0到9之间的所有数字 |\n| [^a-z] | 匹配正则表达式指定范围外的任意字符 | [^0-9] 匹配所有非数字字符（即匹配0到9之外的任何字符） |",
+    "category": "数通",
+    "date": "2026-08-12",
+    "readTime": "1分钟",
+    "cover": "/assets/covers/image.jpg",
+    "source": "github",
+    "githubPath": "blogs/数通高级- BGP高级特性.md"
+  },
+  {
+    "id": "数通高级- IGP高级特性",
+    "title": "IGP高级特性",
+    "excerpt": "IGP高级特性",
+    "content": "## OSPF\n\n### SPF\n1. 根据1类和2类LSA计算最短路径。\n2. 过程\n\t1. 拓扑如下图![Pasted image 20260810161855.png](/assets/images/Pasted%20image%2020260810161855.webp)\n\t2. Dijkstra 核心集合定义\n\t\t- **S 集合**：已经确定最短路径的节点（已加入 SPF 树）\n\t\t- **T 集合**：临时候选、最短距离待定节点\n\t3. 初始状态\n\t\tS = {R0}\n\t\t距离表：\n\t\t![Pasted image 20260810162125.png](/assets/images/Pasted%20image%2020260810162125.webp)\n\t4. **遍历 R0 所有邻居**\n\t\tR0→R1 cost=10；R0→R2 cost=20\n\t\t更新距离\n\t\t- dist(R1)=10\n\t\t- dist(R2)=20\n\t\tT={R1 (10), R2 (20)}\n\t\t挑选 T 开销最小：**R1(10)**\n\t\tR1 移入 S，S={R0,R1}\n\t5. **遍历 R1 邻居**\n\t\t邻居：R0 (已经在 S)、R3，R1‑R3 cost=5\n\t\tdist (R3)=dist (R1)+5 = 10+5 =15\n\t\tT={R2 (20),R3 (15)}\n\t\t挑选最小 R3 (15)\n\t\tR3 加入 S，S={R0,R1,R3}\n\t6. **遍历 R3 邻居**\n\t\tR1 (S 内)、R2；R3‑R2 cost=1\n\t\tdist (R2)= min (旧值 20 , dist (R3)+1=16) → 更新 dist (R2)=1\n\t\tT={R2 (16)}\n\t\t取出 R2 加入 S\n\t\tS={R0,R1,R3,R2}\n\n### I-SPF\n1. 介绍\n\t1. 网络中节点断开，导致树需要重新计算时触发\n\t2. 断开后，下方子树剥离SPF\n\t3. 对所有涉及变动的子拓扑重新计算局部SPF\n2. 触发LSA\n\t1. 1类路由更新\n\t2. 2类路由更新\n\n### PRC\n\n1. 介绍\n\t1. 网络上路由发生变化的时候，只对发生变化的路由进行重新计算\n\t2. PRC不计算节点路径，而是根据SPF算出来的最短路径树来更新内容\n\t3. PRC将路由（叶）放入整棵树中\n2. 过程\n\t1. 某节点泛洪新增LSA\n\t2. 收到LSA创建新路由，继承原有访问节点的路径和下一跳，SPF不变，只在节点后面新增叶子。\n3. 触发LSA\n\t1. 3类路由更新\n\t2. 5类路由更新\n\t3. 7类路由更新\n\n### 智能定时器\n1. 路由拓扑/链路快速震荡时，响应过快会导致路由反复震荡——智能定时器会减少突发时间的快速响应，避免过度占用CPU。\n2. 控制LSA的生成和接收\n\t1. 同一条LSA 1s内不再生成。\n\t2. LSA接收时间间隔为1s。\n\t3. **对于需要快速收敛的网络，可以配置间隔时间为0**\n\t4. **基础配置命令——OSPF协议视图下**\n\t\t1. lsa-originate-interval {0 | {intelligent-timer *max-interval start-interval hold-interval*}}\n\t\t2. 初次更新间隔时间为start-interval（缺省500ms）\n\t\t3. n次更新的LSA间隔时间为hold-interval（缺省1000ms） * 2 ^ (n-2) \n\t\t4. 当上步反复执行到最长间隔max-interval（缺省5000ms），OSPF连续三次更新LSA的间隔时间都是最长时间，之后再次返回步骤1，按照初始时间间隔更新LSA。\n3. 控制路由计算\n\t1. 计算最短路径（SPF和I-SPF）的时间可以由智能定时器指定间隔。\n\t2. **基础配置命令——OSPF协议视图下**\n\t\t1. spf-schedule-interval {*interval1* | intelligent-timer *max-interval start-interval hold-interval* | millisecond *interval2*}\n\t\t2. 初次计算SPF间隔时间为start-interval（缺省500ms）\n\t\t3. n次计算SPF间隔时间为hold-interval（缺省1000ms） * 2 ^ (n-2) \n\t\t4. 当上步反复执行到最长间隔max-interval（缺省10000ms），OSPF连续三次计算SPF的间隔时间都是最长时间，之后再次返回步骤1，按照初始时间间隔计算SPF。\n\n### FRR\n\n1. LFA算法算出最短无环备份路径，50ms内切换\n2. 链路保护不等式1：备份路由器到目的的cost要小于从主路由到目的地那条路径的cost\n3. 节点链路双保护不等式1：备份路由器到目的地的cost要小于从主路由到目的地那条路径的cost，目的地的cost要小于从备份节点到目的地那条路径的cost\n4. 配置\n\t1. ospf视图下，frr进入frr视图\n\t2. loop-free-alternate\n\t3. 接口视图下可以禁止frr 接口视图下ospf frr block：主要为了不让这个接口上的链路成为备份链路，重要业务不会被挤占\n\n### BFD-OSPF联动\n1. 缺省情况下，OSPF探测故障通过hello超时。\n2. 过程\n\t1. OSPF邻居FULL后，通知BFD建立会话\n\t2. 链路down后，BFD直接通知OSPF peer down 毫秒级响应\n3. 配置\n\t1. OSPF视图下，bfd all-interfaces enable\n\t2. 接口视图下，ospf bfd enable\n\n\n### OSPF路由控制\n1. 等价路由\n\t1. 路由表中存在同一目的地址开销值相同，则依据负载分担的方式从多条路由发送到目的地址\n\t2. 负载分担方式——逐包/逐流\n\t3. 命令——配置最大的负载分担条数（默认8条）\n\t\t1. ospf视图下  maximum load-balancing *number*\n2. 缺省路由\n\t1. OSPF 3类和7类缺省路由——stub和NSSA区域\n\t2. import-route无法引入缺省路由，只能使用default-route-advertise\n\t3. 再通告缺省路由的时候，必须检查缺省路由的优先级（比如静态路由优先级高）\n3. LSA过滤\n\t1. 特定LSA过滤\n\t2. 命令：ospf filter-lsa-out xxx（all，summery，ase，nssa等，都可以应用acl）\n\t3. **对于已经发送的LSA，只能等待老化时间**——解决办法只能是重建OSPF\n4. OSPF database overflow\n\t1. 设置路由器非缺省外部路由数量上限\n\t2. 过程\n\t\t1. 进入overflow状态\n\t\t\t1. 路由器删除**所有**自己产生的非缺省外部路由\n\t\t\t2. 启动overflow定时器（默认5s）\n\t\t2. 处于overflow状态\n\t\t\t1. 不产生非缺省外部路由\n\t\t\t2. 丢弃所有非缺省外部路由LSA\n\t\t\t3. 定时器超时，自动检查非缺省外部路由数量是否还超过上限\n\t\t\t\t1. N：退出overflow状态\n\t\t\t\t2. Y：重启overflow计时器\n\t\t\t4. 退出overflow状态\n\t\t\t\t1. 删除overflow定时器\n\t\t\t\t2. 产生非缺省外部路由\n\t\t\t\t3. 接收非缺省外部路由并能回复LSA\n\t\t\t\t4. 准备下次进入overflow状态\n\n### OSPF多进程\n1. 适用于MPLS-VPN\n2. 公司网络合并，有两个area 0，并且area 0无法直接对接。\n\n### OSPF和BGP联动\n情景：\n![Pasted image 20260812150626.png](/assets/images/Pasted%20image%2020260812150626.webp)\n1. 步骤\n\t1. 当R2重启，IBGP不会down，流量瞬间切换到R1-R3-R4。\n\t2. R2启动后，OSPF建立但是IBGP还未收敛，此时R1会选择R2转发，但是R2没有BGP路由表，导致丢包。\n\t3. 在OSPF收敛但是BGP没有收敛的时候，R2要配置stub-router on-startup [*interval* ] 或者使用 wait-for-bgp。在重启的时候会通告cost为65535来避免成为数据转发路由器\n\n\n### Forwarding Address\n1. 5类 7类 LSA特有\n2. 目的：防止某些特殊场景下的次优路径\n3. 场景1——5类FA作用：\n\t![Pasted image 20260812151451.png](/assets/images/Pasted%20image%2020260812151451.webp)\n\t1. 在同一广播域内，R2引入了外部路由下一跳R1，R3就会先把下一跳设置为R2，由R2转到R1——次优路径\n\t2. FA直接指定R1，防止次优路径\n\t3. 当FA非0 ，会直接计算到FA地址的下一跳，规避次优路径\n\t4. FA取值——当满足以下条件才可以非零\n\t\t1. ASBR链接外部路由的接口必须启用OSPF\n\t\t2. 该接口没有启用siilence-interface\n\t\t3. 该接口必须为broadcast/NBMA\n\t\t4. 该接口的IP地址必须在network声明内\n\t\t5. FA地址被置为外部LSA的下一跳地址。\n4. 场景2——7类LSA场景：\n\t![Pasted image 20260812160729.png](/assets/images/Pasted%20image%2020260812160729.webp)\n\t1. 7转5 路由器如果处于低带宽链路，如果没有FA地址，就会认为只能通过R3，流量就被引导到低带宽链路\n\t2. 使用FA后，会认为此NSSA的网段必须经过R5，即会自动找R5的路由，流量就会被引导到高带宽链路。\n\n### OSPF GR——graceful restart（一种NSF 不间断forwarding的策略）\n\n1. 保证重启过程中还能进行数据转发，控制层面不影响数据转发。\n2. 新增type 9 opaque LSA\n\n### NSR 不间断路由\n\n1. 目的：设备倒换过程中，路由处理不中断\n\t1. 邻居和拓扑信息不丢失\n\t2. 邻居关系不中断\n\t3. 收敛速度比NSF快\n\t4. 不依赖对端设备\n2. 场景：在主用和备用控制板都存在的时候，主用控制板故障不影响邻居关系的技术\n3. 过程\n\t1. 批量备份：备板重启，主板批量备份到背板\n\t2. 实时备份：备板实时备份主板的控制平面和转发平面——当邻居或路由发生变化时，主控板会实时将信息备份到备板\n\t3. 主备倒换：硬件探测，备板直接升为主控板，此时倒换很快完成，邻居不会断开。\n\t4. 主备不抢占，老主会成为新备\n\n### 实验\n![Pasted image 20260812141226.png](/assets/images/Pasted%20image%2020260812141226.webp)\n1. 要控制外部路由出口只走一边：\n\t1. type 2引入，忽略外部的cost\n\t2. 指定cost，让边界1的cost比边界2引入的cost小。边界1down后自动切到边界2。\n\t3. **注意import时的cost 和 policy的cost 区别！**\n\t\t1. import时候使用的type 2 cost 100会将所有import的类型都改成cost 100。\n\t\t2. 这里需要使用route-policy来指定某条静态路由cost 100，另一条静态路由cost 200。所以一定要用route-policy来指定。\n2. 内部路由控制\n\t1. 使用cost设计内部路由控制。\n\n### OSPF总结\nimport xxx filter-policy：调用acl，import 的时候放通/禁止路由\nospf视图下 filter-policy：调用ACL，在import/export方向上放通/禁止路由\nroute-policy：调用acl+if-match+apply，import的时候可以更改路由属性\ncost：cost是接口属性\n\n## ISIS\n\n### LSP快速扩散\n1. 正常情况下，收到LSP后会更新LSDB，之后再用一个定时器将LSP扩散\n2. 快速扩散特性可以在更新LSDB之前就把**一定数量的**LSP扩散出去，这个数量可以配置。\n\n### 路由控制\n1. ISIS优先级\n2. 接口开销：注意窄度量0-63，宽度量能到4个字节。网络大需要改到宽度量\n3. 路由渗透\n4. 等价路由\n\t1. 可以配置最大等价路由条数\n\t2. 通过nexthop xxxx weight *weight* 控制，weight越小越优先\n5. 缺省路由通告\n6. 引入外部路由\n7. filter-policy\n\n### 分片扩展\n1. 标准分片：分片ID8bit，最多256片\n2. 分片扩展：配置虚拟系统ID（router id），最多产生50个\n\t1. 初始系统：真实系统\n\t2. 系统id：初始系统id\n\t3. 虚拟系统、附加系统id：生成扩展LSP分片\n\t4. 24号TLV：表示初始系统和虚拟系统的关系\n\n### ISIS GR\n1. 211号TLV\n2. 包含三个置位以及三个定时器\n3. 过程\n\t1. 主备倒换和路由器重启会导致GR触发\n\t2. restarter发送RR请求（IIH TLV=211）\n\t3. helper应答，RA（IIH TLV=211）\n\t4. helper发送CSNP和LSP\n\t5. restarter 更新FIB表。\n\t6. 重启开始，FIB保持不变\n",
+    "category": "数通",
+    "date": "2026-08-10",
+    "readTime": "3分钟",
+    "cover": "/assets/covers/%E6%95%B0%E9%80%9A%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%B0%81%E9%9D%A2.png",
+    "source": "github",
+    "githubPath": "blogs/数通高级- IGP高级特性.md"
   },
   {
     "id": "网络维护-某制造企业专线卫士会话不通",
@@ -247,7 +283,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%93%E7%BA%BF%E5%8D%AB%E5%A3%AB%E4%BC%9A%E8%AF%9D%E4%B8%8D%E9%80%9A-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%93%E7%BA%BF%E5%8D%AB%E5%A3%AB%E4%BC%9A%E8%AF%9D%E4%B8%8D%E9%80%9A-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某制造企业专线卫士会话不通.md"
   },
@@ -259,7 +295,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "3分钟",
-    "cover": "/assets/covers/%E5%8C%BB%E8%8D%AF%E5%85%AC%E5%8F%B8%E7%BB%84%E7%BD%91%E6%8E%92%E6%9F%A5-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E5%8C%BB%E8%8D%AF%E5%85%AC%E5%8F%B8%E7%BB%84%E7%BD%91%E6%8E%92%E6%9F%A5-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某医药公司抓包定位重传故障.md"
   },
@@ -271,7 +307,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E5%8D%AB%E6%B5%B4%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%A2%E5%8C%85MAC%E6%BC%82%E7%A7%BB-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E5%8D%AB%E6%B5%B4%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E4%B8%A2%E5%8C%85MAC%E6%BC%82%E7%A7%BB-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某卫浴制造企业丢包与MAC漂移.md"
   },
@@ -283,7 +319,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "2分钟",
-    "cover": "/assets/covers/%E6%9F%90%E5%A4%A7%E5%9E%8B%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E8%B7%A8%E7%9C%81%E5%8F%8C%E8%B7%A8%E6%8E%92%E9%9A%9C-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%9F%90%E5%A4%A7%E5%9E%8B%E5%88%B6%E9%80%A0%E4%BC%81%E4%B8%9A%E8%B7%A8%E7%9C%81%E5%8F%8C%E8%B7%A8%E6%8E%92%E9%9A%9C-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某大型制造企业跨省双跨排障.md"
   },
@@ -295,7 +331,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "3分钟",
-    "cover": "/assets/covers/%E6%9F%90%E5%AE%B6%E7%94%B5%E4%BC%81%E4%B8%9A%E6%80%BB%E7%82%B9%E5%85%A8%E9%98%BB%E9%97%AE%E9%A2%98-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E6%9F%90%E5%AE%B6%E7%94%B5%E4%BC%81%E4%B8%9A%E6%80%BB%E7%82%B9%E5%85%A8%E9%98%BB%E9%97%AE%E9%A2%98-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某家电企业总点全阻问题.md"
   },
@@ -307,7 +343,7 @@
     "category": "数通",
     "date": "2026-07-30",
     "readTime": "4分钟",
-    "cover": "/assets/covers/%E7%A7%91%E6%8A%80%E4%BC%81%E4%B8%9A%E5%8A%9E%E5%85%AC%E7%BD%91%E6%85%A2%E9%80%9F%E5%BC%82%E5%B8%B8-%E5%B0%81%E9%9D%A2.webp",
+    "cover": "/assets/covers/%E7%A7%91%E6%8A%80%E4%BC%81%E4%B8%9A%E5%8A%9E%E5%85%AC%E7%BD%91%E6%85%A2%E9%80%9F%E5%BC%82%E5%B8%B8-%E5%B0%81%E9%9D%A2.png",
     "source": "github",
     "githubPath": "blogs/网络维护-某科技企业办公网慢速与DHCP异常.md"
   }
